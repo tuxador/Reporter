@@ -235,7 +235,12 @@ class Reporter(wx.Frame):
         if selected_record == -1: # none selected
             return
 
-        id = str(self.record_display.GetItem(selected_record, 0).GetText())
+        # convert to string coz unicode object does not work
+        id = str(''.join([self.record_display.GetItem(
+                    selected_record, x).GetText()
+                    for x in range(len(self.index_keys))]))
+
+        #id = str(self.record_display.GetItem(selected_record, 0).GetText())
 
         rec = self.db.db[id]
 
