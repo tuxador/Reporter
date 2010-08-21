@@ -54,10 +54,15 @@ class Form(wx.Dialog):
         self.project_name = project_name
         self.vals = {} # init the dict
 
-        self.panel.clearall_button.Bind(wx.EVT_BUTTON, self.clearall)
-        self.panel.reset_button.Bind(wx.EVT_BUTTON, self.reset)
-        self.panel.done_button.Bind(wx.EVT_BUTTON, self.done)
+        self.clearall_button = wx.Button(self.panel, label='Clear all')
+        self.reset_button = wx.Button(self.panel, label = 'Reset form')
+        self.done_button = wx.Button(self.panel, id=wx.ID_OK, label= 'Done')
 
+        self.clearall_button.Bind(wx.EVT_BUTTON, self.clearall)
+        self.reset_button.Bind(wx.EVT_BUTTON, self.reset)
+        self.done_button.Bind(wx.EVT_BUTTON, self.done)
+
+        self.panel._layout()
         self.panel.panes[0].Collapse(False)
         self.Show(True)
         
@@ -87,7 +92,7 @@ class Form(wx.Dialog):
         pass
 
     def done(self, event):
-        self.Destroy()
+        self.EndModal(wx.ID_OK)
 
     # def render_report(self):
     #     """render the report as a pdf"""
@@ -140,17 +145,18 @@ class FormPanel(wx.Panel):
          # collpasible panes in between
         self.title = wx.StaticText(self, label=title)
         self.title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.parent = parent
         
         # Panes will be constructed from yaml file
         self.panes = []
         self.construct_panes(fields_file)
         #self.make_pane_content(self.cp1.GetPane())
         
-        self.clearall_button = wx.Button(self, label='Clear all')
-        self.reset_button = wx.Button(self, label = 'Reset form')
-        self.done_button = wx.Button(self, label= 'Done')
+        # self.clearall_button = wx.Button(self, label='Clear all')
+        # self.reset_button = wx.Button(self, label = 'Reset form')
+        # self.done_button = wx.Button(self, label= 'Done')
         
-        self._layout()
+        #self._layout()
 
         self.Show(True)
         
@@ -164,9 +170,9 @@ class FormPanel(wx.Panel):
         for cp in self.panes:
             sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 25)
 
-        button_sizer.Add(self.clearall_button, 0, wx.ALL, 25)
-        button_sizer.Add(self.reset_button, 0, wx.ALL, 25)
-        button_sizer.Add(self.done_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.parent.clearall_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.parent.reset_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.parent.done_button, 0, wx.ALL, 25)
         
         sizer.Add(button_sizer, 0 ,wx.ALL)
         self.SetSizer(sizer)
@@ -322,9 +328,13 @@ class Pane(wx.CollapsiblePane):
 
 def test():
     """Test all modules in this script. Also serves as demo"""
+    import pprint
     app = wx.App()
     f = Form(None, 'test/fields.yaml')
-    print f.ShowModal()
+    if f.ShowModal() == wx.ID_OK:
+        f.update_values_from_form()
+        pprint.pprint(f.vals)
+    f.Destroy()
     app.MainLoop()
         
 if __name__ == '__main__':
