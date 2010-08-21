@@ -39,98 +39,106 @@ an rst document. This is converted to pdf using rst2pdf"""
 import subprocess
 import wx
 import yaml
-from mako.template import Template
+#from mako.template import Template
 #from rst2pdf.createpdf import RstToPdf
 
-class Form(wx.Frame):
-    def __init__(self, parent, fields_file, id=-1):
-        """fields_file is the file to use to construct fields.
-        id is required when we are updating / editing.
-        id of -1 means it is a new form"""
-        wx.Frame.__init__(self, parent, -1, size=(600, 700))
-        self.panel = FormPanel(self, fields_file)
+class Form(wx.Dialog):
+    def __init__(self, parent, fields_file, input_vals=None, project_name=''):
+        """fields_file is the file to use to construct fields
+        input_vals is a dict with the initial values.
+        project_name is a string that is the name of the whole project"""
+        wx.Dialog.__init__(self, parent, -1, size=(600, 700))
+        self.panel = FormPanel(self, fields_file, project_name)
         self.parent = parent
-        self.id = id
+        self.input_vals = input_vals
+        self.project_name = project_name
+        self.vals = {} # init the dict
 
-        self.panel.print_button.Bind(wx.EVT_BUTTON, self.collect_values)
-        self.panel.insert_button.Bind(wx.EVT_BUTTON, self.insert_record)
-        self.panel.update_button.Bind(wx.EVT_BUTTON, self.update_record)
+        self.panel.clearall_button.Bind(wx.EVT_BUTTON, self.clearall)
+        self.panel.reset_button.Bind(wx.EVT_BUTTON, self.reset)
+        self.panel.done_button.Bind(wx.EVT_BUTTON, self.done)
 
-        if id == -1:
-            self.panel.update_button.Enable(False)
-        
         self.panel.panes[0].Collapse(False)
         self.Show(True)
         
 
-    def collect_values(self, event):
+    def update_values_from_form(self):
         """collect all the values from the different collapsible panels"""
-        self.vals = {}
         for pane in self.panel.panes:
             self.vals.update(pane.get_values())
 
-
-    def render_report(self):
-        """render the report as a pdf"""
-        report_template = Template(filename='report_docs/ep_report_template.rst')
-        rep = report_template.render(vals = self.vals)
-
-        reportfile = 'report_docs/report.rst'
-        with open(reportfile, 'w') as fi:
-            fi.write(rep)
-        self.write_pdf(rep)
-        
-
-    def insert_record(self, event):
-        """insert the values into the database.
-        The parent must be ReportManager"""
-        self.collect_values(None)
-        self.parent.record = self.vals
-        self.parent.insert_record()
-        self.Destroy()
-
-    def update_record(self, event):
-        """Update the record that has been opened for editing"""
-        self.collect_values(None)
-        self.parent.record = self.vals
-        self.parent.update_record(self.id)
-        self.Destroy()
-
-        
-    def write_pdf(self, report_rst):
-        """report rst is the rst text for the report.
-        Format that using rst2pdf to create pdf"""
-        pdffile = 'report_docs/report.pdf'
-
-        ### Need to process paths !!! ## TODO:
-        subprocess.Popen(['rst2pdf', '-s', '/data/Dropbox/programming/EP_report2/report_docs/ep_report.sty', '/data/Dropbox/programming/EP_report2/report_docs/report.rst'])
-        subprocess.Popen(['evince', '/data/Dropbox/programming/EP_report2/report_docs/report.pdf'])
-        
-
-    def set_values(self, vals):
+    def insert_values_in_form(self, vals):
         """Fill in the form according to the dict vals"""
-        labels = []
-        controls = []
+        # labels = []
+        # controls = []
 
-        for pane in self.panel.panes:
-            labels += pane.labels
-            controls += pane.controls
+        # for pane in self.panel.panes:
+        #     labels += pane.labels
+        #     controls += pane.controls
         
-        for label, control in zip(labels, controls):
+        for label, control in zip(self.panel.labels, self.panel.controls):
             control.SetValue(vals[label])
+
+
+    def clearall(self, event):
+        pass
+
+    def reset(self, event):
+        pass
+
+    def done(self, event):
+        self.Destroy()
+
+    # def render_report(self):
+    #     """render the report as a pdf"""
+    #     report_template = Template(filename='report_docs/ep_report_template.rst')
+    #     rep = report_template.render(vals = self.vals)
+
+    #     reportfile = 'report_docs/report.rst'
+    #     with open(reportfile, 'w') as fi:
+    #         fi.write(rep)
+    #     self.write_pdf(rep)
+        
+
+    # def insert_record(self, event):
+    #     """insert the values into the database.
+    #     The parent must be ReportManager"""
+    #     self.collect_values(None)
+    #     self.parent.record = self.vals
+    #     self.parent.insert_record()
+    #     self.Destroy()
+
+    # def update_record(self, event):
+    #     """Update the record that has been opened for editing"""
+    #     self.collect_values(None)
+    #     self.parent.record = self.vals
+    #     self.parent.update_record(self.id)
+    #     self.Destroy()
+
+        
+    # def write_pdf(self, report_rst):
+    #     """report rst is the rst text for the report.
+    #     Format that using rst2pdf to create pdf"""
+    #     pdffile = 'report_docs/report.pdf'
+
+    #     ### Need to process paths !!! ## TODO:
+    #     subprocess.Popen(['rst2pdf', '-s', '/data/Dropbox/programming/EP_report2/report_docs/ep_report.sty', '/data/Dropbox/programming/EP_report2/report_docs/report.rst'])
+    #     subprocess.Popen(['evince', '/data/Dropbox/programming/EP_report2/report_docs/report.pdf'])
+        
+
         
             
 class FormPanel(wx.Panel):
     """A Frame  with several collapsible sections that contain
     parts of the form"""
-    def __init__(self, parent, fields_file):
+    def __init__(self, parent, fields_file, title):
         wx.Panel.__init__(self, parent, -1)
 
         ## contents of the panel
          # title at top
          # button at bottom
          # collpasible panes in between
-        self.title = wx.StaticText(self, label="EP Report")
+        self.title = wx.StaticText(self, label=title)
         self.title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
         
         # Panes will be constructed from yaml file
@@ -138,9 +146,9 @@ class FormPanel(wx.Panel):
         self.construct_panes(fields_file)
         #self.make_pane_content(self.cp1.GetPane())
         
-        self.print_button = wx.Button(self, label='Print report')
-        self.insert_button = wx.Button(self, label = 'Insert new record')
-        self.update_button = wx.Button(self, label= 'Update record')
+        self.clearall_button = wx.Button(self, label='Clear all')
+        self.reset_button = wx.Button(self, label = 'Reset form')
+        self.done_button = wx.Button(self, label= 'Done')
         
         self._layout()
 
@@ -156,9 +164,9 @@ class FormPanel(wx.Panel):
         for cp in self.panes:
             sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 25)
 
-        button_sizer.Add(self.insert_button, 0, wx.ALL, 25)
-        button_sizer.Add(self.update_button, 0, wx.ALL, 25)
-        button_sizer.Add(self.print_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.clearall_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.reset_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.done_button, 0, wx.ALL, 25)
         
         sizer.Add(button_sizer, 0 ,wx.ALL)
         self.SetSizer(sizer)
@@ -167,8 +175,15 @@ class FormPanel(wx.Panel):
        """Read the fields file and use the data to construct the
        collapsible panes"""
        fields_data = yaml.load_all(open(fields_file))
+       # Maintain master list of all labels and controls
+       self.labels = []
+       self.controls = []
+       
        for pane_data in fields_data:
            self.panes.append(Pane(self, pane_data))
+           self.labels += self.panes[-1].labels
+           self.controls += self.panes[-1].controls
+           
        self.Layout()
 
     def on_pane_changed(self, event):
@@ -302,9 +317,18 @@ class Pane(wx.CollapsiblePane):
             vals[label] = control.GetValue()
         return vals
 
-    
+
+
+
+def test():
+    """Test all modules in this script. Also serves as demo"""
+    app = wx.App()
+    f = Form(None, 'test/fields.yaml')
+    print f.ShowModal()
+    app.MainLoop()
         
 if __name__ == '__main__':
-    app = wx.App()
-    f = Form(None, 'report_docs/form_fields.yaml')
-    app.MainLoop()
+    test()
+    # app = wx.App()
+    # f = Form(None, 'report_docs/form_fields.yaml')
+    # app.MainLoop()
