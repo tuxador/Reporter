@@ -18,29 +18,9 @@ an rst document. This is converted to pdf using rst2pdf"""
 # License: GPL
 ##
 
-# #ToDo:
-# 1. Collapse other panes when one pane is opened  -------------- Done
-# 2. Bulleted or Enumerated lists must ignore empty items ------- Done
-# 3. None at top of each pdf page                        -------- Done
-# 4. Widget for multline text ----------------------------------- Done
-# 5. Correctly use rst2pdf from python 
-# 6. Paths for all files to be calculated
-# 7. widget for date                              --------------- Done
-# 8. widget with combobox and one field for custom entry
-# 9. form - under ablation - rhythm
-# 10. Canned recommendations                      --------------- Done
-# 11. Modify getvalue for datepicker
-# 12. Change bullet lists to look better without indent
-# 13. Empty cover page                            --------------  Done
-# 14. Edited record must replace, not become new
-# 15. Summary, conclusions are centred - check style file
-
-
-import subprocess
 import wx
 import yaml
-#from mako.template import Template
-#from rst2pdf.createpdf import RstToPdf
+
 
 class Form(wx.Dialog):
     def __init__(self, parent, fields_file, input_vals=None, project_name=''):
@@ -54,55 +34,53 @@ class Form(wx.Dialog):
         self.project_name = project_name
         self.vals = {} # init the dict
 
-        self.clearall_button = wx.Button(self.panel, label='Clear all')
+        #self.clearall_button = wx.Button(self.panel, label='Clear all')
         self.reset_button = wx.Button(self.panel, label = 'Reset form')
+        self.cancel_button = wx.Button(self.panel, id=wx.ID_CANCEL, label="Cancel")
         self.done_button = wx.Button(self.panel, id=wx.ID_OK, label= 'Done')
 
-        self.clearall_button.Bind(wx.EVT_BUTTON, self.clearall)
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
         self.reset_button.Bind(wx.EVT_BUTTON, self.reset)
         self.done_button.Bind(wx.EVT_BUTTON, self.done)
 
         self.panel._layout()
         self.panel.panes[0].Collapse(False)
         self.Show(True)
+
+        if input_vals != None:
+            self.set_values(input_vals)  # set the input values
+            self.init_values = input_vals
+        else:
+            self.get_values()
+            self.init_values = self.vals.copy()
         
 
-    def update_values_from_form(self):
+    def get_values(self):
         """collect all the values from the different collapsible panels"""
         for pane in self.panel.panes:
             self.vals.update(pane.get_values())
 
-    def insert_values_in_form(self, vals):
+    def set_values(self, vals):
         """Fill in the form according to the dict vals"""
-        # labels = []
-        # controls = []
-
-        # for pane in self.panel.panes:
-        #     labels += pane.labels
-        #     controls += pane.controls
-        
         for label, control in zip(self.panel.labels, self.panel.controls):
-            control.SetValue(vals[label])
+            try:
+                control.SetValue(vals[label])
+            except KeyError:
+                pass  
 
 
-    def clearall(self, event):
-        pass
-
+    def cancel(self):
+        """Return without making any changes"""
+        #self.vals = self.init_values  # negate any changes
+        self.EndModal(wx.ID_CANCEL)
+            
     def reset(self, event):
-        pass
+        """Reset to original stage"""
+        self.set_values(self.init_values)
 
     def done(self, event):
         self.EndModal(wx.ID_OK)
 
-    # def render_report(self):
-    #     """render the report as a pdf"""
-    #     report_template = Template(filename='report_docs/ep_report_template.rst')
-    #     rep = report_template.render(vals = self.vals)
-
-    #     reportfile = 'report_docs/report.rst'
-    #     with open(reportfile, 'w') as fi:
-    #         fi.write(rep)
-    #     self.write_pdf(rep)
         
 
     # def insert_record(self, event):
@@ -121,14 +99,6 @@ class Form(wx.Dialog):
     #     self.Destroy()
 
         
-    # def write_pdf(self, report_rst):
-    #     """report rst is the rst text for the report.
-    #     Format that using rst2pdf to create pdf"""
-    #     pdffile = 'report_docs/report.pdf'
-
-    #     ### Need to process paths !!! ## TODO:
-    #     subprocess.Popen(['rst2pdf', '-s', '/data/Dropbox/programming/EP_report2/report_docs/ep_report.sty', '/data/Dropbox/programming/EP_report2/report_docs/report.rst'])
-    #     subprocess.Popen(['evince', '/data/Dropbox/programming/EP_report2/report_docs/report.pdf'])
         
 
         
@@ -170,8 +140,8 @@ class FormPanel(wx.Panel):
         for cp in self.panes:
             sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 25)
 
-        button_sizer.Add(self.parent.clearall_button, 0, wx.ALL, 25)
         button_sizer.Add(self.parent.reset_button, 0, wx.ALL, 25)
+        button_sizer.Add(self.parent.cancel_button, 0, wx.ALL, 25)
         button_sizer.Add(self.parent.done_button, 0, wx.ALL, 25)
         
         sizer.Add(button_sizer, 0 ,wx.ALL)
@@ -330,11 +300,24 @@ def test():
     """Test all modules in this script. Also serves as demo"""
     import pprint
     app = wx.App()
+
+    print 'simple form'
     f = Form(None, 'test/fields.yaml')
     if f.ShowModal() == wx.ID_OK:
-        f.update_values_from_form()
+        f.get_values()
         pprint.pprint(f.vals)
     f.Destroy()
+
+    print 'form with vaues'
+    f = Form(None, 'test/fields.yaml', {'Demographics_Name':'Raja',
+                                   'Clinical_Presentation':'Asymptomatic'},
+             'Featured')
+    if f.ShowModal() == wx.ID_OK:
+        f.get_values()
+        pprint.pprint(f.vals)
+    f.Destroy()
+    
+    
     app.MainLoop()
         
 if __name__ == '__main__':
