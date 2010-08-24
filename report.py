@@ -64,8 +64,6 @@ class Report():
         ed.Destroy()
         app.MainLoop()
 
-        print 'Raw report is'
-        print self.raw_report
     
 class Editor(wx.Dialog):
     """A simple text editor"""
@@ -140,8 +138,6 @@ def test():
     #print "path to pdf file"
     #pdf =  rep.generate_pdf()
     #print pdf
-    #subprocess.Popen(['evince', pdf])
-
 
 
 if __name__ == '__main__':
