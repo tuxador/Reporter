@@ -18,7 +18,9 @@ class Records():
         
     def create_index(self):
         """index is a list of tuples
-        corresponding to the values in index file"""
+        corresponding to the values in index file.
+        Convert into a dictionary to allow sorting in the
+        listctrl"""
         self.index_keys = yaml.load(open(self.index_file))
         index_fields = []
 
@@ -27,7 +29,12 @@ class Records():
 
         index = zip(*index_fields)
 
-        return index
+        index_dict = {}
+        for i, rec in enumerate(index):
+            #rec_key = str(''.join([str(x) for x in rec]))
+            index_dict[i] = rec
+
+        return index_dict
 
 
     def insert_record(self, record):
@@ -82,12 +89,12 @@ def test():
 def create_testdb():
     """create a db for testing"""
     test_data = {
-    'uniq_hash1':{'Name':'Raja', 'Age':38, 'Sex':'Male',
-                  'Date':'20-04-2010'},
-    'uniq_hash2':{'Name':'Rajesh', 'Age':30, 'Sex':'Male',
-                  'Date':'19-02-2010' }}
+    'uniq_hash1':{'Demographics_Name':'Raja', 'Demographics_Age':38, 'Demographics_Sex':'Male',
+                  'Demographics_Date':'20-04-2010'},
+   'uniq_hash2':{'Demographics_Name':'Rajesh', 'Demographics_Age':30, 'Demographics_Sex':'Male',
+                  'Demographics_Date':'19-02-2010' }}
 
-    dbfile = 'test/test.db'
+    dbfile = 'test/records.db'
     db = shelve.open(dbfile)
 
     for key in test_data:
