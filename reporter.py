@@ -32,45 +32,45 @@ class ReportDatabase():
     'uniq_hash2':{'Name':'Rajesh', 'Age':38}
     }
     """
-    def __init__(self, db_path, index_keys):
-        """db_path is full path to the database.
-        index_keys is a list of the keys that will
-        be used to make the index view"""
-        self.db_path = db_path
-        # Note that open will create a new db if it does not exist
-        self.db = shelve.open(db_path)
-        self.index_keys = index_keys
+    # def __init__(self, db_path, index_keys):
+    #     """db_path is full path to the database.
+    #     index_keys is a list of the keys that will
+    #     be used to make the index view"""
+    #     self.db_path = db_path
+    #     # Note that open will create a new db if it does not exist
+    #     self.db = shelve.open(db_path)
+    #     self.index_keys = index_keys
 
-    def get_index(self):
-        """Get data from db to create an index.
-        index_fields are the fields for creating the index
-        return a dictionary where the unique id for each record
-        is used as a key for the record index values"""
-        index_field_vals = []
+    # def get_index(self):
+    #     """Get data from db to create an index.
+    #     index_fields are the fields for creating the index
+    #     return a dictionary where the unique id for each record
+    #     is used as a key for the record index values"""
+    #     index_field_vals = []
         
-        for field in self.index_keys:
-            index_field_vals.append([self.db[rec][field] for rec in self.db])
+    #     for field in self.index_keys:
+    #         index_field_vals.append([self.db[rec][field] for rec in self.db])
 
-        vals = zip(*index_field_vals)
+    #     vals = zip(*index_field_vals)
 
-        #return vals
-        index_dict = {}
-        for i, rec in enumerate(vals):
-            #rec_key = str(''.join([str(x) for x in rec]))
-            index_dict[i] = rec
+    #     #return vals
+    #     index_dict = {}
+    #     for i, rec in enumerate(vals):
+    #         #rec_key = str(''.join([str(x) for x in rec]))
+    #         index_dict[i] = rec
 
-        return index_dict
+    #     return index_dict
     
-    def insert_record(self, record):
-        """Insert a record into the database.
-        The key for each record is a unique id
-        constructed by joining all the index elements.
-        record is a dict
-        eg: {'Name': 'Raja', 'Age': 39}"""
-        unique_id = ''.join([str(record[k]) for k in self.index_keys])
+    # def insert_record(self, record):
+    #     """Insert a record into the database.
+    #     The key for each record is a unique id
+    #     constructed by joining all the index elements.
+    #     record is a dict
+    #     eg: {'Name': 'Raja', 'Age': 39}"""
+    #     unique_id = ''.join([str(record[k]) for k in self.index_keys])
         
-        # insert this record
-        self.db[unique_id] = record
+    #     # insert this record
+    #     self.db[unique_id] = record
 
 
     def delete_record(self, rec_id):
