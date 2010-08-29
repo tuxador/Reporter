@@ -23,7 +23,7 @@ import yaml
 
 
 class Form(wx.Dialog):
-    def __init__(self, parent, fields_file, input_vals=None, project_name=''):
+    def __init__(self, parent, fields_file, project_name='', input_vals=None):
         """fields_file is the file to use to construct fields
         input_vals is a dict with the initial values.
         project_name is a string that is the name of the whole project"""
@@ -309,9 +309,9 @@ def test():
     f.Destroy()
 
     print 'form with vaues'
-    f = Form(None, 'test/fields.yaml', {'Demographics_Name':'Raja',
-                                   'Clinical_Presentation':'Asymptomatic'},
-             'Featured')
+    f = Form(None, 'test/fields.yaml', 'Featured', {'Demographics_Name':'Raja',
+                                   'Clinical_Presentation':'Asymptomatic'})
+
     if f.ShowModal() == wx.ID_OK:
         f.get_values()
         pprint.pprint(f.vals)
