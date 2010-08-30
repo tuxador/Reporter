@@ -1,28 +1,29 @@
 * Program files
-** report.py -- Report class 
+** DONE report.py -- Report class 
 *** Input - path to a template file (.rst), variable values as a dictionary
 *** func:: generate_pdf -- returns path to pdf file as a temp file
 *** attribute:: raw_report -- filled in rst template
 
-** form.py -- Form class
+** DONE form.py -- Form class
 *** Input - path to fields file (fields.yaml)
 *** func:: new_form -- present empty form for fields to be filled in
 *** func:: edit_form -- given input dict, present form with the dict values entered
 
-** records.py -- Records class
+** DONE records.py -- Records class
 *** Input - path to records file (?.sqlite3), path to index file (index.yaml)
 *** attr:: index -- index as a list of tuples
 *** func:: retrieve_record -- given a unique id, return the record values as a dict
 *** func:: insert_record -- insert the record, add to index
 *** func:: delete_record -- remove the record corresponding to id and remove entry from index
 *** func:: modify_record -- change the stored values to that in the provided dict
-
+    
 ** report_manager.py -- ReportManager class
 *** The central controller
 *** configuration file - list the folders
 *** each folder represents a project
 *** For active project  -
 **** class:: register -- display index of records and record_menu - insert, delete, edit; report_menu- pdf preview for each report; report_edit menu - view and edit rst for each report, reset
+
 
 * Data files (one folder for each report group)
 ** fields.yaml -- fields for form in yaml format

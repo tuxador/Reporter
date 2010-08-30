@@ -89,9 +89,9 @@ def test():
 def create_testdb():
     """create a db for testing"""
     test_data = {
-    'uniq_hash1':{'Demographics_Name':'Raja', 'Demographics_Age':38, 'Demographics_Sex':'Male',
+    'Raja38':{'Demographics_Name':'Raja', 'Demographics_Age':38, 'Demographics_Sex':'Male',
                   'Demographics_Date':'20-04-2010'},
-   'uniq_hash2':{'Demographics_Name':'Rajesh', 'Demographics_Age':30, 'Demographics_Sex':'Male',
+   'Rajesh30':{'Demographics_Name':'Rajesh', 'Demographics_Age':30, 'Demographics_Sex':'Male',
                   'Demographics_Date':'19-02-2010' }}
 
     dbfile = 'test/records.db'
@@ -103,5 +103,5 @@ def create_testdb():
     db.close()
 
 if __name__ == '__main__':
-    test()
-    #create_testdb()
+    #test()
+    create_testdb()
