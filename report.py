@@ -57,13 +57,13 @@ class Report():
 
     def edit_report(self):
         """Present a simple editor to edit the raw_report"""
-        app = wx.App()
+        #app = wx.App()
         ed = Editor(None, self.raw_report)
         if ed.ShowModal() == wx.ID_OK:
             self.raw_report = ed.text
         ed.Destroy()
-        app.MainLoop()
-
+        #app.MainLoop()
+        return self.raw_report
     
 class Editor(wx.Dialog):
     """A simple text editor"""

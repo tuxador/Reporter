@@ -8,7 +8,7 @@
 *** Input - path to fields file (fields.yaml)
 *** func:: new_form -- present empty form for fields to be filled in
 *** func:: edit_form -- given input dict, present form with the dict values entered
-
+    
 ** DONE records.py -- Records class
 *** Input - path to records file (?.sqlite3), path to index file (index.yaml)
 *** attr:: index -- index as a list of tuples
@@ -23,11 +23,12 @@
 *** each folder represents a project
 *** For active project  -
 **** class:: register -- display index of records and record_menu - insert, delete, edit; report_menu- pdf preview for each report; report_edit menu - view and edit rst for each report, reset
+***** 
 
-
+     
 * Data files (one folder for each report group)
 ** fields.yaml -- fields for form in yaml format
 ** index.yaml -- list of selected fields needed to construct index
 ** for each report group -
 *** ----.rst -- mako template
-
+*** ----.sty -- style file for rst - with same name as report

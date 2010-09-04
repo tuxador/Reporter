@@ -177,7 +177,7 @@ ${list2bullet([vals['Recommendations_Recommendation 1'],
 
       
      
-.. |jipmer| image:: jipmer_logo.png
+.. |jipmer| image:: /data/Dropbox/programming/EP_report2/jipmer_logo.png
                   :height: 1in
                   :width: 1in
 	    	  :align: middle
