@@ -183,7 +183,7 @@ class ReportManager():
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
         if sys.platform.startswith('linux'):
-            subprocess.Popen('evince', pdf_file)
+            subprocess.Popen(['evince', pdf_file])
 
         elif sys.platform == 'win32':
             os.startfile(pdf_file)
