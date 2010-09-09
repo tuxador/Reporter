@@ -31,7 +31,7 @@ class ReportManager():
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file)
-        self.register = Register(self, self.records)
+        self.register = Register(self, self.records, self.project_name)
 
     def load_project(self):
         """User selects a project"""
@@ -45,6 +45,8 @@ class ReportManager():
         self.report_files = glob.glob(os.path.join(self.project_dir, '*.rst'))
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
+
+        self.project_name = os.path.basename(self.project_dir)
         
         # verify
         VALID_PROJ = True
@@ -133,9 +135,13 @@ class ReportManager():
         
         # style file in the project directory
         # same name as report or all.sty
-        stylefile = os.path.splitext(template_file)[0] + '.sty'
-        if os.path.exists(stylefile):
-            rep = Report(template_file, record_vals, raw_report, stylefile)
+        local_stylefile = os.path.splitext(template_file)[0] + '.sty'
+        global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
+
+        if os.path.exists(local_stylefile):
+            rep = Report(template_file, record_vals, raw_report, local_stylefile)
+        elif os.path.exists(global_stylefile):
+            rep = Report(template_file, record_vals, raw_report, global_stylefile)
         else:
             rep = Report(template_file, record_vals, raw_report)
         
@@ -182,6 +188,7 @@ class ReportManager():
         
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
+        print pdf_file
         if sys.platform.startswith('linux'):
             subprocess.Popen(['evince', pdf_file])
 
@@ -194,9 +201,9 @@ class ReportManager():
 
 class Register(wx.Frame):
     """Display the index and allow selection and operation on records"""
-    def __init__(self, parent, records):
+    def __init__(self, parent, records, project_name):
         """records is a Records instance - provides the db functions"""
-        wx.Frame.__init__(self, None, -1, 'Report Manager', size=(460,600))
+        wx.Frame.__init__(self, None, -1, project_name, size=(460,600))
 
         self.parent = parent
         self.records = records
@@ -346,78 +353,6 @@ class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
         
             
 
-        
-class Reporter(wx.Frame):
-
-        
-    def load_and_edit_record(self, event):
-        """Load the selected record into a form for editing"""
-        selected_record = self.record_display.GetFirstSelected()
-
-        if selected_record == -1: # none selected
-            return
-
-        # convert to string coz unicode object does not work
-        selected_record_key = str(''.join([self.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.index_keys))]))
-
-        rec = self.db.db[selected_record_key]
-        f = Form(Non, 'report_docs/form_fields.yaml', selected_record_key)
-        f.set_values(rec)
-
-
-    def remove_record(self, event):
-        """Remove selected record from the database"""
-        selected_record = self.record_display.GetFirstSelected()
-        if selected_record == -1: # none selected
-            return
-
-        # TODO: separate function to get key
-        selected_record_key = str(''.join([self.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.index_keys))]))
-
-        self.db.delete_record(selected_record_key)
-
-
-    def render_report(self, event):
-        """Render selected record as a pdf"""
-        #TODO: refactor to avoid repetition
-        selected_record = self.record_display.GetFirstSelected()
-        if selected_record == -1: # none selected
-            return
-
-        # convert to string coz unicode object does not work
-        id = str(''.join([self.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.index_keys))]))
-
-        #id = str(self.record_display.GetItem(selected_record, 0).GetText())
-
-        rec = self.db.db[id]
-
-        report_template = Template(filename='report_docs/ep_report_template.rst')
-        rep = report_template.render(vals = rec)
-
-        reportfile = 'report_docs/report.rst'
-        with open(reportfile, 'w') as fi:
-            fi.write(rep)
-        self.write_pdf(rep)
-        
-
-    def record_display_append(self, rec, key):
-        """add the rec to display"""
-        index = self.record_display.InsertStringItem(sys.maxint, rec[0])
-        self.record_display.SetStringItem(index, 1, str(rec[1]))
-        self.record_display.SetStringItem(index, 2, rec[2])
-        self.record_display.SetStringItem(index, 3, rec[3])
-        #self.record_display.SetStringItem(index, 4, rec[4])
-        self.record_display.SetItemData(index, key) 
-            
-    def update_record(self, id):
-        """Update the record with given id"""
-        self.db.db[id] = self.record
 
 
 def test():
