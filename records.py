@@ -47,6 +47,7 @@ class Records():
         
         # insert this record
         self.db[unique_id] = record
+        self.db.sync() #sync immediately
 
 
     def retrieve_record(self, unique_id):
@@ -57,6 +58,7 @@ class Records():
     def delete_record(self, unique_id):
         """Delete record corresponsing to record_id"""
         del self.db[unique_id]
+        self.db.sync()
 
         
     def to_csv(self, fields, filename):
