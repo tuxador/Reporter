@@ -1,0 +1,17 @@
+
+Demographics:
+  0: [Name, text]
+  1: [Age, spin, 1, 100, 35]
+  2: [Sex, combo, [Male,Female], Male]
+  3: [Date of Admission, text]
+  4: [Date of Procedure (dd-mm-yyyy), text]
+  5: [IP Number, text]
+
+---
+ 
+Clinical:
+  0: [Presentation, multitext]
+  1: [ECG, multitext]
+  2: [ECG during tachycardia, multitext]
+  3: [Other investigations, multitext]
+  4: [Drugs, text]

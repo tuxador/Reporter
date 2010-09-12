@@ -14,6 +14,7 @@ Demographics:
   4: [Date of Procedure (dd-mm-yyyy), text]
   5: [Hospital Number, text]
   6: [IP Number, text]
+  7: [EPS Number, text]
 
 ---
  
@@ -25,6 +26,14 @@ Clinical:
   4: [Drugs, text]
 
 ---
+
+Investigations:
+  0: [Hb, text]
+  1: [Bld Sugar,text]
+  2: [Bld Urea, text]
+  3: [HIV, text]
+  4: [HBsAg, text]
+  5: [HCV, text]
 
 Technical:
   0: [Lab, combo, [EMS, SSB-1, SSB-2], EMS]
@@ -46,11 +55,11 @@ Technical:
 ---
 
 Baseline:
-  0: [Rhythm, text, NSR CL AH HV]
-  1: [AH, text]
-  2: [HV, text]
-  3: [CL, text]
-  4: [Parahisian, combo, ['', Nodal, Extranodal, Indeterminate], Nodal]
+  0: [Rhythm, combo, ['', NSR, AF], NSR]
+  1: [CL, text]
+  2: [AH, text]
+  3: [HV, text]
+  4: [Parahisian, combo, ['', Not done, Nodal, Extranodal, Indeterminate], Nodal]
 
 ---
 
@@ -80,7 +89,8 @@ Prog A Pace:
   0: [AH jump, combo, [NA, Present, Absent], Absent]
   1: [SPERP, text]
   2: [FPERP, text]
-  3: [AERP, text]
+  3: [AVERP, text]
+  4: [AERP, text]
 
 ---
 
@@ -113,9 +123,9 @@ Ablation:
 
 Post Ablation:
   0: [Rhythm, text]
-  1: [AH, text]
-  2: [HV, text]
-  3: [CL, text]
+  1: [CL, text]
+  2: [AH, text]
+  3: [HV, text]
   4: [Parahisian, text]
   5: [Incr V Pace, text]
   6: [Prog V Pace, text]
