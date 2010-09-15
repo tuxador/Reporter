@@ -15,7 +15,10 @@ Demographics:
   5: [Hospital Number, text]
   6: [IP Number, text]
   7: [EPS Number, text]
-
+  8: [Procedure Start, text]
+  9: [Procedure End, text]
+  10: [Fluoro time, text]
+  
 ---
  
 Clinical:
@@ -116,8 +119,9 @@ Ablation:
   0: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue]
   1: [Target, text]
   2: [Settings, text]
-  3: [Time, spin , 0, 2000, 0]
-  4: [Endpoint, text]
+  3: [RF applications, spin, 0, 100, 0]
+  4: [Time, spin , 0, 2000, 0]
+  5: [Endpoint, text]
 
 ---
 
