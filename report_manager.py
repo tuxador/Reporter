@@ -188,7 +188,7 @@ class ReportManager():
         
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
-        print pdf_file
+        #print pdf_file
         if sys.platform.startswith('linux'):
             subprocess.Popen(['evince', pdf_file])
 
@@ -228,12 +228,25 @@ class Register(wx.Frame):
         self.hbox2.Add(self.remove_button, 1, wx.ALL, 5)
         
         self.vbox.Add(self.hbox1, 6, wx.EXPAND, 10)
-        self.vbox.Add(self.hbox2, 1, wx.ALL, 10)
+        self.vbox.Add(self.hbox2, 1, wx.ALL|wx.EXPAND, 10)
 
         self._build_menubar()
         self._set_bindings()
 
         panel.SetSizer(self.vbox)
+
+        # sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
+        # self.SetSizer(sizer_1)
+        # sizer_1.Fit(self)
+        # self.Layout()
+
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
+        self.Layout()
+        # self.SetSizer(mainsizer)
+        
+        #self.Layout()
         self.Centre()
         self.Show(True)
 
@@ -358,6 +371,7 @@ class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
 def test():
     app= wx.App()
     rm = ReportManager()
+    #rm.Show(True)
     app.MainLoop()
 
 if __name__ == '__main__':
