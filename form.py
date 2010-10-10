@@ -20,7 +20,7 @@ an rst document. This is converted to pdf using rst2pdf"""
 
 import wx
 import yaml
-
+import wx.lib.scrolledpanel as scrolled
 
 class Form(wx.Dialog):
     def __init__(self, parent, fields_file, project_name='', input_vals=None):
@@ -28,7 +28,16 @@ class Form(wx.Dialog):
         input_vals is a dict with the initial values.
         project_name is a string that is the name of the whole project"""
         wx.Dialog.__init__(self, parent, -1, size=(600, 700))
+
+        
+        # scroll=wx.ScrolledWindow(self,-1)
+        # self.scroll=scroll
+        #panel=wx.Panel(scroll,-1)
         self.panel = FormPanel(self, fields_file, project_name)
+        # self.unit=20
+        # width,height=self.panel.GetSizeTuple()
+        # scroll.SetScrollbars(self.unit, self.unit, width/self.unit, height/self.unit)
+
         self.parent = parent
         self.input_vals = input_vals
         self.project_name = project_name
@@ -103,11 +112,11 @@ class Form(wx.Dialog):
 
         
             
-class FormPanel(wx.Panel):
+class FormPanel(scrolled.ScrolledPanel):
     """A Frame  with several collapsible sections that contain
     parts of the form"""
     def __init__(self, parent, fields_file, title):
-        wx.Panel.__init__(self, parent, -1)
+        scrolled.ScrolledPanel.__init__(self,parent, -1)
 
         ## contents of the panel
          # title at top
@@ -127,8 +136,9 @@ class FormPanel(wx.Panel):
         # self.done_button = wx.Button(self, label= 'Done')
         
         #self._layout()
-
-        self.Show(True)
+        self.SetAutoLayout(1)
+        self.SetupScrolling()
+        #self.Show(True)
         
     def _layout(self):
         """Layout the controls using sizers"""

@@ -14,6 +14,7 @@ import subprocess
 from records import Records
 from form import Form
 from report import Report
+from config_manager import Config
 
 ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
@@ -28,16 +29,33 @@ class ReportManager():
     Manages one 'project' at a time.
     Coordinates the form for input, records for storage and report for generating output"""
     def __init__(self):
+        configfile = self.get_configfile()
+        self.config = Config(configfile)
+        
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file)
         self.register = Register(self, self.records, self.project_name)
 
-    def load_project(self):
-        """User selects a project"""
-        dlg = wx.DirDialog(None, "Choose project directory")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.project_dir = dlg.GetPath()
+
+    def get_configfile(self):
+        """Get path to config file"""
+        platform = sys.platform
+        if platform.startswith('linux'):
+            return os.path.expanduser('~/.reportmanagerrc')
+        elif platform == 'win32':
+            return 'reportmanager.conf'
+        
+        
+    def load_project(self, project_dir = None):
+        """User selects a project if project dir is not given"""
+        if not project_dir:
+            dlg = wx.DirDialog(None, "Choose project directory")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.project_dir = dlg.GetPath()
+            else:
+                self.project_dir = project_dir
+                return # TODO:
 
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
@@ -211,7 +229,8 @@ class Register(wx.Frame):
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.vbox = wx.BoxSizer(wx.VERTICAL)
-        
+
+
         panel = wx.Panel(self, -1)
         
         # listcontrol
@@ -223,7 +242,7 @@ class Register(wx.Frame):
         self.remove_button = wx.Button(panel, -1, 'Remove Record')
         
         self.hbox1.Add(self.record_display, 1, wx.ALL|wx.EXPAND, 10)
-        self.hbox2.Add(self.new_button, 1, wx.ALL, 5)
+        self.hbox2.Add(self.new_button, 1, wx.ALL, 5) 
         self.hbox2.Add(self.edit_button, 1, wx.ALL, 5)
         self.hbox2.Add(self.remove_button, 1, wx.ALL, 5)
         
