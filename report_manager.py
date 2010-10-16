@@ -10,6 +10,7 @@ import os
 import sys
 import glob
 import subprocess
+import time
 
 from records import Records
 from form import Form
@@ -209,6 +210,7 @@ class ReportManager():
         """Display the pdf using the native viewer"""
         print pdf_file
         if sys.platform.startswith('linux'):
+            time.sleep(2)
             subprocess.Popen(['evince', pdf_file])
 
         elif sys.platform == 'win32':
