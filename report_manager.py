@@ -162,8 +162,9 @@ class ReportManager():
             rep = Report(template_file, record_vals, raw_report, global_stylefile)
         else:
             rep = Report(template_file, record_vals, raw_report)
-        
+
         pdf_file = rep.generate_pdf()
+        
         self.display_pdf(pdf_file)
 
 
@@ -206,7 +207,7 @@ class ReportManager():
         
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
-        #print pdf_file
+        print pdf_file
         if sys.platform.startswith('linux'):
             subprocess.Popen(['evince', pdf_file])
 

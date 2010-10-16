@@ -41,6 +41,8 @@ class Report():
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
+        print tmp_rstfilename
+        
         # write the raw_report as a file
         with open(tmp_rstfilename,'w') as fi:
             fi.write(self.raw_report)

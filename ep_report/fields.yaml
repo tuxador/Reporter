@@ -38,10 +38,12 @@ Investigations:
   4: [HBsAg, text]
   5: [HCV, text]
 
+---
+
 Technical:
   0: [Lab, combo, [EMS, SSB-1, SSB-2], EMS]
   1: [EP System, combo, [Bard, Siemens Axiom Sensis, Cordis], Bard]
-  2: [3D Mapping, combo, [CARTO, Ensite], CARTO]
+  2: [3D Mapping, combo, [CARTO, Ensite, None], None]
   3: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
   4: [Operator 2, combo, [Arunprasath, Babu, Geofi], Arunprasath]
   5: [Technical Assistant, combo, [Gajendran, Janardhanan, Vijayakumar, Narasimhan], Narasimhan]
