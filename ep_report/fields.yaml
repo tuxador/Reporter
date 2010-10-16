@@ -41,10 +41,10 @@ Investigations:
 Technical:
   0: [Lab, combo, [EMS, SSB-1, SSB-2], EMS]
   1: [EP System, combo, [Bard, Siemens Axiom Sensis, Cordis], Bard]
-  2: [Stimulator, combo, [Micropace 2, Micropace 3, Cordis], Micropace 2]
+  2: [3D Mapping, combo, [CARTO, Ensite], CARTO]
   3: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
   4: [Operator 2, combo, [Arunprasath, Babu, Geofi], Arunprasath]
-  5: [Comment, text]
+  5: [Technical Assistant, combo, [Gajendran, Janardhanan, Vijayakumar, Narasimhan], Narasimhan]
   6: [Access 1, text, RFV 2 x 5F]
   7: [Access 2, text, RFV 6F]
   8: [Access 3, text, RFV 7F]
@@ -67,7 +67,7 @@ Baseline:
 ---
 
 Incr V Pace:
-  0: [VA conduction, combo, [Non-decremental, Decremental], Non-Decremental]
+  0: [VA conduction, combo, [Non-decremental, Decremental, absent], Non-Decremental]
   1: [VAWB, text]
   2: [Atrial Activation, combo, [Concentric, Eccentric], Concentric]
 
@@ -84,7 +84,7 @@ Prog V Pace:
 Incr A Pace:
   0: [AVWB, text]
   1: [Level of block, combo, [NA, Nodal, Infranodal], Nodal]
-  2: [AH jump, combo, [NA, Present, Absent], Absent]
+  2: [PR>RR, combo, [NA, Present, Absent], Absent]
 
 ---
 
@@ -122,6 +122,7 @@ Ablation:
   3: [RF applications, spin, 0, 100, 0]
   4: [Time, spin , 0, 2000, 0]
   5: [Endpoint, text]
+  6: [Comments, text]
 
 ---
 
