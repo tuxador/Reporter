@@ -52,11 +52,10 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 .. csv-table:: Access and catheters
    :widths: 3, 10
 
-    "**Access**", "${list2line([${vals['Technical_Access 1']}, {vals['Technical_Access 2']},
-    		   {vals['Technical_Access 3']}, vals['Technical_Access 4']}])}"
-    "**Catheters**", "${list2line([${vals['Technical_Catheter 1']}, {vals['Technical_Catheter 2']},
-                                   ${vals['Technical_Catheter 3']}, {vals['Technical_Catheter 4']},
-				   ${vals['Technical_Catheter 5']}])}
+    "**Access**", "${list2line([vals['Technical_Access 1'], vals['Technical_Access 2'],vals['Technical_Access 3'], vals['Technical_Access 4']])}"
+    "**Catheters**", "${list2line([vals['Technical_Catheter 1'], vals['Technical_Catheter 2'],
+                                   vals['Technical_Catheter 3'], vals['Technical_Catheter 4'],
+				   vals['Technical_Catheter 5']])}
 
 
 .. csv-table:: Baseline
@@ -101,19 +100,19 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 .. csv-table::    Conclusions
    :widths: 1, 50
 
-   ${list2onecolcsv(${vals['Conclusions_Conclusion 1']},
-                    ${vals['Conclusions_Conclusion 2']},
-		    ${vals['Conclusions_Conclusion 3']},
-		    ${vals['Conclusions_Conclusion 4']}])}
+   ${list2onecolcsv([vals['Conclusions_Conclusion 1'],
+                    vals['Conclusions_Conclusion 2'],
+		    vals['Conclusions_Conclusion 3'],
+		    vals['Conclusions_Conclusion 4']])}
 
      
 .. csv-table::     Recommendations
    :widths: 1, 50
 
-      ${list2onecolcsv(${vals['Recommendations_Recommendation 1']},
-                    ${vals['Recommendations_Recommendation 2']},
-		    ${vals['Recommendations_Recommendation 3']},
-		    ${vals['Recommendations_Recommendation 4']}])}
+      ${list2onecolcsv([vals['Recommendations_Recommendation 1'],
+                    vals['Recommendations_Recommendation 2'],
+		    vals['Recommendations_Recommendation 3'],
+		    vals['Recommendations_Recommendation 4']])}
 
 
 .. raw:: pdf
