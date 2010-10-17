@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Custom datectrl written by Frank Millman
+# Available at http://wiki.wxpython.org/DateEditorAndPicker
+# Version 1.4 downloaded on Oct 17, 2010
+
+
 import sys
 import wx
 import wx.combo
@@ -370,17 +375,17 @@ class Panel(wx.Panel):
             self.d.convert_to_wx_date()
         evt.Skip()
 
-class Frame(wx.Frame):
-    def __init__(self):
-        wx.Frame.__init__(self, None, -1, "Date Picker Ctrl test", size=(400, 240))
-        panel = Panel(self)
-        self.CentreOnScreen()
+# class Frame(wx.Frame):
+#     def __init__(self):
+#         wx.Frame.__init__(self, None, -1, "Date Picker Ctrl test", size=(400, 240))
+#         panel = Panel(self)
+#         self.CentreOnScreen()
 
-class App(wx.App):
-    def OnInit(self):
-        frame = Frame()
-        frame.Show(True)
-        return True
+# class App(wx.App):
+#     def OnInit(self):
+#         frame = Frame()
+#         frame.Show(True)
+#         return True
 
-app = App(False)
-app.MainLoop()
+# app = App(False)
+# app.MainLoop()

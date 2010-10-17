@@ -32,7 +32,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 	  "**IP No.**", "${vals['Demographics_IP Number']}", "**Hospital No.**", "${vals['Demographics_Hospital Number']}", "**EPS No.**", "${vals['Demographics_EPS Number']}"
 	  "**Lab**", "${vals['Technical_Lab']}", "**EP System**", "${vals['Technical_EP System']}", "**3 D mapping**", "${vals['Technical_3D Mapping']}"
 	  "**Operator 1**", "${vals['Technical_Operator 1']}", "**Operator 2**", "${vals['Technical_Operator 2']}", "**Tech. Asst**", "${vals['Technical_Technical Assistant']}"
-	  "**Procedure start**", "${vals['Demographics_Procedure Start']}", "**Procedure end**", "${vals['Demographics_Procedure End']}", "**Fluoro time**", "${vals['Demographics_Fluoro time']}"
+	  "**Procedure start**", "${vals['Demographics_Procedure Start']}", "**Procedure end**", "${vals['Demographics_Procedure End']}", "**Fluoro time**", "${vals['Demographics_Fluoro time']} mins"
 
 .. csv-table:: Clinical
    :widths: 3, 10
@@ -45,7 +45,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
 .. csv-table:: Investigations
 
-   "**Hb**", "${vals['Investigations_Hb']}gms", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']}mg/dl", "**Bld Urea**", "${vals['Investigations_Bld Urea']}mg/dl"
+   "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_Bld Urea']} mg/dl"
    "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}", "**HCV**", "${vals['Investigations_HCV']}"
     
 
@@ -77,7 +77,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
     "**Induction**", "${vals['Tachycardia_Induction']}",    "**Measurements**", "CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
     "**VA relation**", "${vals['Tachycardia_VA relationship']}",     "**Atrial activation**", "${vals['Tachycardia_Atrial activation']}"
-    "**Ventricular overdrive**", "${vals['Tachycardia_RV overdrive']}",     "**Ventricular extras**", "${vals['Tachycardia_RV extra']}"
+    "**RV overdrive**", "${vals['Tachycardia_RV overdrive']}",     "**RV extras**", "${vals['Tachycardia_RV extra']}"
     "**Atrial overdrive**", "${vals['Tachycardia_RA overdrive']}",     "**Atrial extras**", "${vals['Tachycardia_RA extra']}"
     "**Termination**", "${vals['Tachycardia_Termination']}",     "**Comment**", "${vals['Tachycardia_Comment']}"
 

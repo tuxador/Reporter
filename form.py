@@ -22,6 +22,8 @@ import wx
 import yaml
 import wx.lib.scrolledpanel as scrolled
 
+from datectrl import DateCtrl
+
 class Form(wx.Dialog):
     def __init__(self, parent, fields_file, project_name='', input_vals=None):
         """fields_file is the file to use to construct fields
@@ -90,25 +92,6 @@ class Form(wx.Dialog):
     def done(self, event):
         self.EndModal(wx.ID_OK)
 
-        
-
-    # def insert_record(self, event):
-    #     """insert the values into the database.
-    #     The parent must be ReportManager"""
-    #     self.collect_values(None)
-    #     self.parent.record = self.vals
-    #     self.parent.insert_record()
-    #     self.Destroy()
-
-    # def update_record(self, event):
-    #     """Update the record that has been opened for editing"""
-    #     self.collect_values(None)
-    #     self.parent.record = self.vals
-    #     self.parent.update_record(self.id)
-    #     self.Destroy()
-
-        
-        
 
         
             
@@ -274,9 +257,10 @@ class Pane(wx.CollapsiblePane):
                self.controls[-1].SetValue(control_data[3])
 
            elif control_type == 'date':
-               self.controls.append(wx.DatePickerCtrl(self.pane, -1,
-                                    style=wx.TAB_TRAVERSAL))
-
+               self.controls.append(DateCtrl(self.pane, (130, -1), (150,80), input_format='%d-%m-%Y',
+                                             display_format='%d-%m-%Y', title='',
+                                             default_to_today=1, allow_null=0))
+                                    
 
        # make widget list - keep as loop so any additional steps can be added
        widget_list = []
@@ -305,6 +289,7 @@ class Pane(wx.CollapsiblePane):
         vals = {}
         for label, control in zip(self.labels, self.controls):
             vals[label] = control.GetValue()
+            print vals[label]
         return vals
 
 
