@@ -21,6 +21,7 @@ ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
 ID_REMOVE = wx.NewId()
 ID_PREF = wx.NewId()
+ID_FLUSH = wx.NewId()
 ID_QUIT = wx.NewId()
 
 
@@ -32,7 +33,7 @@ class ReportManager():
     def __init__(self):
         configfile = self.get_configfile()
         self.config = Config(configfile)
-        
+
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file)
@@ -49,15 +50,17 @@ class ReportManager():
         
         
     def load_project(self, project_dir = None):
-        """User selects a project if project dir is not given"""
-        if not project_dir:
-            dlg = wx.DirDialog(None, "Choose project directory")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.project_dir = dlg.GetPath()
-            else:
-                self.project_dir = project_dir
-                return # TODO:
+        """load project based on options in config file"""
+        # if not project_dir:
+        #     dlg = wx.DirDialog(None, "Choose project directory")
+        #     if dlg.ShowModal() == wx.ID_OK:
+        #         self.project_dir = dlg.GetPath()
+        #     else:
+        #         self.project_dir = project_dir
+        #         return # TODO:
 
+        self.project_dir = self.config.options['projects'][self.config.options['default_project']]
+        
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
         self.index_file = os.path.join(self.project_dir, 'index.yaml')
@@ -169,6 +172,33 @@ class ReportManager():
         self.display_pdf(pdf_file)
 
 
+
+    def flush_report(self, event):
+        """Remove the stored raw report for the record if it exists"""
+        selected_record = self.register.record_display.GetFirstSelected()
+
+        if selected_record == -1:
+            print 'No record selected'
+            return
+
+        id = str(''.join([self.register.record_display.GetItem(
+                    selected_record, x).GetText()
+                    for x in range(len(self.records.index_keys))]))
+        
+        #template_file = self.report_files[event.Id // 2]
+        #record_vals = self.records.retrieve_record(id)
+        record_vals = self.records.retrieve_record(id)
+
+        record_vals['raw_report'] = ''
+        #form = Form(None, self.fields_file, 'Edit the values', record_vals)
+
+        self.records.delete_record(id)
+        self.records.insert_record(record_vals)
+        #self.register.refresh_records()
+
+        
+        
+        
     def edit_report(self, event):
         """Display the report for the selected record and allow edits"""
         selected_record = self.register.record_display.GetFirstSelected()
@@ -282,6 +312,7 @@ class Register(wx.Frame):
         file_menu.Append(ID_NEW, "&New Record","Create a new record")
         file_menu.Append(ID_EDIT, "&Edit Record", "Edit an existing record")
         file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
+        file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
         file_menu.Append(ID_QUIT, "&Quit","Quit the program")
    
         edit_menu = wx.Menu()
@@ -314,6 +345,7 @@ class Register(wx.Frame):
         
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
+        self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
         # all generate report events are bound to one function

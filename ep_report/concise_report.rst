@@ -72,14 +72,15 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 	     
 
 .. csv-table:: Tachycardia
-   :widths: 5, 8, 5, 8
+   :widths: 3, 10
 
 
-    "**Induction**", "${vals['Tachycardia_Induction']}",    "**Measurements**", "CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
-    "**VA relation**", "${vals['Tachycardia_VA relationship']}",     "**Atrial activation**", "${vals['Tachycardia_Atrial activation']}"
-    "**RV overdrive**", "${vals['Tachycardia_RV overdrive']}",     "**RV extras**", "${vals['Tachycardia_RV extra']}"
-    "**Atrial overdrive**", "${vals['Tachycardia_RA overdrive']}",     "**Atrial extras**", "${vals['Tachycardia_RA extra']}"
-    "**Termination**", "${vals['Tachycardia_Termination']}",     "**Comment**", "${vals['Tachycardia_Comment']}"
+    "**Induction**", "${vals['Tachycardia_Induction']}, ${vals['Tachycardia_Termination']}"
+    "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
+    "**VA relation**", "${vals['Tachycardia_VA relationship']} with ${vals['Tachycardia_Atrial activation']}"
+    "**RV Pacing**", "${vals['Tachycardia_RV overdrive']}, ${vals['Tachycardia_RV extra']}"
+    "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']}, ${vals['Tachycardia_RA extra']}"
+    "**Comment**", "${vals['Tachycardia_Comment']}"
 
 .. csv-table:: Mapping and RF ablation
     :widths: 4, 10, 4, 10

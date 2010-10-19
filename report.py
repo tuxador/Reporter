@@ -53,6 +53,7 @@ class Report():
         else:
             cmd = ['rst2pdf', '-o', tmp_pdffilename, tmp_rstfilename]
 
+        print cmd
         subprocess.Popen(cmd)
         return tmp_pdffilename
 

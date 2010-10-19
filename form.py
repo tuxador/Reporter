@@ -256,9 +256,10 @@ class Pane(wx.CollapsiblePane):
                self.controls.append(wx.ComboBox(self.pane, -1, choices=control_data[2]))
                self.controls[-1].SetValue(control_data[3])
 
+           # use yyyy-mm-dd format for date to allow easy sorting
            elif control_type == 'date':
                self.controls.append(DateCtrl(self.pane, (130, -1), (150,80), input_format='%d-%m-%Y',
-                                             display_format='%d-%m-%Y', title='',
+                                             display_format='%Y-%m-%d', title='',
                                              default_to_today=1, allow_null=0))
                                     
 

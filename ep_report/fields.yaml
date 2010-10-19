@@ -100,8 +100,8 @@ Prog A Pace:
 ---
 
 Tachycardia:
-  0: [Induction, text]
-  1: [QRS, combo, [Narrow, LBBB, RBBB], Narrow]
+  0: [Induction, text, Induced by]
+  1: [QRS, combo, [Narrow complex, LBBB, RBBB], Narrow complex]
   2: [CL, text]
   3: [AH, text]
   4: [HV, text]
