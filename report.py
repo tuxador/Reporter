@@ -71,7 +71,8 @@ class Report():
 class Editor(wx.Dialog):
     """A simple text editor"""
     def __init__(self, parent, text):
-        wx.Dialog.__init__(self, parent, -1, 'Edit Report')
+        wx.Dialog.__init__(self, parent, -1, 'Edit Report',
+                           style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         self.text = text
         
