@@ -14,6 +14,18 @@
 %>
 
 
+<%
+    def noblanks(pre, var, post):
+        """If var is not empty string, return pre+var+post.
+	Else return empty string"""
+	if var.strip() == '':
+            return ''
+	else:
+	    return ''.join([pre, var, post])
+%>
+
+
+
 
 |jipmer|  Electrophysiology study and RF ablation
 =================================================
@@ -78,7 +90,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
     "**Induction**", "${vals['Tachycardia_Induction']}, ${vals['Tachycardia_Termination']}"
     "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
     "**VA relation**", "${vals['Tachycardia_VA relationship']} with ${vals['Tachycardia_Atrial activation']}"
-    "**RV Pacing**", "${vals['Tachycardia_RV overdrive']}, ${vals['Tachycardia_RV extra']}"
+    "**RV Pacing**", "${vals['Tachycardia_RV overdrive']}, ${noblanks('RV extra - ',vals['Tachycardia_RV extra'], '.')}"
     "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']}, ${vals['Tachycardia_RA extra']}"
     "**Comment**", "${vals['Tachycardia_Comment']}"
 

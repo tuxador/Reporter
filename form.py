@@ -290,7 +290,6 @@ class Pane(wx.CollapsiblePane):
         vals = {}
         for label, control in zip(self.labels, self.controls):
             vals[label] = control.GetValue()
-            print vals[label]
         return vals
 
 

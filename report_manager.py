@@ -265,7 +265,6 @@ class ReportManager():
         id = str(''.join([self.register.record_display.GetItem(
                     selected_record, x).GetText()
                     for x in range(len(self.records.index_keys))]))
-        print id
         
         template_file = self.report_files[event.Id // 2]
         record_vals = self.records.retrieve_record(id)
