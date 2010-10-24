@@ -5,7 +5,6 @@
 
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin
-from wx.lib.mixins.listctrl import CheckListCtrlMixin
 
 import os
 import sys
@@ -13,6 +12,7 @@ import glob
 import subprocess
 import time
 import yaml
+
 
 from records import Records
 from form import Form
@@ -25,6 +25,7 @@ ID_REMOVE = wx.NewId()
 ID_PREF = wx.NewId()
 ID_FLUSH = wx.NewId()
 ID_NEWTEMPLATE = wx.NewId()
+ID_DELTEMPLATE = wx.NewId()
 ID_QUIT = wx.NewId()
 
 
@@ -144,6 +145,21 @@ class ReportManager():
             yaml.dump(template_vals, open(template_name, 'w'))
         
 
+    def del_template(self, event):
+        """Delete an existing template"""
+        template_chooser = TemplateChooser(None, self.project_dir)
+        if template_chooser.ShowModal() == wx.ID_OK:
+            template_name = template_chooser.chosentemplate
+            template_chooser.Destroy()
+        else:
+            template_name = 'Empty'
+
+        if template_name == 'Empty':
+            return
+        else:
+            os.remove(template_name) #TODO: will raise an exception windows if file is in use
+
+            
     def edit_record(self, event):
         """Load the selected record into a form for editing."""
         selected_record = self.register.record_display.GetFirstSelected()
@@ -295,7 +311,6 @@ class TemplateChooser(wx.Dialog):
 
         self.project_dir = project_dir
         self.templates = self.get_templates(project_dir)
-        print 'templates', self.templates
 
         # Default is empty
         self.chosentemplate = 'Empty'
@@ -426,6 +441,7 @@ class Register(wx.Frame):
 
         template_menu = wx.Menu()
         template_menu.Append(ID_NEWTEMPLATE, "&New Template", "Create a new template")
+        template_menu.Append(ID_DELTEMPLATE, "&Delete Template", "Delete a template")
             
         # TODO: Avoid repetition and incorporate in prev loop
         report_edit_menu = wx.Menu()
@@ -452,6 +468,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
+        self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
         # all generate report events are bound to one function
