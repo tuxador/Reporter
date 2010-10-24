@@ -5,12 +5,14 @@
 
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin
+from wx.lib.mixins.listctrl import CheckListCtrlMixin
 
 import os
 import sys
 import glob
 import subprocess
 import time
+import yaml
 
 from records import Records
 from form import Form
@@ -22,8 +24,8 @@ ID_EDIT = wx.NewId()
 ID_REMOVE = wx.NewId()
 ID_PREF = wx.NewId()
 ID_FLUSH = wx.NewId()
+ID_NEWTEMPLATE = wx.NewId()
 ID_QUIT = wx.NewId()
-
 
 
 class ReportManager():
@@ -97,7 +99,20 @@ class ReportManager():
     def new_record(self, event):
         """Insert new record.
         Get values by presenting an empty form"""
-        form = Form(None, self.fields_file, 'Fill in the values')
+        # does user want to fill with template ?
+        template_chooser = TemplateChooser(None, self.project_dir)
+        if template_chooser.ShowModal() == wx.ID_OK:
+            template_name = template_chooser.chosentemplate
+            template_chooser.Destroy()
+        else:
+            template_name = 'Empty'
+
+        if template_name == 'Empty':
+            form = Form(None, self.fields_file, 'Fill in the values')            
+        else:
+            template_vals = yaml.load(open(template_name))
+            form = Form(None, self.fields_file, 'Fill in the values', template_vals)
+
         if form.ShowModal() == wx.ID_OK:
             form.get_values()
             self.records.insert_record(form.vals)
@@ -105,6 +120,29 @@ class ReportManager():
             
         form.Destroy()
 
+
+    def new_template(self, event):
+        """Create a new template"""
+        form = Form(None, self.fields_file, 'Fill in the values for template')
+        if form.ShowModal() == wx.ID_OK:
+            form.get_values()
+            template_vals = form.vals
+            form.Destroy()
+            
+            # get template name
+            name_entry = wx.TextEntryDialog(None, 'Enter name for template')
+            if name_entry.ShowModal() == wx.ID_OK:
+                template_name = name_entry.GetValue()
+                if not template_name.endswith('.tpl'):
+                    template_name += '.tpl'
+                template_name = os.path.join(self.project_dir, template_name)
+                
+            else:
+                return
+
+            # write the template
+            yaml.dump(template_vals, open(template_name, 'w'))
+        
 
     def edit_record(self, event):
         """Load the selected record into a form for editing."""
@@ -248,8 +286,70 @@ class ReportManager():
 
         # elif sys.platform == 'darwin':
         #     return 'mac'
-        
 
+
+class TemplateChooser(wx.Dialog):
+    """List the available templates and allow user to choose one"""
+    def __init__(self, parent, project_dir):
+        wx.Dialog.__init__(self, parent, -1, 'Choose template to use')
+
+        self.project_dir = project_dir
+        self.templates = self.get_templates(project_dir)
+        print 'templates', self.templates
+
+        # Default is empty
+        self.chosentemplate = 'Empty'
+        
+        panel  = wx.Panel(self, -1)
+        panelsizer = wx.BoxSizer(wx.VERTICAL)
+        buttonsizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.choices = wx.RadioBox(panel, -1, "Choose template",
+                                   choices=self.templates, style=wx.RA_VERTICAL)
+        self.cancel_button = wx.Button(panel, -1, 'Cancel')
+        self.done_button = wx.Button(panel, -1, 'Done')
+
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+        self.done_button.Bind(wx.EVT_BUTTON, self.ondone)
+
+        buttonsizer.Add(self.cancel_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.done_button, 0, wx.ALL, 10)
+
+        panelsizer.Add(self.choices, 10, wx.ALL|wx.EXPAND, 2)
+        panelsizer.Add(buttonsizer, 1, wx.ALL, 2)
+        
+        panel.SetSizer(panelsizer)
+        self.Layout()
+
+        
+    def _filename2templatename(self, name):
+        """from filename, get the template name"""
+        return os.path.basename(name)[:-4]
+
+    
+    def _templatename2filename(self, name):
+        """from template name, get full filename"""
+        return os.path.join(self.project_dir, name + '.tpl')
+    
+        
+    def get_templates(self, project_dir):
+        """collect template names"""
+        tpl_files = glob.glob(os.path.join(project_dir, '*.tpl'))
+        return [self._filename2templatename(filename) for filename in tpl_files]
+
+
+    def cancel(self, event):
+        """Cancel and discard edits"""
+        self.EndModal(wx.ID_CANCEL)
+
+    def ondone(self, event):
+        """returns the filename to the template file"""
+        self.chosentemplate = self._templatename2filename(
+                              self.choices.GetStringSelection())
+        self.EndModal(wx.ID_OK)
+
+
+    
 class Register(wx.Frame):
     """Display the index and allow selection and operation on records"""
     def __init__(self, parent, records, project_name):
@@ -323,6 +423,10 @@ class Register(wx.Frame):
             report_name = os.path.basename(self.parent.report_files[i]).rstrip('.rst')
             report_gen_menu.Append(2*i, report_name)
 
+
+        template_menu = wx.Menu()
+        template_menu.Append(ID_NEWTEMPLATE, "&New Template", "Create a new template")
+            
         # TODO: Avoid repetition and incorporate in prev loop
         report_edit_menu = wx.Menu()
         for i in range(len(self.parent.report_files)):
@@ -332,10 +436,11 @@ class Register(wx.Frame):
         self.MenuBar.Append(file_menu, "&File")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
         self.MenuBar.Append(report_edit_menu, "&Edit Report")
-        
+        self.MenuBar.Append(template_menu, "&Template")
         
         self.SetMenuBar(self.MenuBar)
 
+        
     def _set_bindings(self):
         """All the bindings"""
         self.Bind(wx.EVT_CLOSE, self.on_quit)
@@ -346,6 +451,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
+        self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
         # all generate report events are bound to one function

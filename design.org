@@ -32,3 +32,4 @@
 ** for each report group -
 *** ----.rst -- mako template
 *** ----.sty -- style file for rst - with same name as report
+*** ____.tpl -- template file to fill a report. 
