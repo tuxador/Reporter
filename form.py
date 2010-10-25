@@ -31,21 +31,13 @@ class Form(wx.Dialog):
         project_name is a string that is the name of the whole project"""
         wx.Dialog.__init__(self, parent, -1, size=(600, 700))
 
-        
-        # scroll=wx.ScrolledWindow(self,-1)
-        # self.scroll=scroll
-        #panel=wx.Panel(scroll,-1)
         self.panel = FormPanel(self, fields_file, project_name)
-        # self.unit=20
-        # width,height=self.panel.GetSizeTuple()
-        # scroll.SetScrollbars(self.unit, self.unit, width/self.unit, height/self.unit)
 
         self.parent = parent
         self.input_vals = input_vals
         self.project_name = project_name
         self.vals = {} # init the dict
 
-        #self.clearall_button = wx.Button(self.panel, label='Clear all')
         self.reset_button = wx.Button(self.panel, label = 'Reset form')
         self.cancel_button = wx.Button(self.panel, id=wx.ID_CANCEL, label="Cancel")
         self.done_button = wx.Button(self.panel, id=wx.ID_OK, label= 'Done')
@@ -75,12 +67,15 @@ class Form(wx.Dialog):
         """Fill in the form according to the dict vals"""
         for label, control in zip(self.panel.labels, self.panel.controls):
             try:
+                print control
+                print 'label', label
+                print 'trying to set', vals[label]
                 control.SetValue(vals[label])
             except KeyError:
-                pass  
+                pass
 
 
-    def cancel(self):
+    def cancel(self, event):
         """Return without making any changes"""
         #self.vals = self.init_values  # negate any changes
         self.EndModal(wx.ID_CANCEL)

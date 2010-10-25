@@ -108,6 +108,8 @@ class ReportManager():
         else:
             template_name = 'Empty'
 
+        print 'template used', template_name
+            
         if template_name == 'Empty':
             form = Form(None, self.fields_file, 'Fill in the values')            
         else:

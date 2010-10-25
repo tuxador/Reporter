@@ -25,8 +25,6 @@
 %>
 
 
-
-
 |jipmer|  Electrophysiology study and RF ablation
 =================================================
 
@@ -39,7 +37,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
 .. csv-table:: Demographics
 
-          "**Name**", "${vals['Demographics_Name']}", "**Age**", "${vals['Demographics_Age']}", "**Sex**", "${vals['Demographics_Sex']}"
+          "**Name**", "${vals['Demographics_Name']}", "**Age**", "${vals['Demographics_Age']} yrs", "**Sex**", "${vals['Demographics_Sex']}"
 	  "**Date of Adm.**", "${vals['Demographics_Date of Admission']}", "**Proc. date**", "${vals['Demographics_Date of Procedure']}", "", ""
 	  "**IP No.**", "${vals['Demographics_IP Number']}", "**Hospital No.**", "${vals['Demographics_Hospital Number']}", "**EPS No.**", "${vals['Demographics_EPS Number']}"
 	  "**Lab**", "${vals['Technical_Lab']}", "**EP System**", "${vals['Technical_EP System']}", "**3 D mapping**", "${vals['Technical_3D Mapping']}"
@@ -57,7 +55,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
 .. csv-table:: Investigations
 
-   "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_Bld Urea']} mg/dl"
+   "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_RFT']} mg/dl"
    "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}", "**HCV**", "${vals['Investigations_HCV']}"
     
 
@@ -77,11 +75,9 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
    "**ParaHisian pacing**", "${vals['Baseline_Parahisian']}"
    "**Incr RV pace**", "VA conduction ${vals['Incr V Pace_VA conduction']}, VAWB ${vals['Incr V Pace_VAWB']}ms, Atrial activation ${vals['Incr V Pace_Atrial Activation']}"
    "**Progr RV pace**", "VA conduction ${vals['Prog V Pace_VA conduction']}, VAERP ${vals['Prog V Pace_VAERP']}ms, Atrial activation ${vals['Prog V Pace_Atrial Activation']}, VERP ${vals['Prog V Pace_VERP']}ms"
-    "**Incr A pace**", "AVWB ${vals['Incr A Pace_AVWB']}, Level of block ${vals['Incr A Pace_Level of block']}, PR>RR ${vals['Incr A Pace_PR>RR']}"
-    "**Prog A pace**", "AH jump ${vals['Prog A Pace_AH jump']}, SPERP ${vals['Prog A Pace_SPERP']}ms, FPERP ${vals['Prog A Pace_FPERP']}ms, AERP ${vals['Prog A Pace_AERP']}ms"
+    "**Incr A pace**", "AVWB ${vals['Incr A Pace_AVWB']} ms, Level of block ${vals['Incr A Pace_Level of block']}, PR>RR ${vals['Incr A Pace_PR>RR']}"
+    "**Prog A pace**", "AH jump ${vals['Prog A Pace_AH jump']} ms, ${noblanks('SPERP ',vals['Prog A Pace_SPERP'], ' ms,')} ${noblanks('FPERP ',vals['Prog A Pace_FPERP'], ' ms,')} ${noblanks('AVERP ', vals['Prog A Pace_AVERP'], ' ms,')} AERP ${vals['Prog A Pace_AERP']} ms"
 
-	 
-	     
 
 .. csv-table:: Tachycardia
    :widths: 3, 10
@@ -90,7 +86,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
     "**Induction**", "${vals['Tachycardia_Induction']}, ${vals['Tachycardia_Termination']}"
     "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
     "**VA relation**", "${vals['Tachycardia_VA relationship']} with ${vals['Tachycardia_Atrial activation']}"
-    "**RV Pacing**", "${vals['Tachycardia_RV overdrive']}, ${noblanks('RV extra - ',vals['Tachycardia_RV extra'], '.')}"
+    "**RV Pacing**", "${vals['Tachycardia_RV overdrive']} ${noblanks(', RV extra - ',vals['Tachycardia_RV extra'], '.')}"
     "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']}, ${vals['Tachycardia_RA extra']}"
     "**Comment**", "${vals['Tachycardia_Comment']}"
 

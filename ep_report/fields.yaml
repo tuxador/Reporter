@@ -14,11 +14,11 @@ Demographics:
   4: [Date of Procedure, date]
   5: [Hospital Number, text]
   6: [IP Number, text]
-  7: [EPS Number, text]
-  8: [Procedure Start, text]
-  9: [Procedure End, text]
-  10: [Fluoro time, text]
-  
+  7: [EPS Number, text, 2010/]
+  8: [Procedure Start(hh.mm am), text]
+  9: [Procedure End(hh.mm am), text]
+  10: [Fluoro time(seconds), text]
+  11: [Referring Physician, combo, ['Dr. Amirtha Ganesh', ''], '']
 ---
  
 Clinical:
@@ -33,7 +33,7 @@ Clinical:
 Investigations:
   0: [Hb, text]
   1: [Bld Sugar,text]
-  2: [Bld Urea, text]
+  2: [RFT, text, Bl. Urea - Se. Creat - ]
   3: [HIV, text]
   4: [HBsAg, text]
   5: [HCV, text]
@@ -53,7 +53,7 @@ Technical:
   9: [Access 4, text]
   10: [Catheter 1, combo, ['', 5F quadripolar in HRA, 6F quadripolar in HRA], 5F quadripolar in HRA]
   11: [Catheter 2, combo, ['', 5F quadripolar in RV,6F quadripolar in RV, 6F quadripolar in RV], 5F quadripolar in RV]
-  12: [Catheter 3, combo, ['', 5F quadripolar in His, 6F quadripolar in His, 7F quadripolar in His], 5F quadripolar in His]
+  12: [Catheter 3, combo, ['', 5F quadripolar in His, 6F quadripolar in His, 7F quadripolar in His], 5F quadripolar in His] 
   13: [Catheter 4, combo, ['', 6F decapolar in CS, 7F decapolar in CS], 6F decapolar in CS]
   14: [Catheter 5, text]
 
@@ -61,58 +61,64 @@ Technical:
 
 Baseline:
   0: [Rhythm, combo, ['', NSR, AF], NSR]
-  1: [CL, text]
-  2: [AH, text]
-  3: [HV, text]
-  4: [Parahisian, combo, ['', Not done, Nodal, Extranodal, Indeterminate], Nodal]
+  1: [CL (ms), spin, 100, 2000, 700]
+  2: [AH (ms), spin, 10, 200, 85]
+  3: [HV (ms), spin, -100, 100, 40]
+  4: [Parahisian, combo, ['', not done, nodal, extranodal, indeterminate], nodal]
 
 ---
 
 Incr V Pace:
-  0: [VA conduction, combo, [Non-decremental, Decremental, absent], Non-Decremental]
-  1: [VAWB, text]
-  2: [Atrial Activation, combo, [Concentric, Eccentric], Concentric]
-
+  0: [VA conduction, combo, [non-decremental, decremental, absent], non-decremental]
+  1: [VAWB, text, <300]
+  2: [Atrial Activation, combo, [concentric, eccentric], concentric]
+  3: [Comments, text]
+  
 ---
 
 Prog V Pace:
-  0: [VA conduction, combo, [Non-decremental, Decremental], Non-Decremental]
+  0: [VA conduction, combo, [non-decremental, decremental], non-decremental]
   1: [VAERP, text]
-  2: [Atrial Activation, combo, [Concentric, Eccentric], Concentric]
+  2: [Atrial Activation, combo, [concentric, eccentric], concentric]
   3: [VERP, text]
+  4: [Comments, text]
 
 ---
 
 Incr A Pace:
-  0: [AVWB, text]
-  1: [Level of block, combo, [NA, Nodal, Infranodal], Nodal]
-  2: [PR>RR, combo, [NA, Present, Absent], Absent]
-
+  0: [Preexcitation, combo, [present, absent], absent]
+  1: [AVWB, text]
+  2: [Level of block, combo, ['', nodal, infranodal], nodal]
+  3: [PR>RR, combo, [present, absent], absent]
+  4: [Comments, text]
+  
 ---
 
 Prog A Pace:
-  0: [AH jump, combo, [NA, Present, Absent], Absent]
-  1: [SPERP, text]
-  2: [FPERP, text]
-  3: [AVERP, text]
-  4: [AERP, text]
-
+  0: [Preexcitation, combo, [present, absent], absent]
+  1: [AH jump, combo, [present, absent], absent]
+  2: [SPERP, text]
+  3: [FPERP, text]
+  4: [AVERP, text]
+  5: [AERP, text]
+  6: [Comments, text]
+  
 ---
 
 Tachycardia:
   0: [Induction, text, Induced by]
   1: [QRS, combo, [Narrow complex, LBBB, RBBB], Narrow complex]
-  2: [CL, text]
-  3: [AH, text]
-  4: [HV, text]
-  5: [VA, text]
-  6: [VA relationship, text]
-  7: [Atrial activation, combo, [Concentric, Eccentric], Concentric]
+  2: [CL, spin, 100, 1000, 300]
+  3: [AH, spin, 10, 200, 85]
+  4: [HV, spin, -100, 100, 40]
+  5: [VA, spin, -100, 1000, 60]
+  6: [VA relationship, combo, ['1:1', '2:1', '1:2'], '1:1']
+  7: [Atrial activation, combo, [concentric, eccentric], concentric]
   8: [RV overdrive, text]
   9: [RV extra, text]
   10: [RA overdrive, text]
   11: [RA extra, text]
-  12: [Termination, text]
+  12: [Termination, text, terminated by]
   13: [Comment, text]
 
 ---
@@ -122,36 +128,39 @@ Ablation:
   1: [Target, text]
   2: [Settings, text]
   3: [RF applications, spin, 0, 100, 0]
-  4: [Time, spin , 0, 2000, 0]
+  4: [Time (seconds), spin , 0, 2000, 0]
   5: [Endpoint, text]
-  6: [Comments, text]
+  6: [Comments, multitext]
 
 ---
 
 Post Ablation:
   0: [Rhythm, text]
-  1: [CL, text]
-  2: [AH, text]
-  3: [HV, text]
-  4: [Parahisian, text]
+  1: [CL, spin, 100, 2000, 700]
+  2: [AH, spin, 10, 200, 60]
+  3: [HV, spin, -100, 100, 40]
+  4: [Parahisian, combo, [not done, nodal, extranodal, indeterminate], nodal]
   5: [Incr V Pace, text]
   6: [Prog V Pace, text]
   7: [Incr A Pace, text]
   8: [Prog A Pace, text]
-
+  9: [Comments, multitext]
 ---
 
 Conclusions:
-  0: [Summary, text]
-  1: [Conclusion 1, text]
-  2: [Conclusion 2, text]
-  3: [Conclusion 3, text]
-  4: [Conclusion 4, text]
+  0: [Diagnosis, combo, [AVNRT, AVRT, AT, Fascicular VT, Mahaim], AVNRT]
+  1: [Success, combo, ['yes', 'no', indeterminate], 'yes']
+  2: [Interesting features, combo, ['', AVNRT with AV block, AP conduction dissociation during abl], '']
+  3: [Summary, text]
+  4: [Conclusion 1, text]
+  5: [Conclusion 2, text]
+  6: [Conclusion 3, text]
+  7: [Conclusion 4, text]
 
 ---
 
 Recommendations:
   0: [Recommendation 1, text, Aspirin 150 mg OD PO for 6 weeks]
-  1: [Recommendation 2, text, Follow up in Cardiology OPD 184 on Wednesdays]
+  1: [Recommendation 2, text, Follow up in Cardiology OPD (184) on Wednesday at 9 am]
   2: [Recommendation 3, text]
   3: [Recommendation 4, text]
