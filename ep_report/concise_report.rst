@@ -82,12 +82,11 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 .. csv-table:: Tachycardia
    :widths: 3, 10
 
-
     "**Induction**", "${vals['Tachycardia_Induction']}, ${vals['Tachycardia_Termination']}"
     "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
     "**VA relation**", "${vals['Tachycardia_VA relationship']} with ${vals['Tachycardia_Atrial activation']}"
     "**RV Pacing**", "${vals['Tachycardia_RV overdrive']} ${noblanks(', RV extra - ',vals['Tachycardia_RV extra'], '.')}"
-    "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']}, ${vals['Tachycardia_RA extra']}"
+    "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']} ${noblanks(', ', vals['Tachycardia_RA extra'], '.')}"
     "**Comment**", "${vals['Tachycardia_Comment']}"
 
 .. csv-table:: Mapping and RF ablation
@@ -129,6 +128,8 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
        Spacer 0 40
      
 
+
+       
      
 .. |jipmer| image:: /data/Dropbox/programming/EP_report2/ep_report/jipmer_logo.png
               :height: 1in
