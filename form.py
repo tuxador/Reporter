@@ -109,10 +109,6 @@ class FormPanel(scrolled.ScrolledPanel):
         self.construct_panes(fields_file)
         #self.make_pane_content(self.cp1.GetPane())
         
-        # self.clearall_button = wx.Button(self, label='Clear all')
-        # self.reset_button = wx.Button(self, label = 'Reset form')
-        # self.done_button = wx.Button(self, label= 'Done')
-        
         #self._layout()
         self.SetAutoLayout(1)
         self.SetupScrolling()

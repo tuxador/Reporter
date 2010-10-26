@@ -34,6 +34,8 @@ Department of Cardiology
 Jawaharlal Institute of Postgraduate Medical Education and Research
 --------------------------------------------------------------------
 
+Puducherry - 605006
+-------------------
 
 .. csv-table:: Demographics
 
@@ -90,11 +92,13 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
     "**Comment**", "${vals['Tachycardia_Comment']}"
 
 .. csv-table:: Mapping and RF ablation
-    :widths: 4, 10, 4, 10
+    :widths: 3, 10
 
-    "**Catheter**", "${vals['Ablation_Catheter']}", "**Target**", "${vals['Ablation_Target']}"
-    "**Settings**", "${vals['Ablation_Settings']}",     "**Time**", "${vals['Ablation_Time']} seconds"
-    "**Endpoint**", "${vals['Ablation_Endpoint']}", "**Comments**", "${vals['Ablation_Comments']}"
+    "**Catheter**", "${vals['Ablation_Catheter']}"
+    "**Target**", "${vals['Ablation_Target']}"
+    "**RF**", "Settings - ${vals['Ablation_Settings']}, RF applications - ${vals['Ablation_RF applications']}, RF time - ${vals['Ablation_Time']} seconds"
+    "**Endpoint**", "${vals['Ablation_Endpoint']}"
+    "**Comments**", "${vals['Ablation_Comments']}"
 
 
 .. csv-table:: Post ablation
@@ -128,6 +132,10 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
        Spacer 0 40
      
 
+
+| Dr. Raja Selvaraj  
+| Assistant Professor of Cardiology
+| JIPMER
 
        
      
