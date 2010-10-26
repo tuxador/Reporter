@@ -98,6 +98,7 @@ class DateCtrl(wx.combo.ComboCtrl):
 
     def setup_input_format(self):
         format = self.input_format
+        print format
         blank_string = format
 
         day_pos = format.find('%d')
@@ -118,11 +119,14 @@ class DateCtrl(wx.combo.ComboCtrl):
             yr_pos = format.find('%Y')
             if yr_pos > -1:
                 blank_string = blank_string[:yr_pos]+'    '+blank_string[yr_pos+2:]
-                format = format[:yr_pos+2]+'YY'+format[yr_pos+4:]
+                format = format[:yr_pos+2]+'YY'+format[yr_pos+2:]
                 yr_pos = (yr_pos, yr_pos+4)
+                day_pos = tuple(2 + pos for pos in day_pos)
+                mth_pos = tuple(2 + pos for pos in mth_pos)
 
         literal_pos = [i for (i, ch) in enumerate(blank_string)
             if blank_string[i] == format[i]]
+        
         return blank_string, day_pos, mth_pos, yr_pos, literal_pos
 
     # Overridden from ComboCtrl, called when the combo button is clicked
@@ -350,9 +354,8 @@ class Panel(wx.Panel):
         wx.StaticText(self, -1, 'Field1', pos=(50, 30))
         t1 = wx.TextCtrl(self, -1, '', size=(130, -1), pos=(150, 30))
 
-        input_format = '%d-%m-%Y'
-        display_format = '%a %d %b %Y'
-#       display_format = '%d-%m-%Y'
+        input_format = '%Y-%m-%d'
+        display_format = '%Y-%m-%d'
 
         wx.StaticText(self, -1, 'Invoice date', pos=(50, 80))
         self.d = DateCtrl(self, size=(130, -1), pos=(150, 80),
@@ -372,20 +375,23 @@ class Panel(wx.Panel):
         if self.first_time:
             self.first_time = False
         else:
+            print self.d.GetValue()
             self.d.convert_to_wx_date()
+            print 'after', self.d.GetValue()
         evt.Skip()
 
-# class Frame(wx.Frame):
-#     def __init__(self):
-#         wx.Frame.__init__(self, None, -1, "Date Picker Ctrl test", size=(400, 240))
-#         panel = Panel(self)
-#         self.CentreOnScreen()
+class Frame(wx.Frame):
+    def __init__(self):
+        wx.Frame.__init__(self, None, -1, "Date Picker Ctrl test", size=(400, 240))
+        panel = Panel(self)
+        self.CentreOnScreen()
 
-# class App(wx.App):
-#     def OnInit(self):
-#         frame = Frame()
-#         frame.Show(True)
-#         return True
+class App(wx.App):
+    def OnInit(self):
+        frame = Frame()
+        frame.Show(True)
+        return True
 
-# app = App(False)
-# app.MainLoop()
+if __name__ ==  "__main__":
+    app = App(False)
+    app.MainLoop()

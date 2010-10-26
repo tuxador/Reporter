@@ -249,7 +249,8 @@ class Pane(wx.CollapsiblePane):
 
            # use yyyy-mm-dd format for date to allow easy sorting
            elif control_type == 'date':
-               self.controls.append(DateCtrl(self.pane, (130, -1), (150,80), input_format='%d-%m-%Y',
+               self.controls.append(DateCtrl(self.pane, (130, -1), (150,80),
+                                             input_format='%Y-%m-%d',
                                              display_format='%Y-%m-%d', title='',
                                              default_to_today=1, allow_null=0))
                                     
