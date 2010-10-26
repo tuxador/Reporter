@@ -24,6 +24,13 @@
 	    return ''.join([pre, var, post])
 %>
 
+<%
+    def invert_date(dt):
+        """invert from yyyy-mm-dd to dd-mm-yyyy"""
+	yr, mth, day = dt.split('-')
+	return '-'.join([day, mth, yr])
+%>	
+
 
 |jipmer|  Electrophysiology study and RF ablation
 =================================================
@@ -40,7 +47,7 @@ Puducherry - 605006
 .. csv-table:: Demographics
 
           "**Name**", "${vals['Demographics_Name']}", "**Age**", "${vals['Demographics_Age']} yrs", "**Sex**", "${vals['Demographics_Sex']}"
-	  "**Date of Adm.**", "${vals['Demographics_Date of Admission']}", "**Proc. date**", "${vals['Demographics_Date of Procedure']}", "", ""
+	  "**Date of Adm.**", "${invert_date(vals['Demographics_Date of Admission'])}", "**Proc. date**", "${invert_date(vals['Demographics_Date of Procedure'])}", "", ""
 	  "**IP No.**", "${vals['Demographics_IP Number']}", "**Hospital No.**", "${vals['Demographics_Hospital Number']}", "**EPS No.**", "${vals['Demographics_EPS Number']}"
 	  "**Lab**", "${vals['Technical_Lab']}", "**EP System**", "${vals['Technical_EP System']}", "**3 D mapping**", "${vals['Technical_3D Mapping']}"
 	  "**Operator 1**", "${vals['Technical_Operator 1']}", "**Operator 2**", "${vals['Technical_Operator 2']}", "**Tech. Asst**", "${vals['Technical_Technical Assistant']}"
