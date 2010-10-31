@@ -39,17 +39,20 @@ class Report():
         self.raw_report = self.template.render(vals=self.vals)
         
 
-    def generate_pdf(self):
-        """Creat pdf and return path to pdf file"""
+    def generate_pdf(self, raw=None):
+        """Creat pdf and return path to pdf file.
+        Use given rst text or use raw_report"""
         # get the temp names
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
         print tmp_rstfilename
-        
+
+        if not raw:
+            raw = self.raw_report
         # write the raw_report as a file
         with open(tmp_rstfilename,'w') as fi:
-            fi.write(self.raw_report)
+            fi.write(raw)
 
         # invoke rst2pdf
         if self.stylefile:
@@ -161,7 +164,10 @@ class ReportEditor(wx.Dialog):
         """Bindings"""
         self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
         self.Bind(wx.EVT_BUTTON, self.ondone, self.donebutton)
-
+        self.Bind(wx.EVT_BUTTON, self.pdfviewer.prev_page, self.prev_button)
+        self.Bind(wx.EVT_BUTTON, self.pdfviewer.next_page, self.next_button)
+        self.Bind(wx.EVT_BUTTON, self.refresh_pdf, self.refresh_button)
+        
 # end wxGlade
     def _init_values(self):
         """Initialise values in texteditor and pdf viewer"""
@@ -171,7 +177,14 @@ class ReportEditor(wx.Dialog):
         self.raweditor.write(self.raw_text)
         self.pdfviewer.LoadDocument(pdf_file)
         
-        
+
+    def refresh_pdf(self, event):
+        """refresh the displayed pdf"""
+        pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
+        time.sleep(2)
+
+        self.pdfviewer.LoadDocument(pdf_file)
+        self.pdfviewer.Refresh()
 
     def __do_layout(self):
         # begin wxGlade: Frame.__do_layout
@@ -318,6 +331,31 @@ class PDFWindow(wx.ScrolledWindow):
             self.n_page = next_page
             self.current_page = self.document.get_page(next_page)
             self.Refresh()
+
+
+    def next_page(self, event):
+        """go to next page"""
+        if self.n_page + 1 <= self.n_pages:
+            self.n_page += 1
+            self.current_page = self.document.get_page(self.n_page)
+            self.Refresh()
+
+        else:
+            print 'Already at last page'
+            return
+
+    def prev_page(self, event):
+        """go to previous page"""
+        if self.n_page > 0:
+            self.n_page -= 1
+            self.current_page = self.document.get_page(self.n_page)
+            self.Refresh()
+
+        else:
+            print 'Already at first page'
+            return
+
+        
 
     
     
