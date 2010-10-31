@@ -145,6 +145,7 @@ class ReportEditor(wx.Dialog):
         self.prev_button = wx.Button(self.buttonpanel, -1, "Prev Page")
         self.next_button = wx.Button(self.buttonpanel, -1, "Next Page")
         self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")
+        self.editor_show_button = wx.Button(self.buttonpanel, -1, "Show Editor")
         
         self.revertbutton = wx.Button(self.buttonpanel2, -1, "Revert")
         self.donebutton = wx.Button(self.buttonpanel2, wx.ID_OK, "Done")
@@ -162,11 +163,11 @@ class ReportEditor(wx.Dialog):
 
     def _set_bindings(self):
         """Bindings"""
-        self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
         self.Bind(wx.EVT_BUTTON, self.ondone, self.donebutton)
         self.Bind(wx.EVT_BUTTON, self.pdfviewer.prev_page, self.prev_button)
         self.Bind(wx.EVT_BUTTON, self.pdfviewer.next_page, self.next_button)
         self.Bind(wx.EVT_BUTTON, self.refresh_pdf, self.refresh_button)
+        self.Bind(wx.EVT_BUTTON, self.show_editor, self.editor_show_button)
         
 # end wxGlade
     def _init_values(self):
@@ -176,7 +177,11 @@ class ReportEditor(wx.Dialog):
         
         self.raweditor.write(self.raw_text)
         self.pdfviewer.LoadDocument(pdf_file)
-        
+
+        w, h = self.GetSize()
+        self.splitter.SetSashPosition(h)
+        self.EDITOR_SHOWN = False
+        self.editor_show_button.SetLabel("Show Editor")
 
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
@@ -196,13 +201,12 @@ class ReportEditor(wx.Dialog):
         buttonpanel_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.splitter.SplitHorizontally(self.pdfpanel, self.editorpanel)
-        #self.splitter.SetMinimumPaneSize(20)
-        #self.splitter.SetSashPosition(100)        
         mainsizer.Add(self.splitter, 1, wx.EXPAND, 0)
 
         buttonpanel_sizer.Add(self.prev_button, 0, wx.ALL, 10)
         buttonpanel_sizer.Add(self.next_button, 0, wx.ALL, 10)
         buttonpanel_sizer.Add(self.refresh_button, 0, wx.ALL, 10)
+        buttonpanel_sizer.Add(self.editor_show_button, 0, wx.ALL, 10)
         self.buttonpanel.SetSizer(buttonpanel_sizer)
 
         pdfpanel_sizer.Add(self.pdfviewer, 6, wx.ALL|wx.EXPAND, 10)
@@ -224,7 +228,7 @@ class ReportEditor(wx.Dialog):
         self.SetSizer(rootsizer)
         rootsizer.Fit(self)
 
-        self.SetSize((1000, 800))
+        self.SetSize((600, 800))
         
         self.Layout()
         # end wxGlade
@@ -234,10 +238,21 @@ class ReportEditor(wx.Dialog):
         """"""
         self.EndModal(wx.ID_OK)
         
-    def prev_page(self, event): # wxGlade: Frame.<event_handler>
-        print "Event handler `prev_page' not implemented!"
-        event.Skip()
 
+    def show_editor(self, event):
+        """move the splitter sash to show the editor"""
+        w,h = self.GetSize()
+        
+        if self.EDITOR_SHOWN:
+            self.splitter.SetSashPosition(h)
+            self.EDITOR_SHOWN = False
+            self.editor_show_button.SetLabel("Show Editor")
+
+        else:
+            self.splitter.SetSashPosition(h/2)
+            self.EDITOR_SHOWN = True
+            self.editor_show_button.SetLabel("Hide Editor")
+        
         
 
 class PDFWindow(wx.ScrolledWindow):
