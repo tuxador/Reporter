@@ -96,20 +96,17 @@ class DateCtrl(wx.combo.ComboCtrl):
         # and tell the ComboCtrl to use it
         self.SetButtonBitmaps(bmp, True)
 
+
+
     def setup_input_format(self):
+        """
+        Modify the defined input format to a string where each character
+        represents one character of the input string.
+        Generate and return a blank string to fill in the control.
+        Return positions within the string of yr, mth, day and literals.
+        """
         format = self.input_format
-        print format
         blank_string = format
-
-        day_pos = format.find('%d')
-        if day_pos > -1:
-            blank_string = blank_string[:day_pos]+'  '+blank_string[day_pos+2:]
-            day_pos = (day_pos, day_pos+2)
-
-        mth_pos = format.find('%m')
-        if mth_pos > -1:
-            blank_string = blank_string[:mth_pos]+'  '+blank_string[mth_pos+2:]
-            mth_pos = (mth_pos, mth_pos+2)
 
         yr_pos = format.find('%y')
         if yr_pos > -1:
@@ -121,13 +118,22 @@ class DateCtrl(wx.combo.ComboCtrl):
                 blank_string = blank_string[:yr_pos]+'    '+blank_string[yr_pos+2:]
                 format = format[:yr_pos+2]+'YY'+format[yr_pos+2:]
                 yr_pos = (yr_pos, yr_pos+4)
-                day_pos = tuple(2 + pos for pos in day_pos)
-                mth_pos = tuple(2 + pos for pos in mth_pos)
+
+        mth_pos = format.find('%m')
+        if mth_pos > -1:
+            blank_string = blank_string[:mth_pos]+'  '+blank_string[mth_pos+2:]
+            mth_pos = (mth_pos, mth_pos+2)
+
+        day_pos = format.find('%d')
+        if day_pos > -1:
+            blank_string = blank_string[:day_pos]+'  '+blank_string[day_pos+2:]
+            day_pos = (day_pos, day_pos+2)
 
         literal_pos = [i for (i, ch) in enumerate(blank_string)
             if blank_string[i] == format[i]]
-        
-        return blank_string, day_pos, mth_pos, yr_pos, literal_pos
+
+        return blank_string, yr_pos, mth_pos, day_pos, literal_pos
+    
 
     # Overridden from ComboCtrl, called when the combo button is clicked
     def OnButtonClick(self):
