@@ -64,7 +64,7 @@ class Report():
     def edit_report(self):
         """Present a simple editor to edit the raw_report"""
         #app = wx.App()
-        ed = Editor(None, self.raw_report)
+        ed = ReportEditor(None, self.raw_report)
         if ed.ShowModal() == wx.ID_OK:
             self.raw_report = ed.text
         ed.Destroy()
@@ -114,41 +114,94 @@ class Editor(wx.Dialog):
         self.EndModal(wx.ID_OK)
         
 
-def editor_test():
-    """Testing the editor"""
-    app = wx.App()
-    ed = Editor(None, 'This is a test')
-    if ed.ShowModal() == wx.ID_OK:
-        print ed.text
-    ed.Destroy()
-    
-    app.MainLoop()
+class ReportEditor(wx.Dialog):
+    def __init__(self, parent, raw_text):
+        # begin wxGlade: Frame.__init__
+        #wx.Frame.__init__(self, *args, **kwds)
+        wx.Dialog.__init__(self, parent, -1, 'Edit Report',
+                           style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+
+        self.mainpanel = wx.Panel(self, -1)
+
+        self.splitter = wx.SplitterWindow(self.mainpanel, -1, style=wx.SP_3D|wx.SP_BORDER)
+        #self.splitter.SetMinimumPanesize(20)
+        self.editorpanel = wx.Panel(self.splitter, -1)
+        self.pdfpanel = wx.Panel(self.splitter, -1)
+        self.splitter.SetMinimumPaneSize(20)
+
+        self.buttonpanel = wx.Panel(self.pdfpanel, -1)
+        self.buttonpanel2 = wx.Panel(self.editorpanel, -1)
+
+        self.pdfviewer = wx.TextCtrl(self.pdfpanel, -1, "pdf viewer")
+        self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor")
+
+        self.prev_button = wx.Button(self.buttonpanel, -1, "Prev Page")
+        self.next_button = wx.Button(self.buttonpanel, -1, "Next Page")
+        self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")
+        
+        self.revertbutton = wx.Button(self.buttonpanel2, -1, "Revert")
+        self.donebutton = wx.Button(self.buttonpanel2, -1, "Done")
+
+        self.__set_properties()
+        self.__do_layout()
+
+        self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
+        # end wxGlade
+
+    def __set_properties(self):
+        # begin wxGlade: Frame.__set_properties
+        self.SetTitle("Report Editor")
 
 
-class ReportViewer(wx.Frame):
-    """GUI for displaying the pdf and the raw rst report.
-    Allows for easy preview of report, editing the report, etc"""
-    def __init__(self, parent):
-        wx.Frame.__init__(self, parent, -1, 'Report Viewer', style = wx.DEFAULT_FRAME_STYLE)
+# end wxGlade
 
-        #--------Set up Splitter and Notebook----------------------------------
-        ## SPLITTER - contains pdfwindow and editor
-        self.basepanel = wx.Panel(self, style=wx.SUNKEN_BORDER)
-                
-        self.splitter = wx.SplitterWindow(self.basepanel, style=wx.SP_3D)
-        self.splitter.SetMinimumPaneSize(10)
-               
-        self.pdfwindow = PDFWindow(self.splitter)
-        self.editor = Editor(self.splitter, '')
-                
-        # unsplit splitter for now, split later when size can be calculated
-        self.splitter.SplitHorizontally(self.pdfwindow, self.editor)
-        self.splitter.Unsplit()
+    def __do_layout(self):
+        # begin wxGlade: Frame.__do_layout
+        rootsizer = wx.BoxSizer(wx.VERTICAL)
+        mainsizer = wx.BoxSizer(wx.VERTICAL)
+        editorpanel_sizer = wx.BoxSizer(wx.VERTICAL)
+        buttonpanel2_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        pdfpanel_sizer = wx.BoxSizer(wx.VERTICAL)
+        buttonpanel_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        # sizers
-        splittersizer = wx.BoxSizer()
-        splittersizer.Add(self.splitter, 1, wx.ALL|wx.EXPAND, 5)
-        self.basepanel.SetSizer(splittersizer)
+        self.splitter.SplitHorizontally(self.pdfpanel, self.editorpanel)
+        #self.splitter.SetMinimumPaneSize(20)
+        #self.splitter.SetSashPosition(100)        
+        mainsizer.Add(self.splitter, 1, wx.EXPAND, 0)
+
+        buttonpanel_sizer.Add(self.prev_button, 0, wx.ALL, 10)
+        buttonpanel_sizer.Add(self.next_button, 0, wx.ALL, 10)
+        buttonpanel_sizer.Add(self.refresh_button, 0, wx.ALL, 10)
+        self.buttonpanel.SetSizer(buttonpanel_sizer)
+
+        pdfpanel_sizer.Add(self.pdfviewer, 6, wx.ALL|wx.EXPAND, 10)
+        pdfpanel_sizer.Add(self.buttonpanel, 1, wx.EXPAND, 0)
+        self.pdfpanel.SetSizer(pdfpanel_sizer)
+
+        buttonpanel2_sizer.Add(self.revertbutton, 0, wx.ALL, 10)
+        buttonpanel2_sizer.Add(self.donebutton, 0, wx.ALL, 10)
+        self.buttonpanel2.SetSizer(buttonpanel2_sizer)
+
+        editorpanel_sizer.Add(self.raweditor, 6, wx.ALL|wx.EXPAND, 10)
+        editorpanel_sizer.Add(self.buttonpanel2, 1, wx.EXPAND, 0)
+        self.editorpanel.SetSizer(editorpanel_sizer)
+
+        self.mainpanel.SetSizer(mainsizer)
+
+        rootsizer.Add(self.mainpanel, 1, wx.EXPAND, 0)
+
+        self.SetSizer(rootsizer)
+        rootsizer.Fit(self)
+
+        self.SetSize((1000, 800))
+        
+        self.Layout()
+        # end wxGlade
+
+    def prev_page(self, event): # wxGlade: Frame.<event_handler>
+        print "Event handler `prev_page' not implemented!"
+        event.Skip()
+
         
 
 class PDFWindow(wx.ScrolledWindow):
@@ -177,6 +230,8 @@ class PDFWindow(wx.ScrolledWindow):
         self.panel.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
         self.panel.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
 
+        #self.LoadDocument('/tmp/tmpLSvo1m.pdf')
+
     def LoadDocument(self, file):
         self.document = poppler.document_new_from_file("file://" + file, None)
         self.n_pages = self.document.get_n_pages()
@@ -190,9 +245,16 @@ class PDFWindow(wx.ScrolledWindow):
         cr.set_source_rgb(1, 1, 1)  # White background
         if self.scale != 1:
             cr.scale(self.scale, self.scale)
-        cr.rectangle(0, 0, self.width, self.height)
+            
+        try:
+            cr.rectangle(0, 0, self.width, self.height)
+        except TypeError:
+            cr.rectangle(0, 0, 680, 400)
+            
         cr.fill()
-        self.current_page.render(cr)
+
+        if self.current_page:
+            self.current_page.render(cr)
 
     def OnLeftDown(self, event):
         self._UpdateScale(self.scale + 0.2)
@@ -230,9 +292,9 @@ class PDFWindow(wx.ScrolledWindow):
         else:
             update = False
         if update and (next_page >= 0) and (next_page < self.n_pages):
-                self.n_page = next_page
-                self.current_page = self.document.get_page(next_page)
-                self.Refresh()
+            self.n_page = next_page
+            self.current_page = self.document.get_page(next_page)
+            self.Refresh()
 
     
     
