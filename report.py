@@ -7,6 +7,7 @@ import wx
 import subprocess
 import wx.lib.wxcairo as wxcairo
 import poppler
+import time
 
 import tempfile
 from mako.template import Template
@@ -64,10 +65,10 @@ class Report():
     def edit_report(self):
         """Present a simple editor to edit the raw_report"""
         #app = wx.App()
-        ed = ReportEditor(None, self.raw_report)
-        if ed.ShowModal() == wx.ID_OK:
-            self.raw_report = ed.text
-        ed.Destroy()
+        reped = ReportEditor(None, self, self.raw_report)
+        if reped.ShowModal() == wx.ID_OK:
+            self.raw_report = reped.raweditor.GetValue()
+        reped.Destroy()
         #app.MainLoop()
         return self.raw_report
     
@@ -115,9 +116,11 @@ class Editor(wx.Dialog):
         
 
 class ReportEditor(wx.Dialog):
-    def __init__(self, parent, raw_text):
+    def __init__(self, parent, report, raw_text):
         # begin wxGlade: Frame.__init__
         #wx.Frame.__init__(self, *args, **kwds)
+        self.raw_text = raw_text
+        self.report = report
         wx.Dialog.__init__(self, parent, -1, 'Edit Report',
                            style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
@@ -132,28 +135,43 @@ class ReportEditor(wx.Dialog):
         self.buttonpanel = wx.Panel(self.pdfpanel, -1)
         self.buttonpanel2 = wx.Panel(self.editorpanel, -1)
 
-        self.pdfviewer = wx.TextCtrl(self.pdfpanel, -1, "pdf viewer")
-        self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor")
+        self.pdfviewer = PDFWindow(self.pdfpanel)
+        self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor",
+                                     style=wx.TE_MULTILINE)
 
         self.prev_button = wx.Button(self.buttonpanel, -1, "Prev Page")
         self.next_button = wx.Button(self.buttonpanel, -1, "Next Page")
         self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")
         
         self.revertbutton = wx.Button(self.buttonpanel2, -1, "Revert")
-        self.donebutton = wx.Button(self.buttonpanel2, -1, "Done")
+        self.donebutton = wx.Button(self.buttonpanel2, wx.ID_OK, "Done")
 
         self.__set_properties()
         self.__do_layout()
 
-        self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
+        self._set_bindings()
+        self._init_values()
         # end wxGlade
 
     def __set_properties(self):
         # begin wxGlade: Frame.__set_properties
         self.SetTitle("Report Editor")
 
+    def _set_bindings(self):
+        """Bindings"""
+        self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
+        self.Bind(wx.EVT_BUTTON, self.ondone, self.donebutton)
 
 # end wxGlade
+    def _init_values(self):
+        """Initialise values in texteditor and pdf viewer"""
+        pdf_file = self.report.generate_pdf()
+        time.sleep(2)
+        
+        self.raweditor.write(self.raw_text)
+        self.pdfviewer.LoadDocument(pdf_file)
+        
+        
 
     def __do_layout(self):
         # begin wxGlade: Frame.__do_layout
@@ -198,6 +216,11 @@ class ReportEditor(wx.Dialog):
         self.Layout()
         # end wxGlade
 
+
+    def ondone(self):
+        """"""
+        self.EndModal(wx.ID_OK)
+        
     def prev_page(self, event): # wxGlade: Frame.<event_handler>
         print "Event handler `prev_page' not implemented!"
         event.Skip()
@@ -299,32 +322,6 @@ class PDFWindow(wx.ScrolledWindow):
     
     
 
-def test():
-    """Test the report module and demonstrate use"""
-    #def __init__(self, template_file, vals, raw_report='', stylefile=None):
-    # template_file = 'test/template.rst'
-    # vals = {'Demographics_Name':'Raja',
-    #         'Demographics_Age':36,
-    #         'Demographics_Sex':'Male',
-    #         'Clinical_Presentation':'Asymptomatic',
-    #         'Clinical_Drugs':'Aspirin 75 mg PO OD',
-    #         'Clinical_ECG':'Normal Sinus Rhythm'}
-
-    # print 'creating new report with a template and values'
-    # rep = Report(template_file, vals)
-    # rep.generate_raw()
-    # print rep.raw_report
-
-    # rep.edit_report()
-    #print "path to pdf file"
-    #pdf =  rep.generate_pdf()
-    #print pdf
-    app = wx.App()
-    f = ReportViewer(None)
-    f.Show()
-    app.MainLoop()
-
-
 if __name__ == '__main__':
     #editor_test()
-    test()
+    pass
