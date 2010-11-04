@@ -20,16 +20,13 @@ class Config():
 
     def read_options(self):
         try:
-            yaml.load(self.configfile)
-            for key in self.options:
-                self.options[key] = self.parser.get('options', key)
-
+            with open(self.configfile) as fi:
+                self.options = yaml.load(fi)
         except: # if file is not present or is damaged
+            print "didn't work"
             self.write_options() # write a new file
             return # donot change defaults
             
-        print self.options
-
 
     def write_options(self):
         with open(self.configfile, 'w') as fi:

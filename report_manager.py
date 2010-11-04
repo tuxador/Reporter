@@ -37,6 +37,8 @@ class ReportManager():
         configfile = self.get_configfile()
         self.config = Config(configfile)
 
+        print configfile
+
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file)
@@ -61,8 +63,10 @@ class ReportManager():
         #     else:
         #         self.project_dir = project_dir
         #         return # TODO:
+        print self.config.options
+        
 
-        self.project_dir = self.config.options['projects'][self.config.options['default_project']]
+        self.project_dir = self.config.options['projects'][int(self.config.options['default_project'])]
         
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
@@ -70,6 +74,9 @@ class ReportManager():
         self.report_files = glob.glob(os.path.join(self.project_dir, '*.rst'))
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
+
+        print self.project_dir
+        print self.fields_file
 
         self.project_name = os.path.basename(self.project_dir)
         
