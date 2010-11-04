@@ -5,13 +5,17 @@ with mako and render the report to a pdf with rst2pdf"""
 
 import wx
 import subprocess
-import wx.lib.wxcairo as wxcairo
-import poppler
 import time
 
 import tempfile
 from mako.template import Template
 #from rst2pdf.createpdf import RstToPdf
+
+if wx.Platform == '__WXMSW__':
+    from wx.lib.pdfwin import PDFWindow as PDFWindowWin
+elif wx.Platform == '__WXGTK__':
+    import wx.lib.wxcairo as wxcairo
+    import poppler    
 
 class Report():
     """
@@ -55,6 +59,10 @@ class Report():
             fi.write(raw)
 
         # invoke rst2pdf
+        print self.stylefile
+        print tmp_pdffilename
+        print tmp_rstfilename
+        
         if self.stylefile:
             cmd = ['rst2pdf', '-s', self.stylefile, '-o', tmp_pdffilename, tmp_rstfilename]
         else:
@@ -138,7 +146,10 @@ class ReportEditor(wx.Dialog):
         self.buttonpanel = wx.Panel(self.pdfpanel, -1)
         self.buttonpanel2 = wx.Panel(self.editorpanel, -1)
 
-        self.pdfviewer = PDFWindow(self.pdfpanel)
+        if wx.Platform == '__WXMSW__':
+            self.pdfviewer = PDFWindowWin(self.pdfpanel)
+        elif wx.Platform == '__WXGTK__':
+            self.pdfviewer = PDFWindowLin(self.pdfpanel)
         self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor",
                                      style=wx.TE_MULTILINE)
 
@@ -164,19 +175,26 @@ class ReportEditor(wx.Dialog):
     def _set_bindings(self):
         """Bindings"""
         self.Bind(wx.EVT_BUTTON, self.ondone, self.donebutton)
-        self.Bind(wx.EVT_BUTTON, self.pdfviewer.prev_page, self.prev_button)
-        self.Bind(wx.EVT_BUTTON, self.pdfviewer.next_page, self.next_button)
+        self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
+        self.Bind(wx.EVT_BUTTON, self.next_page, self.next_button)
         self.Bind(wx.EVT_BUTTON, self.refresh_pdf, self.refresh_button)
         self.Bind(wx.EVT_BUTTON, self.show_editor, self.editor_show_button)
+
+
+    def prev_page(self, event):
+        self.pdfviewer.gotoPreviousPage()
+
+    def next_page(self, event):
+        self.pdfviewer.gotoNextPage()
         
 # end wxGlade
     def _init_values(self):
         """Initialise values in texteditor and pdf viewer"""
         pdf_file = self.report.generate_pdf()
-        time.sleep(2)
+        time.sleep(3)
         
         self.raweditor.write(self.raw_text)
-        self.pdfviewer.LoadDocument(pdf_file)
+        self.pdfviewer.LoadFile(pdf_file)
 
         w, h = self.GetSize()
         self.splitter.SetSashPosition(h)
@@ -188,7 +206,7 @@ class ReportEditor(wx.Dialog):
         pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
         time.sleep(2)
 
-        self.pdfviewer.LoadDocument(pdf_file)
+        self.pdfviewer.LoadFile(pdf_file)
         self.pdfviewer.Refresh()
 
     def __do_layout(self):
@@ -255,7 +273,7 @@ class ReportEditor(wx.Dialog):
         
         
 
-class PDFWindow(wx.ScrolledWindow):
+class PDFWindowLin(wx.ScrolledWindow):
     """pdf viewer window. Taken from
     http://code.activestate.com/recipes/577195-wxpython-pdf-viewer-using-poppler/"""
 
@@ -283,7 +301,7 @@ class PDFWindow(wx.ScrolledWindow):
 
         #self.LoadDocument('/tmp/tmpLSvo1m.pdf')
 
-    def LoadDocument(self, file):
+    def LoadFile(self, file):
         self.document = poppler.document_new_from_file("file://" + file, None)
         self.n_pages = self.document.get_n_pages()
         self.current_page = self.document.get_page(self.n_page)
@@ -314,7 +332,7 @@ class PDFWindow(wx.ScrolledWindow):
         self._UpdateScale(self.scale - 0.2)
 
     def _UpdateScale(self, new_scale):
-        if new_scale >= PDFWindow.MIN_SCALE and new_scale <= PDFWindow.MAX_SCALE:
+        if new_scale >= PDFWindowLin.MIN_SCALE and new_scale <= PDFWindowLin.MAX_SCALE:
             self.scale = new_scale
             # Obtain the current scroll position
             prev_position = self.GetViewStart() 
@@ -328,7 +346,7 @@ class PDFWindow(wx.ScrolledWindow):
             self.Scroll(prev_position[0], prev_position[1]) 
 
     def _UpdateSize(self):
-        u = PDFWindow.SCROLLBAR_UNITS
+        u = PDFWindowLin.SCROLLBAR_UNITS
         self.panel.SetSize((self.width*self.scale, self.height*self.scale))
         self.SetScrollbars(u, u, (self.width*self.scale)/u, (self.height*self.scale)/u)
 
@@ -348,7 +366,7 @@ class PDFWindow(wx.ScrolledWindow):
             self.Refresh()
 
 
-    def next_page(self, event):
+    def gotoNextPage(self):
         """go to next page"""
         if self.n_page + 1 <= self.n_pages:
             self.n_page += 1
@@ -359,7 +377,7 @@ class PDFWindow(wx.ScrolledWindow):
             print 'Already at last page'
             return
 
-    def prev_page(self, event):
+    def gotoPreviousPage(self):
         """go to previous page"""
         if self.n_page > 0:
             self.n_page -= 1
