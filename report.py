@@ -4,8 +4,9 @@
 with mako and render the report to a pdf with rst2pdf"""
 
 import wx
-import subprocess
+#import subprocess
 import time
+import shutil
 
 import tempfile
 from mako.template import Template
@@ -156,6 +157,8 @@ class ReportEditor(wx.Dialog):
         self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor",
                                      style=wx.TE_MULTILINE)
 
+        self.save_button = wx.Button(self.buttonpanel, -1, "Save pdf")
+        self.print_button = wx.Button(self.buttonpanel, -1, "Print pdf")
         self.prev_button = wx.Button(self.buttonpanel, -1, "Prev Page")
         self.next_button = wx.Button(self.buttonpanel, -1, "Next Page")
         self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")
@@ -178,6 +181,8 @@ class ReportEditor(wx.Dialog):
     def _set_bindings(self):
         """Bindings"""
         self.Bind(wx.EVT_BUTTON, self.ondone, self.donebutton)
+        self.Bind(wx.EVT_BUTTON, self.print_pdf, self.print_button)
+        self.Bind(wx.EVT_BUTTON, self.save_pdf, self.save_button)
         self.Bind(wx.EVT_BUTTON, self.prev_page, self.prev_button)
         self.Bind(wx.EVT_BUTTON, self.next_page, self.next_button)
         self.Bind(wx.EVT_BUTTON, self.refresh_pdf, self.refresh_button)
@@ -189,15 +194,28 @@ class ReportEditor(wx.Dialog):
 
     def next_page(self, event):
         self.pdfviewer.gotoNextPage()
+
+    def print_pdf(self, event):
+        pass #TODO:
+
+
+    def save_pdf(self, event):
+        """Save pdf by copying temp file"""
+        dlg = wx.FileDialog(None, 'Save pdf as', style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        if dlg.ShowModal() == wx.ID_OK:
+            savefile = dlg.GetPath()
+
+        shutil.copyfile(self.pdf_file, savefile)
+        
         
 # end wxGlade
     def _init_values(self):
         """Initialise values in texteditor and pdf viewer"""
-        pdf_file = self.report.generate_pdf()
+        self.pdf_file = self.report.generate_pdf()
         time.sleep(3)
         
         self.raweditor.write(self.raw_text)
-        self.pdfviewer.LoadFile(pdf_file)
+        self.pdfviewer.LoadFile(self.pdf_file)
 
         w, h = self.GetSize()
         self.splitter.SetSashPosition(h)
@@ -206,10 +224,10 @@ class ReportEditor(wx.Dialog):
 
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
-        pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
+        self.pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
         time.sleep(2)
 
-        self.pdfviewer.LoadFile(pdf_file)
+        self.pdfviewer.LoadFile(self.pdf_file)
         self.pdfviewer.Refresh()
 
     def __do_layout(self):
@@ -224,6 +242,8 @@ class ReportEditor(wx.Dialog):
         self.splitter.SplitHorizontally(self.pdfpanel, self.editorpanel)
         mainsizer.Add(self.splitter, 1, wx.EXPAND, 0)
 
+        buttonpanel_sizer.Add(self.save_button, 0, wx.ALL, 10)
+        buttonpanel_sizer.Add(self.print_button, 0, wx.ALL, 10)
         buttonpanel_sizer.Add(self.prev_button, 0, wx.ALL, 10)
         buttonpanel_sizer.Add(self.next_button, 0, wx.ALL, 10)
         buttonpanel_sizer.Add(self.refresh_button, 0, wx.ALL, 10)
