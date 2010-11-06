@@ -10,6 +10,8 @@ import time
 import tempfile
 from mako.template import Template
 #from rst2pdf.createpdf import RstToPdf
+from rst2pdf import createpdf
+
 
 if wx.Platform == '__WXMSW__':
     from wx.lib.pdfwin import PDFWindow as PDFWindowWin
@@ -51,6 +53,7 @@ class Report():
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
         print tmp_rstfilename
+        print tmp_pdffilename
 
         if not raw:
             raw = self.raw_report
@@ -59,17 +62,15 @@ class Report():
             fi.write(raw)
 
         # invoke rst2pdf
-        print self.stylefile
-        print tmp_pdffilename
-        print tmp_rstfilename
-        
         if self.stylefile:
-            cmd = ['rst2pdf', '-s', self.stylefile, '-o', tmp_pdffilename, tmp_rstfilename]
+            cmd = ['-s', self.stylefile, '-o', tmp_pdffilename, tmp_rstfilename]
         else:
             cmd = ['rst2pdf', '-o', tmp_pdffilename, tmp_rstfilename]
 
         print cmd
-        subprocess.Popen(cmd)
+            
+        createpdf.main(cmd)
+
         return tmp_pdffilename
 
 
