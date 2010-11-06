@@ -195,44 +195,44 @@ class ReportManager():
         form.Destroy()
         
 
-    def generate_report(self, event):
-        """Generate report for the selected record in the register
-        using the specified report"""
-        selected_record = self.register.record_display.GetFirstSelected()
+    # def generate_report(self, event):
+    #     """Generate report for the selected record in the register
+    #     using the specified report"""
+    #     selected_record = self.register.record_display.GetFirstSelected()
 
-        if selected_record == -1:
-            print 'No record selected'
-            return
+    #     if selected_record == -1:
+    #         print 'No record selected'
+    #         return
 
-        # convert to string coz unicode object does not work
-        id = str(''.join([self.register.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.records.index_keys))]))
+    #     # convert to string coz unicode object does not work
+    #     id = str(''.join([self.register.record_display.GetItem(
+    #                 selected_record, x).GetText()
+    #                 for x in range(len(self.records.index_keys))]))
         
-        template_file = self.report_files[event.Id // 2]
-        record_vals = self.records.retrieve_record(id)
+    #     template_file = self.report_files[event.Id // 2]
+    #     record_vals = self.records.retrieve_record(id)
 
-        # retrieve stored raw report
-        try:
-            raw_report = record_vals['raw_report']
-        except KeyError:
-            raw_report = ''
+    #     # retrieve stored raw report
+    #     try:
+    #         raw_report = record_vals['raw_report']
+    #     except KeyError:
+    #         raw_report = ''
         
-        # style file in the project directory
-        # same name as report or all.sty
-        local_stylefile = os.path.splitext(template_file)[0] + '.sty'
-        global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
+    #     # style file in the project directory
+    #     # same name as report or all.sty
+    #     local_stylefile = os.path.splitext(template_file)[0] + '.sty'
+    #     global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
 
-        if os.path.exists(local_stylefile):
-            rep = Report(template_file, record_vals, raw_report, local_stylefile)
-        elif os.path.exists(global_stylefile):
-            rep = Report(template_file, record_vals, raw_report, global_stylefile)
-        else:
-            rep = Report(template_file, record_vals, raw_report)
+    #     if os.path.exists(local_stylefile):
+    #         rep = Report(template_file, record_vals, raw_report, local_stylefile)
+    #     elif os.path.exists(global_stylefile):
+    #         rep = Report(template_file, record_vals, raw_report, global_stylefile)
+    #     else:
+    #         rep = Report(template_file, record_vals, raw_report)
 
-        pdf_file = rep.generate_pdf()
+    #     pdf_file = rep.generate_pdf()
         
-        self.display_pdf(pdf_file)
+    #     self.display_pdf(pdf_file)
 
 
 
@@ -260,9 +260,7 @@ class ReportManager():
         #self.register.refresh_records()
 
         
-        
-        
-    def edit_report(self, event):
+    def show_n_edit_report(self, event):
         """Display the report for the selected record and allow edits"""
         selected_record = self.register.record_display.GetFirstSelected()
 
@@ -286,9 +284,13 @@ class ReportManager():
         
         # style file in the project directory
         # same name as report or all.sty
-        stylefile = os.path.splitext(template_file)[0] + '.sty'
-        if os.path.exists(stylefile):
-            rep = Report(template_file, record_vals, raw_report, stylefile)
+        local_stylefile = os.path.splitext(template_file)[0] + '.sty'
+        global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
+        
+        if os.path.exists(local_stylefile):
+            rep = Report(template_file, record_vals, raw_report, local_stylefile)
+        elif os.path.exists(global_stylefile):
+            rep = Report(template_file, record_vals, raw_report, global_stylefile)
         else:
             rep = Report(template_file, record_vals, raw_report)
 
@@ -451,15 +453,15 @@ class Register(wx.Frame):
         template_menu.Append(ID_NEWTEMPLATE, "&New Template", "Create a new template")
         template_menu.Append(ID_DELTEMPLATE, "&Delete Template", "Delete a template")
             
-        # TODO: Avoid repetition and incorporate in prev loop
-        report_edit_menu = wx.Menu()
-        for i in range(len(self.parent.report_files)):
-            report_name = os.path.basename(self.parent.report_files[i]).rstrip('.rst')
-            report_edit_menu.Append(2*i + 1, report_name)
+        # # TODO: Avoid repetition and incorporate in prev loop
+        # report_edit_menu = wx.Menu()
+        # for i in range(len(self.parent.report_files)):
+        #     report_name = os.path.basename(self.parent.report_files[i]).rstrip('.rst')
+        #     report_edit_menu.Append(2*i + 1, report_name)
         
         self.MenuBar.Append(file_menu, "&File")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
-        self.MenuBar.Append(report_edit_menu, "&Edit Report")
+        #self.MenuBar.Append(report_edit_menu, "&Edit Report")
         self.MenuBar.Append(template_menu, "&Template")
         
         self.SetMenuBar(self.MenuBar)
@@ -481,11 +483,11 @@ class Register(wx.Frame):
 
         # all generate report events are bound to one function
         for i in range(len(self.parent.report_files)):
-            self.Bind(wx.EVT_MENU, self.parent.generate_report, id=2*i)
+            self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i)
 
-        # all edit report events
-        for i in range(len(self.parent.report_files)):
-            self.Bind(wx.EVT_MENU, self.parent.edit_report, id=2*i + 1)
+        # # all edit report events
+        # for i in range(len(self.parent.report_files)):
+        #     self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i + 1)
 
     def load_records(self):
         """Load the index and display"""

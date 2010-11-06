@@ -33,6 +33,8 @@ class Report():
         self.raw_report = raw_report
         self.stylefile = stylefile
 
+        print 'stylefile', stylefile
+        
         self.template = Template(filename=template_file)
 
         # create a new report only if there isnt one stored
@@ -63,9 +65,9 @@ class Report():
 
         # invoke rst2pdf
         if self.stylefile:
-            cmd = ['-s', self.stylefile, '-o', tmp_pdffilename, tmp_rstfilename]
+            cmd = ['-s', self.stylefile, tmp_rstfilename, '-o', tmp_pdffilename]
         else:
-            cmd = ['rst2pdf', '-o', tmp_pdffilename, tmp_rstfilename]
+            cmd = [tmp_rstfilename, '-o', tmp_pdffilename]
 
         print cmd
             
