@@ -34,8 +34,6 @@ class Report():
         self.raw_report = raw_report
         self.stylefile = stylefile
 
-        print 'stylefile', stylefile
-        
         self.template = Template(filename=template_file)
 
         # create a new report only if there isnt one stored
@@ -70,8 +68,6 @@ class Report():
         else:
             cmd = [tmp_rstfilename, '-o', tmp_pdffilename]
 
-        print cmd
-            
         createpdf.main(cmd)
 
         return tmp_pdffilename
@@ -154,7 +150,7 @@ class ReportEditor(wx.Dialog):
             self.pdfviewer = PDFWindowWin(self.pdfpanel)
         elif wx.Platform == '__WXGTK__':
             self.pdfviewer = PDFWindowLin(self.pdfpanel)
-        self.raweditor = wx.TextCtrl(self.editorpanel, -1, "text editor",
+        self.raweditor = wx.TextCtrl(self.editorpanel, -1, "",
                                      style=wx.TE_MULTILINE)
 
         self.save_button = wx.Button(self.buttonpanel, -1, "Save pdf")
@@ -242,12 +238,12 @@ class ReportEditor(wx.Dialog):
         self.splitter.SplitHorizontally(self.pdfpanel, self.editorpanel)
         mainsizer.Add(self.splitter, 1, wx.EXPAND, 0)
 
-        buttonpanel_sizer.Add(self.save_button, 0, wx.ALL, 10)
-        buttonpanel_sizer.Add(self.print_button, 0, wx.ALL, 10)
-        buttonpanel_sizer.Add(self.prev_button, 0, wx.ALL, 10)
-        buttonpanel_sizer.Add(self.next_button, 0, wx.ALL, 10)
-        buttonpanel_sizer.Add(self.refresh_button, 0, wx.ALL, 10)
-        buttonpanel_sizer.Add(self.editor_show_button, 0, wx.ALL, 10)
+        buttonpanel_sizer.Add(self.save_button, 0, wx.ALL, 5)
+        buttonpanel_sizer.Add(self.print_button, 0, wx.ALL, 5)
+        buttonpanel_sizer.Add(self.prev_button, 0, wx.ALL, 5)
+        buttonpanel_sizer.Add(self.next_button, 0, wx.ALL, 5)
+        buttonpanel_sizer.Add(self.refresh_button, 0, wx.ALL, 5)
+        buttonpanel_sizer.Add(self.editor_show_button, 0, wx.ALL, 5)
         self.buttonpanel.SetSizer(buttonpanel_sizer)
 
         pdfpanel_sizer.Add(self.pdfviewer, 6, wx.ALL|wx.EXPAND, 10)

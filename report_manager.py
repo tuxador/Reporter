@@ -37,8 +37,6 @@ class ReportManager():
         configfile = self.get_configfile()
         self.config = Config(configfile)
 
-        print configfile
-
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file)
@@ -56,16 +54,6 @@ class ReportManager():
         
     def load_project(self, project_dir = None):
         """load project based on options in config file"""
-        # if not project_dir:
-        #     dlg = wx.DirDialog(None, "Choose project directory")
-        #     if dlg.ShowModal() == wx.ID_OK:
-        #         self.project_dir = dlg.GetPath()
-        #     else:
-        #         self.project_dir = project_dir
-        #         return # TODO:
-        print self.config.options
-        
-
         self.project_dir = self.config.options['projects'][int(self.config.options['default_project'])]
         
         # paths
@@ -302,7 +290,6 @@ class ReportManager():
         
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
-        print pdf_file
         if sys.platform.startswith('linux'):
             time.sleep(2)
             subprocess.Popen(['evince', pdf_file])

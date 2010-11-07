@@ -154,7 +154,7 @@ class FormPanel(scrolled.ScrolledPanel):
                 pane.Collapse(pane != active_pane)
 
         # set focus on first control in the active pane
-        active_pane.controls[0].SetFocus()
+        #active_pane.controls[0].SetFocus()
                 
 
 class Pane(wx.CollapsiblePane):
