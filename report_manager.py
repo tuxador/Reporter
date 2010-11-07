@@ -54,7 +54,8 @@ class ReportManager():
         
     def load_project(self, project_dir = None):
         """load project based on options in config file"""
-        self.project_dir = self.config.options['projects'][int(self.config.options['default_project'])]
+        self.project_dir = self.config.options['projects'][
+            int(self.config.options['default_project'])]
         
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
@@ -62,9 +63,6 @@ class ReportManager():
         self.report_files = glob.glob(os.path.join(self.project_dir, '*.rst'))
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
-
-        print self.project_dir
-        print self.fields_file
 
         self.project_name = os.path.basename(self.project_dir)
         
@@ -85,6 +83,7 @@ class ReportManager():
             missing_files.append('Report_Files')
 
         if not VALID_PROJ:
+            self.register.SetStatusText('Missing files in project', 0)
             print 'Not all files required for project are present. The following files are missing'
             for f in missing_files:
                 print f
@@ -103,8 +102,6 @@ class ReportManager():
         else:
             template_name = 'Empty'
 
-        print 'template used', template_name
-            
         if template_name == 'Empty':
             form = Form(None, self.fields_file, 'Fill in the values')            
         else:
@@ -162,7 +159,7 @@ class ReportManager():
         selected_record = self.register.record_display.GetFirstSelected()
 
         if selected_record == -1:
-            print 'No record selected'
+            self.register.SetStatusText('No record selected', 0)
             return
 
         id = str(''.join([self.register.record_display.GetItem(
@@ -253,7 +250,7 @@ class ReportManager():
         selected_record = self.register.record_display.GetFirstSelected()
 
         if selected_record == -1:
-            print 'No record selected'
+            self.register.SetStatusText('No record selected', 0)
             return
 
         # convert to string coz unicode object does not work
@@ -409,6 +406,8 @@ class Register(wx.Frame):
         mainsizer.Fit(self)
         self.Layout()
         # self.SetSizer(mainsizer)
+
+        self.CreateStatusBar(2)
         
         #self.Layout()
         self.Centre()
