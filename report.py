@@ -36,8 +36,12 @@ class Report():
 
         self.template = Template(filename=template_file)
 
+        # flag to indicate if stored raw report is used
+        self.STORED_RAW = False
+        
         # create a new report only if there isnt one stored
         if self.raw_report == '':
+            self.STORED_RAW = True
             self.generate_raw()
 
 
@@ -166,6 +170,8 @@ class ReportEditor(wx.Dialog):
         self.__set_properties()
         self.__do_layout()
 
+        #self.CreateStatusBar()
+        
         self._set_bindings()
         self._init_values()
         # end wxGlade
@@ -213,6 +219,9 @@ class ReportEditor(wx.Dialog):
         self.raweditor.write(self.raw_text)
         self.pdfviewer.LoadFile(self.pdf_file)
 
+        # if self.report.STORED_RAW == True:
+        #     self.SetStatusText('Using stored report')
+        
         w, h = self.GetSize()
         self.splitter.SetSashPosition(h)
         self.EDITOR_SHOWN = False
@@ -265,7 +274,7 @@ class ReportEditor(wx.Dialog):
         self.SetSizer(rootsizer)
         rootsizer.Fit(self)
 
-        self.SetSize((600, 800))
+        self.SetSize((600, 600))
         
         self.Layout()
         # end wxGlade
