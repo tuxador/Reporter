@@ -10,7 +10,7 @@
 <%
     def list2onecolcsv(lst):
         """convert items in python list to a single column csv table"""
-	return '\n    '.join(["," + x for x in lst if x.strip() != ''])	
+	return '\n    '.join([",'" + x + "'" for x in lst if x.strip() != ''])	
 %>
 
 
@@ -64,8 +64,8 @@ Puducherry - 605006
 
 .. csv-table:: Investigations
 
-   "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_RFT']} mg/dl"
-   "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}", "**HCV**", "${vals['Investigations_HCV']}"
+   "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_Bld Urea']} mg/dl"
+   "**Se Creatinine**", "${vals['Investigations_Se Creat']},  "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}"
     
 
 .. csv-table:: Access and catheters
@@ -80,7 +80,8 @@ Puducherry - 605006
 .. csv-table:: Baseline
    :widths: 3, 10
 
-   "**Measurements**", "AH ${vals['Baseline_AH']}ms, HV ${vals['Baseline_HV']}ms, CL ${vals['Baseline_CL']}ms"
+   "**Rhythm**", "${vals['Baseline_Rhythm']}"
+   "**Measurements**", "${noblanks('PR ', vals['Baseline_PR'], ' ms')}, ${noblanks('AH ', vals['Baseline_AH'], ' ms')}, ${noblanks('HV ', vals['Baseline_HV'], ' ms')}, CL ${vals['Baseline_CL']}ms"
    "**ParaHisian pacing**", "${vals['Baseline_Parahisian']}"
    "**Incr RV pace**", "VA conduction ${vals['Incr V Pace_VA conduction']}, VAWB ${vals['Incr V Pace_VAWB']}ms, Atrial activation ${vals['Incr V Pace_Atrial Activation']}"
    "**Progr RV pace**", "VA conduction ${vals['Prog V Pace_VA conduction']}, VAERP ${vals['Prog V Pace_VAERP']}ms, Atrial activation ${vals['Prog V Pace_Atrial Activation']}, VERP ${vals['Prog V Pace_VERP']}ms"
@@ -92,11 +93,13 @@ Puducherry - 605006
    :widths: 3, 10
 
     "**Induction**", "${vals['Tachycardia_Induction']}, ${vals['Tachycardia_Termination']}"
-    "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, AH ${vals['Tachycardia_AH']}ms, HV ${vals['Tachycardia_HV']}ms, VA ${vals['Tachycardia_VA']}ms"
+    "**Measurements**", "${vals['Tachycardia_QRS']} tachycardia, CL ${vals['Tachycardia_CL']}ms, ${noblanks('AH ',vals['Tachycardia_AH'], ' ms')}, ${noblanks('HV ',vals['Tachycardia_HV'], ' ms')}, ${noblanks('VA ',vals['Tachycardia_VA'], ' ms')}"
     "**VA relation**", "${vals['Tachycardia_VA relationship']} with ${vals['Tachycardia_Atrial activation']}"
     "**RV Pacing**", "${vals['Tachycardia_RV overdrive']} ${noblanks(', RV extra - ',vals['Tachycardia_RV extra'], '.')}"
     "**Atrial Pacing**", "${vals['Tachycardia_RA overdrive']} ${noblanks(', ', vals['Tachycardia_RA extra'], '.')}"
     "**Comment**", "${vals['Tachycardia_Comment']}"
+
+
 
 .. csv-table:: Mapping and RF ablation
     :widths: 3, 10

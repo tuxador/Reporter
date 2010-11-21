@@ -8,7 +8,7 @@
 
 Demographics:
   0: [Name, text]
-  1: [Age, spin, 1, 100, 35]
+  1: [Age (yrs), text]
   2: [Sex, combo, [Male,Female], Male]
   3: [Date of Admission (yyyy-mm-dd), date]
   4: [Date of Procedure (yyyy-mm-dd), date]
@@ -31,12 +31,12 @@ Clinical:
 ---
 
 Investigations:
-  0: [Hb, text]
-  1: [Bld Sugar,text]
-  2: [RFT, text, Bl. Urea - Se. Creat - ]
-  3: [HIV, text]
-  4: [HBsAg, text]
-  5: [HCV, text]
+  0: [Hb (g/dl), text]
+  1: [Bld Sugar (mg/dl),text]
+  2: [Bld Urea (mg/dl), text]
+  3: [Se Creat (mg/dl), text]
+  4: [HIV, text, Negative]
+  5: [HBsAg, text, Negative]
 
 ---
 
@@ -61,17 +61,18 @@ Technical:
 
 Baseline:
   0: [Rhythm, combo, ['', NSR, AF], NSR]
-  1: [CL (ms), spin, 100, 2000, 700]
-  2: [AH (ms), spin, 10, 200, 85]
-  3: [HV (ms), spin, -100, 100, 40]
-  4: [Parahisian, combo, ['', not done, nodal, extranodal, indeterminate], nodal]
+  1: [PR (ms), text]
+  2: [CL (ms), text]
+  3: [AH (ms), text]
+  4: [HV (ms), text]
+  5: [Parahisian, combo, ['', not done, nodal, extranodal, indeterminate], '']
 
 ---
 
 Incr V Pace:
   0: [VA conduction, combo, [non-decremental, decremental, absent], non-decremental]
   1: [VAWB, text, <300]
-  2: [Atrial Activation, combo, [concentric, eccentric], concentric]
+  2: [Atrial Activation, combo, [concentric, eccentric, ''], concentric]
   3: [Comments, text]
   
 ---
@@ -108,10 +109,10 @@ Prog A Pace:
 Tachycardia:
   0: [Induction, text, Induced by]
   1: [QRS, combo, [Narrow complex, LBBB, RBBB], Narrow complex]
-  2: [CL, spin, 100, 1000, 300]
-  3: [AH, spin, 10, 200, 85]
-  4: [HV, spin, -100, 100, 40]
-  5: [VA, spin, -100, 1000, 60]
+  2: [CL, text]
+  3: [AH, text]
+  4: [HV, text]
+  5: [VA, text]
   6: [VA relationship, combo, ['1:1', '2:1', '1:2'], '1:1']
   7: [Atrial activation, combo, [concentric, eccentric], concentric]
   8: [RV overdrive, text]
@@ -124,13 +125,14 @@ Tachycardia:
 ---
 
 Ablation:
-  0: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue]
-  1: [Target, text]
-  2: [Settings, text]
-  3: [RF applications, spin, 0, 100, 0]
-  4: [Time (seconds), spin , 0, 2000, 0]
-  5: [Endpoint, text]
-  6: [Comments, multitext]
+  0: [Ablation done, combo, [Done, Not done], Done]
+  1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue]
+  2: [Target, text]
+  3: [Settings, text]
+  4: [RF applications, spin, 0, 100, 0]
+  5: [Time (seconds), spin , 0, 2000, 0]
+  6: [Endpoint, text]
+  7 : [Comments, multitext]
 
 ---
 
