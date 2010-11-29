@@ -2,7 +2,6 @@
 
 # Author: Raja Selvaraj <rajajs@gmail.com>
 # License: GPL
-
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin
 

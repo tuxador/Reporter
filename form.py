@@ -67,9 +67,6 @@ class Form(wx.Dialog):
         """Fill in the form according to the dict vals"""
         for label, control in zip(self.panel.labels, self.panel.controls):
             try:
-                print control
-                print 'label', label
-                print 'trying to set', vals[label]
                 control.SetValue(vals[label])
             except KeyError:
                 pass
@@ -148,13 +145,15 @@ class FormPanel(scrolled.ScrolledPanel):
 
     def on_pane_changed(self, event):
         """When a pane uncollapses, make sure other panes are collapsed"""
+        print dir(event)
         active_pane = event.EventObject
         if not event.GetCollapsed():
             for pane in self.panes:
                 pane.Collapse(pane != active_pane)
 
-        # set focus on first control in the active pane
-        active_pane.controls[0].SetFocus()
+        # set focus on first control in the active pane #TODO: causes segmentation fault
+        #active_pane.controls[0].SetFocus()
+        
                 
 
 class Pane(wx.CollapsiblePane):
