@@ -373,9 +373,13 @@ class Register(wx.Frame):
 
 
         panel = wx.Panel(self, -1)
-        
+
+        # load the records and create index
+        self.index_summary = self.records.create_index()
+    
         # listcontrol
-        self.record_display = AutoWidthListCtrl(panel)
+        # TODO: need to pass number of columns in index
+        self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys))
 
         # buttons
         self.edit_button = wx.Button(panel, -1,  'Edit Record')
@@ -411,8 +415,8 @@ class Register(wx.Frame):
         #self.Layout()
         self.Centre()
         self.Show(True)
-
         self.load_records()
+
 
     def _build_menubar(self):
         """Build the menu bar"""
@@ -437,12 +441,6 @@ class Register(wx.Frame):
         template_menu = wx.Menu()
         template_menu.Append(ID_NEWTEMPLATE, "&New Template", "Create a new template")
         template_menu.Append(ID_DELTEMPLATE, "&Delete Template", "Delete a template")
-            
-        # # TODO: Avoid repetition and incorporate in prev loop
-        # report_edit_menu = wx.Menu()
-        # for i in range(len(self.parent.report_files)):
-        #     report_name = os.path.basename(self.parent.report_files[i]).rstrip('.rst')
-        #     report_edit_menu.Append(2*i + 1, report_name)
         
         self.MenuBar.Append(file_menu, "&File")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
@@ -470,17 +468,12 @@ class Register(wx.Frame):
         for i in range(len(self.parent.report_files)):
             self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i)
 
-        # # all edit report events
-        # for i in range(len(self.parent.report_files)):
-        #     self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i + 1)
 
     def load_records(self):
         """Load the index and display"""
-        summary = self.records.create_index()
-        
         # for sorting we use the full db
         # itemdatamap must be a dict
-        self.record_display.itemDataMap = summary
+        self.record_display.itemDataMap = self.index_summary
 
         index_keys = self.records.index_keys
         
@@ -490,8 +483,8 @@ class Register(wx.Frame):
             self.record_display.InsertColumn(i, keyname)
         
         #self.record_display.ClearAll()
-        for key in summary:
-            self.record_display_append(summary[key], key)
+        for key in self.index_summary:
+            self.record_display_append(self.index_summary[key], key)
 
 
     def refresh_records(self):
@@ -527,16 +520,15 @@ class Register(wx.Frame):
         
 
 class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
-    def __init__(self, parent):
+    def __init__(self, parent, columns_to_sort):
+        # columns_to_sort is number of columns
         wx.ListCtrl.__init__(self, parent, -1, style=wx.LC_REPORT)
         ListCtrlAutoWidthMixin.__init__(self)
-        ColumnSorterMixin.__init__(self, 4)
+        ColumnSorterMixin.__init__(self, columns_to_sort)
 
     def GetListCtrl(self):
         return self
 
-        
-            
 
 
 

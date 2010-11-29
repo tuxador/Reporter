@@ -34,6 +34,7 @@ class Records():
             #rec_key = str(''.join([str(x) for x in rec]))
             index_dict[i] = rec
 
+        print index_dict
         return index_dict
 
 
