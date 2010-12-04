@@ -280,7 +280,7 @@ class ReportEditor(wx.Dialog):
         # end wxGlade
 
 
-    def ondone(self):
+    def ondone(self, event):
         """"""
         self.EndModal(wx.ID_OK)
         
