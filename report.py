@@ -139,10 +139,16 @@ class ReportEditor(wx.Dialog):
         wx.Dialog.__init__(self, parent, -1, 'Edit Report',
                            style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
+
         self.mainpanel = wx.Panel(self, -1)
 
+        # custom statusbar
+        self.statusbarpanel = wx.Panel(self, -1, size=((20,40)),
+                                       style=wx.SUNKEN_BORDER)
+        self.statusbar = wx.StaticText(self.statusbarpanel, -1, 'This is the statusbar')
+        
         self.splitter = wx.SplitterWindow(self.mainpanel, -1, style=wx.SP_3D|wx.SP_BORDER)
-        #self.splitter.SetMinimumPanesize(20)
+
         self.editorpanel = wx.Panel(self.splitter, -1)
         self.pdfpanel = wx.Panel(self.splitter, -1)
         self.splitter.SetMinimumPaneSize(20)
@@ -219,8 +225,11 @@ class ReportEditor(wx.Dialog):
         self.raweditor.write(self.raw_text)
         self.pdfviewer.LoadFile(self.pdf_file)
 
-        # if self.report.STORED_RAW == True:
-        #     self.SetStatusText('Using stored report')
+        #self.show_message('Loaded pdf')
+        if self.report.STORED_RAW == True:
+            self.show_message('Using stored report')
+        else:
+            self.show_message('Creating new report')
         
         w, h = self.GetSize()
         self.splitter.SetSashPosition(h)
@@ -229,15 +238,23 @@ class ReportEditor(wx.Dialog):
 
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
+        self.show_message('Refreshing pdf ...')
+        time.sleep(1)
         self.pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
         time.sleep(2)
 
         self.pdfviewer.LoadFile(self.pdf_file)
         self.pdfviewer.Refresh()
+        self.show_message('Reloaded pdf')
 
     def __do_layout(self):
         # begin wxGlade: Frame.__do_layout
         rootsizer = wx.BoxSizer(wx.VERTICAL)
+
+        statussizer = wx.BoxSizer(wx.VERTICAL)
+        statussizer.Add(self.statusbar, 0, wx.ALL, 2)
+        self.statusbarpanel.SetSizer(statussizer)
+        
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         editorpanel_sizer = wx.BoxSizer(wx.VERTICAL)
         buttonpanel2_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -269,8 +286,9 @@ class ReportEditor(wx.Dialog):
 
         self.mainpanel.SetSizer(mainsizer)
 
-        rootsizer.Add(self.mainpanel, 1, wx.EXPAND, 0)
-
+        rootsizer.Add(self.mainpanel, 12, wx.EXPAND, 0)
+        rootsizer.Add(self.statusbarpanel, 1, wx.ALL|wx.EXPAND, 10)
+        
         self.SetSizer(rootsizer)
         rootsizer.Fit(self)
 
@@ -298,7 +316,10 @@ class ReportEditor(wx.Dialog):
             self.splitter.SetSashPosition(h/2)
             self.EDITOR_SHOWN = True
             self.editor_show_button.SetLabel("Hide Editor")
-        
+
+    def show_message(self, msg):
+        """show the message in the statusbar"""
+        self.statusbar.SetLabel(msg)
         
 
 class PDFWindowLin(wx.ScrolledWindow):
