@@ -161,7 +161,7 @@ class ReportEditor(wx.Dialog):
         self.print_button = wx.Button(self.buttonpanel, -1, "Print pdf")
         self.prev_button = wx.Button(self.buttonpanel, -1, "Prev Page")
         self.next_button = wx.Button(self.buttonpanel, -1, "Next Page")
-        self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")
+        self.refresh_button = wx.Button(self.buttonpanel, -1, "Refresh")  
         self.editor_show_button = wx.Button(self.buttonpanel, -1, "Show Editor")
         
         self.revertbutton = wx.Button(self.buttonpanel2, -1, "Revert")

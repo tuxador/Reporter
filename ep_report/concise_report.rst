@@ -10,7 +10,7 @@
 <%
     def list2onecolcsv(lst):
         """convert items in python list to a single column csv table"""
-	return '\n    '.join([",'" + x + "'" for x in lst if x.strip() != ''])	
+	return '\n    '.join([',"' + x + '"' for x in lst if x.strip() != ''])	
 %>
 
 
@@ -65,7 +65,7 @@ Puducherry - 605006
 .. csv-table:: Investigations
 
    "**Hb**", "${vals['Investigations_Hb']} gms/dl", "**Bld Sugar**", "${vals['Investigations_Bld Sugar']} mg/dl", "**Bld Urea**", "${vals['Investigations_Bld Urea']} mg/dl"
-   "**Se Creatinine**", "${vals['Investigations_Se Creat']},  "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}"
+   "**Se Creatinine**", "${vals['Investigations_Se Creat']}",  "**HIV**", "${vals['Investigations_HIV']}", "**HBsAg**", "${vals['Investigations_HBsAg']}"
     
 
 .. csv-table:: Access and catheters
