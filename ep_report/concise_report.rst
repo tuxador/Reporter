@@ -48,7 +48,7 @@ Puducherry - 605006
 
           "**Name**", "${vals['Demographics_Name']}", "**Age**", "${vals['Demographics_Age']} yrs", "**Sex**", "${vals['Demographics_Sex']}"
 	  "**Date of Adm.**", "${invert_date(vals['Demographics_Date of Admission'])}", "**Proc. date**", "${invert_date(vals['Demographics_Date of Procedure'])}", "**Contact No.**", "${vals['Demographics_Contact number']}"
-	  "**IP No.**", "${vals['Demographics_IP Number']}", "**Hospital No.**", "${vals['Demographics_Hospital Number']}", "**EPS No.**", "${vals['Demographics_EPS Number']}"
+	  "**IP No.**", "${vals['Demographics_IP Number']}", "**MRD No.**", "${vals['Demographics_MRD Number']}", "**EPS No.**", "${vals['Demographics_EPS Number']}"
 	  "**Lab**", "${vals['Technical_Lab']}", "**EP System**", "${vals['Technical_EP System']}", "**3 D mapping**", "${vals['Technical_3D Mapping']}"
 	  "**Operator 1**", "${vals['Technical_Operator 1']}", "**Operator 2**", "${vals['Technical_Operator 2']}", "**Tech. Asst**", "${vals['Technical_Technical Assistant']}"
 	  "**Procedure start**", "${vals['Demographics_Procedure Start']}", "**Procedure end**", "${vals['Demographics_Procedure End']}", "**Fluoro time**", "${vals['Demographics_Fluoro time']} mins"
@@ -105,6 +105,7 @@ Puducherry - 605006
     :widths: 3, 10
 
     "**Catheter**", "${vals['Ablation_Catheter']}"
+    "**Approach**", "${vals['Ablation_Approach']}"
     "**Target**", "${vals['Ablation_Target']}"
     "**RF**", "Settings - ${vals['Ablation_Settings']}, RF applications - ${vals['Ablation_RF applications']}, RF time - ${vals['Ablation_Time']} seconds"
     "**Endpoint**", "${vals['Ablation_Endpoint']}"

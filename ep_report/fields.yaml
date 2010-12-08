@@ -13,7 +13,7 @@ Demographics:
   3: [Contact number, text]
   4: [Date of Admission (yyyy-mm-dd), date]
   5: [Date of Procedure (yyyy-mm-dd), date]
-  6: [Hospital Number, text]
+  6: [MRD Number, text]
   7: [IP Number, text]
   8: [EPS Number, text, 2010/]
   9: [Procedure Start(hh.mm am), text]
@@ -128,20 +128,21 @@ Tachycardia:
 Ablation:
   0: [Ablation done, combo, [Done, Not done], Done]
   1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue]
-  2: [Target, text]
-  3: [Settings, text]
-  4: [RF applications, spin, 0, 100, 0]
-  5: [Time (seconds), spin , 0, 2000, 0]
-  6: [Endpoint, text]
-  7 : [Comments, multitext]
+  2: [Approach, combo, [transseptal, retrograde, ''], '']
+  3: [Target, text]
+  4: [Settings, text]
+  5: [RF applications, spin, 0, 100, 0]
+  6: [Time (seconds), spin , 0, 2000, 0]
+  7: [Endpoint, text]
+  8: [Comments, multitext]
 
 ---
 
 Post Ablation:
   0: [Rhythm, text]
-  1: [CL, spin, 100, 2000, 700]
-  2: [AH, spin, 10, 200, 60]
-  3: [HV, spin, -100, 100, 40]
+  1: [CL, text]
+  2: [AH, text]
+  3: [HV, text]
   4: [Parahisian, combo, [not done, nodal, extranodal, indeterminate], nodal]
   5: [Incr V Pace, text]
   6: [Prog V Pace, text]
@@ -151,7 +152,7 @@ Post Ablation:
 ---
 
 Conclusions:
-  0: [Diagnosis, combo, [AVNRT, AVRT, AT, Fascicular VT, Mahaim], AVNRT]
+  0: [Diagnosis, combo, [AVNRT, Concealed AP, WPW, AT, Fascicular VT, Mahaim, Atrial flutter, Scar VT, VT], AVNRT]
   1: [Success, combo, ['yes', 'no', indeterminate], 'yes']
   2: [Interesting features, combo, ['', AVNRT with AV block, AP conduction dissociation during abl], '']
   3: [Summary, text]

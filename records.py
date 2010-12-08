@@ -77,7 +77,12 @@ class Records():
             for record in self.db:
                 f.write(row_format % tuple([self.db[record][key]
                                             for key in fields]))
-            
+
+    def retrieve_column(self, fieldname):
+        """Retrieve the values corresponding to
+        a single key for all the records"""
+        return [self.db[record][fieldname] for record in self.db]
+                
 
 
 def test():

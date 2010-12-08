@@ -11,7 +11,7 @@ import glob
 import subprocess
 import time
 import yaml
-
+import numpy
 
 from records import Records
 from form import Form
@@ -26,7 +26,22 @@ ID_FLUSH = wx.NewId()
 ID_NEWTEMPLATE = wx.NewId()
 ID_DELTEMPLATE = wx.NewId()
 ID_QUIT = wx.NewId()
+ID_NUM_SUMMARY = wx.NewId()
+ID_CAT_SUMMARY = wx.NewId()
 
+#----------------------------
+# Utility functions
+
+def str2float(s):
+    """Convert the string s to a float.
+    If empty string or invalid literal,
+    return empty string"""
+    try:
+        return float(s)
+    except ValueError, AttributeError:
+        return ''
+
+    
 
 class ReportManager():
     """The primary controller.
@@ -179,46 +194,6 @@ class ReportManager():
         form.Destroy()
         
 
-    # def generate_report(self, event):
-    #     """Generate report for the selected record in the register
-    #     using the specified report"""
-    #     selected_record = self.register.record_display.GetFirstSelected()
-
-    #     if selected_record == -1:
-    #         print 'No record selected'
-    #         return
-
-    #     # convert to string coz unicode object does not work
-    #     id = str(''.join([self.register.record_display.GetItem(
-    #                 selected_record, x).GetText()
-    #                 for x in range(len(self.records.index_keys))]))
-        
-    #     template_file = self.report_files[event.Id // 2]
-    #     record_vals = self.records.retrieve_record(id)
-
-    #     # retrieve stored raw report
-    #     try:
-    #         raw_report = record_vals['raw_report']
-    #     except KeyError:
-    #         raw_report = ''
-        
-    #     # style file in the project directory
-    #     # same name as report or all.sty
-    #     local_stylefile = os.path.splitext(template_file)[0] + '.sty'
-    #     global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
-
-    #     if os.path.exists(local_stylefile):
-    #         rep = Report(template_file, record_vals, raw_report, local_stylefile)
-    #     elif os.path.exists(global_stylefile):
-    #         rep = Report(template_file, record_vals, raw_report, global_stylefile)
-    #     else:
-    #         rep = Report(template_file, record_vals, raw_report)
-
-    #     pdf_file = rep.generate_pdf()
-        
-    #     self.display_pdf(pdf_file)
-
-
 
     def flush_report(self, event):
         """Remove the stored raw report for the record if it exists"""
@@ -293,9 +268,52 @@ class ReportManager():
         elif sys.platform == 'win32':
             os.startfile(pdf_file)
 
-        # elif sys.platform == 'darwin':
-        #     return 'mac'
 
+    def summarize_numerical(self, fieldname):
+        """Calculate summary for numerical data with
+        field name (key) fieldname"""
+        col = self.records.retrieve_column(fieldname)
+        numerical_cols = [str2float(val) for val in col if str2float(val) != '']
+
+        mean = numpy.mean(numerical_cols)
+        stdev = numpy.std(numerical_cols)
+        minimum = min(numerical_cols)
+        maximum = max(numerical_cols)
+        missing_vals = len(col) - len(numerical_cols)
+
+        return mean, stdev, minimum, maximum, missing_vals
+
+
+    def cat_summary(self, event):
+        """summarize categorical data"""
+        # testing
+        field = 'Demographics_Sex'
+
+        col = self.records.retrieve_column(field)
+
+        uniq = {}
+
+        for val in col:
+            if val in uniq:
+                uniq[val] += 1
+            else:
+                uniq[val] = 1
+
+        print uniq
+        
+        
+    def num_summary(self, event):
+        """provide summary of numerical field"""
+        # todo: gui to display fields and results
+        
+        # testing
+        field = 'Demographics_Age'
+
+        mean, stdev, minimum, maximum, missing_vals = self.summarize_numerical(
+            field)
+        
+        
+    
 
 class TemplateChooser(wx.Dialog):
     """List the available templates and allow user to choose one"""
@@ -399,11 +417,7 @@ class Register(wx.Frame):
 
         panel.SetSizer(self.vbox)
 
-        # sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
-        # self.SetSizer(sizer_1)
-        # sizer_1.Fit(self)
-        # self.Layout()
-
+        
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         mainsizer.Add(panel, 1, wx.EXPAND, 5)
         mainsizer.Fit(self)
@@ -441,11 +455,16 @@ class Register(wx.Frame):
         template_menu = wx.Menu()
         template_menu.Append(ID_NEWTEMPLATE, "&New Template", "Create a new template")
         template_menu.Append(ID_DELTEMPLATE, "&Delete Template", "Delete a template")
+
+        info_menu = wx.Menu()
+        info_menu.Append(ID_NUM_SUMMARY, "&Numerical Summary", "Provide summary for numerical data")
+        info_menu.Append(ID_CAT_SUMMARY, "&Categorical Summary", "Provide summary for categorical data")
         
         self.MenuBar.Append(file_menu, "&File")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
         #self.MenuBar.Append(report_edit_menu, "&Edit Report")
         self.MenuBar.Append(template_menu, "&Template")
+        self.MenuBar.Append(info_menu, "&Info")
         
         self.SetMenuBar(self.MenuBar)
 
@@ -462,6 +481,8 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
+        self.Bind(wx.EVT_MENU, self.parent.num_summary, id=ID_NUM_SUMMARY)
+        self.Bind(wx.EVT_MENU, self.parent.cat_summary, id=ID_CAT_SUMMARY)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
         # all generate report events are bound to one function

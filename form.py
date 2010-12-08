@@ -145,7 +145,6 @@ class FormPanel(scrolled.ScrolledPanel):
 
     def on_pane_changed(self, event):
         """When a pane uncollapses, make sure other panes are collapsed"""
-        print dir(event)
         active_pane = event.EventObject
         if not event.GetCollapsed():
             for pane in self.panes:
