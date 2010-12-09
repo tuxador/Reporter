@@ -17,6 +17,7 @@ from records import Records
 from form import Form
 from report import Report
 from config_manager import Config
+from numsummary import NumSummary
 
 ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
@@ -301,11 +302,29 @@ class ReportManager():
 
         print uniq
         
+
+    def get_fieldnames(self, fields_file):
+        """retrieve the index names"""
+        fieldnames = []
+        fields_data = yaml.load_all(open(fields_file))
+
+        for data in fields_data: #collection of dictionaries
+            prefix = data.keys()[0]
+            
+            for i in range(len(data[prefix])):
+                suffix = data[prefix][i][0]
+                fieldnames.append(prefix + '_' + suffix)
+
+        return fieldnames
+                    
         
     def num_summary(self, event):
         """provide summary of numerical field"""
         # todo: gui to display fields and results
-        
+        fieldnames = self.get_fieldnames(self.fields_file)
+
+        numsummary = NumSummary(self, fieldnames)
+        numsummary.Show()
         # testing
         field = 'Demographics_Age'
 
