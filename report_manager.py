@@ -17,7 +17,7 @@ from records import Records
 from form import Form
 from report import Report
 from config_manager import Config
-from numsummary import NumSummary
+from summary import NumSummary, CatSummary
 
 ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
@@ -280,18 +280,15 @@ class ReportManager():
         stdev = numpy.std(numerical_cols)
         minimum = min(numerical_cols)
         maximum = max(numerical_cols)
-        missing_vals = len(col) - len(numerical_cols)
+        total_vals = len(col)
+        missing_vals = total_vals - len(numerical_cols)
+        
+        return mean, stdev, minimum, maximum, total_vals, missing_vals
 
-        return mean, stdev, minimum, maximum, missing_vals
 
-
-    def cat_summary(self, event):
+    def summarize_categorical(self, fieldname):
         """summarize categorical data"""
-        # testing
-        field = 'Demographics_Sex'
-
-        col = self.records.retrieve_column(field)
-
+        col = self.records.retrieve_column(fieldname)
         uniq = {}
 
         for val in col:
@@ -300,8 +297,21 @@ class ReportManager():
             else:
                 uniq[val] = 1
 
-        print uniq
-        
+        result = []
+        for key in uniq:
+            result.append((key, str(uniq[key])))
+                
+        return result
+
+
+    def cat_summary(self, event):
+        #TODO: retrive fieldnames in init and dont keep repeating
+        catsummary = CatSummary(self, self.get_fieldnames(self.fields_file))
+        catsummary.Show()
+    
+    def num_summary(self, event):
+        numsummary = NumSummary(self, self.get_fieldnames(self.fields_file))
+        numsummary.Show()
 
     def get_fieldnames(self, fields_file):
         """retrieve the index names"""
@@ -317,22 +327,7 @@ class ReportManager():
 
         return fieldnames
                     
-        
-    def num_summary(self, event):
-        """provide summary of numerical field"""
-        # todo: gui to display fields and results
-        fieldnames = self.get_fieldnames(self.fields_file)
-
-        numsummary = NumSummary(self, fieldnames)
-        numsummary.Show()
-        # testing
-        field = 'Demographics_Age'
-
-        mean, stdev, minimum, maximum, missing_vals = self.summarize_numerical(
-            field)
-        
-        
-    
+            
 
 class TemplateChooser(wx.Dialog):
     """List the available templates and allow user to choose one"""
@@ -397,9 +392,10 @@ class TemplateChooser(wx.Dialog):
     
 class Register(wx.Frame):
     """Display the index and allow selection and operation on records"""
+
     def __init__(self, parent, records, project_name):
         """records is a Records instance - provides the db functions"""
-        wx.Frame.__init__(self, None, -1, project_name, size=(460,600))
+        wx.Frame.__init__(self, None, -1, project_name, size=(640, 800))
 
         self.parent = parent
         self.records = records
@@ -442,7 +438,8 @@ class Register(wx.Frame):
         mainsizer.Fit(self)
         self.Layout()
         # self.SetSizer(mainsizer)
-
+        self.SetSize((600, 600))
+        
         self.CreateStatusBar(2)
         
         #self.Layout()

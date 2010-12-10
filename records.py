@@ -34,7 +34,6 @@ class Records():
             #rec_key = str(''.join([str(x) for x in rec]))
             index_dict[i] = rec
 
-        print index_dict
         return index_dict
 
 
@@ -69,7 +68,6 @@ class Records():
         # string format for each row
         row_format = '%s,' * len(fields) + '\n'
 
-        print 'fields', fields
         with open(filename, 'w') as f:
             # header row
             f.write(row_format % fields)
