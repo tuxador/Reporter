@@ -558,8 +558,23 @@ class Register(wx.Frame):
     # def load_and_edit_record(self):
     #     pass
 
-    def remove_record(self):
-        pass
+    def remove_record(self, event):
+        """delete the selected record"""
+        selected_record = self.record_display.GetFirstSelected()
+
+        if selected_record == -1:
+            self.SetStatusText('No record selected', 0)
+            return
+
+        id = str(''.join([self.record_display.GetItem(
+                        selected_record, x).GetText()
+                        for x in range(len(self.records.index_keys))]))
+
+        self.records.delete_record(id)
+        
+        self.index_summary = self.records.create_index()
+        self.refresh_records()
+
         
         
 
