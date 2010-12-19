@@ -44,6 +44,8 @@ class Report():
             self.STORED_RAW = True
             self.generate_raw()
 
+        print 'initing report with', self.raw_report
+    
 
     def generate_raw(self, event=None):
         """fill the template to create a raw_report"""
@@ -62,6 +64,7 @@ class Report():
 
         if not raw:
             raw = self.raw_report
+        
         # write the raw_report as a file
         with open(tmp_rstfilename,'w') as fi:
             fi.write(raw)
@@ -83,6 +86,8 @@ class Report():
         reped = ReportEditor(None, self, self.raw_report)
         if reped.ShowModal() == wx.ID_OK:
             self.raw_report = reped.raweditor.GetValue()
+            print 'returning', self.raw_report
+            
         reped.Destroy()
         #app.MainLoop()
         return self.raw_report

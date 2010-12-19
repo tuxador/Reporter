@@ -126,8 +126,11 @@ class ReportManager():
         if form.ShowModal() == wx.ID_OK:
             form.get_values()
             self.records.insert_record(form.vals)
+
+            # recreate index
+            self.register.index_summary = self.records.create_index()
             self.register.refresh_records()
-            
+                                    
         form.Destroy()
 
 
@@ -259,6 +262,7 @@ class ReportManager():
         record_vals['raw_report'] = raw_report
         self.records.insert_record(record_vals)
 
+        
         
     def display_pdf(self, pdf_file):
         """Display the pdf using the native viewer"""
@@ -510,14 +514,16 @@ class Register(wx.Frame):
         """Load the index and display"""
         # for sorting we use the full db
         # itemdatamap must be a dict
+        
         self.record_display.itemDataMap = self.index_summary
 
         index_keys = self.records.index_keys
-        
+
         # create the columns
         for i, val in enumerate(index_keys):
             keyname = val.split('_')[1]
             self.record_display.InsertColumn(i, keyname)
+
         
         #self.record_display.ClearAll()
         for key in self.index_summary:
@@ -528,7 +534,8 @@ class Register(wx.Frame):
         """Completely refresh the summary being shown"""
         self.record_display.ClearAll()
         self.load_records()
-
+        
+        
     def record_display_append(self, rec, key):
         """add the rec to display"""
         # convert everything to a string
