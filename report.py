@@ -59,9 +59,6 @@ class Report():
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
-        print tmp_rstfilename
-        print tmp_pdffilename
-
         if not raw:
             raw = self.raw_report
         
@@ -86,8 +83,7 @@ class Report():
         reped = ReportEditor(None, self, self.raw_report)
         if reped.ShowModal() == wx.ID_OK:
             self.raw_report = reped.raweditor.GetValue()
-            print 'returning', self.raw_report
-            
+                        
         reped.Destroy()
         #app.MainLoop()
         return self.raw_report
