@@ -404,18 +404,22 @@ class Register(wx.Frame):
         self.parent = parent
         self.records = records
         
-        self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.vbox = wx.BoxSizer(wx.VERTICAL)
-
+        self.hbox1 = wx.BoxSizer(wx.HORIZONTAL) # for the listctrl
+        self.hbox2 = wx.BoxSizer(wx.HORIZONTAL) # for the buttons
+        self.vbox = wx.BoxSizer(wx.VERTICAL) # for the panel
+        self.hbox3 = wx.BoxSizer(wx.HORIZONTAL) # for the filter controls
 
         panel = wx.Panel(self, -1)
 
+        # filter for records
+        self.filter_label = wx.ComboBox(panel, -1, choices=parent.get_fieldnames(parent.fields_file))
+        self.filter_operator = wx.ComboBox(panel, -1,
+                               choices=['==', '<' ,'>', 'contains', 'starts with'])
+        self.filter_value = wx.TextCtrl(panel, -1, style=wx.TE_PROCESS_ENTER)
+        
         # load the records and create index
         self.index_summary = self.records.create_index()
-    
         # listcontrol
-        # TODO: need to pass number of columns in index
         self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys))
 
         # buttons
@@ -427,7 +431,11 @@ class Register(wx.Frame):
         self.hbox2.Add(self.new_button, 1, wx.ALL, 5) 
         self.hbox2.Add(self.edit_button, 1, wx.ALL, 5)
         self.hbox2.Add(self.remove_button, 1, wx.ALL, 5)
-        
+        self.hbox3.Add(self.filter_label, 1, wx.ALL, 5)
+        self.hbox3.Add(self.filter_operator, 1, wx.ALL, 5)
+        self.hbox3.Add(self.filter_value, 1, wx.ALL, 5)
+
+        self.vbox.Add(self.hbox3, 1, wx.ALL|wx.EXPAND, 10)
         self.vbox.Add(self.hbox1, 6, wx.EXPAND, 10)
         self.vbox.Add(self.hbox2, 1, wx.ALL|wx.EXPAND, 10)
 
@@ -505,6 +513,9 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.cat_summary, id=ID_CAT_SUMMARY)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
+        self.filter_value.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
+        #self.filter_operator.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
+        
         # all generate report events are bound to one function
         for i in range(len(self.parent.report_files)):
             self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i)
@@ -534,6 +545,68 @@ class Register(wx.Frame):
         """Completely refresh the summary being shown"""
         self.record_display.ClearAll()
         self.load_records()
+        
+
+    def apply_filter(self, event):
+        """Restrict the record display according to the applied filter"""
+        # Read the filter parameters
+        filter_label = self.filter_label.GetValue()
+        filter_label = self.without_parentheses(filter_label)
+        filter_operator = self.filter_operator.GetValue()
+        filter_value = self.filter_value.GetValue()
+
+        # vlaidate the filter
+        NUM = filter_operator in ['<', '>']
+
+        val_id_pairs = self.records.retrieve_column_with_id(filter_label)
+
+        # numerical
+        # separate into vals coaxable into numbers and those no
+        if NUM:
+            nums = [(str2float(val), id) for (val, id) in val_id_pairs if str2float(val) != '']
+            innums = [(val, id) for (val, id) in val_id_pairs if str2float(val) == '']
+
+            
+            if len(nums) == 0:
+                self.SetStatusText('No numerical values in ', filter_label)
+                return
+
+            # TODO: make this secure
+            filt_nums = [(val, id) for (val, id) in nums
+                         if eval(''.join([str(val), filter_operator, filter_value]))]
+
+            return filt_nums, innums
+            
+        # strings
+        else:
+            if filter_operator == 'contains':
+                filt_vals = [(val, id) for (val, id) in val_id_pairs
+                         if eval (''.join(["'", filter_value.lower(), "' in", 
+                                           "'",  val.lower(), "'"]))]
+            elif filter_operator == 'starts with':
+                filt_vals = [(val, id) for (val, id) in val_id_pairs
+                             if eval (''.join(["'", val.lower(), "'.startswith('",
+                                              filter_value.lower(), "')"]))]
+            
+            print filt_vals
+        
+                
+        # refresh register display
+
+
+    def without_parentheses(self, label_str):
+        """Remove terminal text within parentheses
+        >>> without_parentheses(self, "test(within)")
+            "test"
+        """
+        # TODO: refactor to avoid repetitions of this function
+        opening_brace_pos = label_str.find('(')
+
+        if opening_brace_pos == -1:
+            return label_str
+        
+        return label_str[:opening_brace_pos].strip()
+
         
         
     def record_display_append(self, rec, key):

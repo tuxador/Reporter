@@ -87,6 +87,8 @@ class Report():
         reped.Destroy()
         #app.MainLoop()
         return self.raw_report
+
+
     
 class Editor(wx.Dialog):
     """A simple text editor"""

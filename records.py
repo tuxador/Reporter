@@ -16,16 +16,20 @@ class Records():
         #self.create_index() # init self.index
 
         
-    def create_index(self):
+    def create_index(self, restrict_ids=None):
         """index is a list of tuples
         corresponding to the values in index file.
         Convert into a dictionary to allow sorting in the
-        listctrl"""
+        listctrl.
+        restrict_ids is a list of ids to restrict to"""
         self.index_keys = yaml.load(open(self.index_file))
         index_fields = []
 
+        if restrict_ids == None:
+            restrict_ids = self.db.keys()
+
         for field in self.index_keys:
-            index_fields.append([self.db[rec][field] for rec in self.db])
+            index_fields.append([self.db[rec][field] for rec in self.db if rec in restrict_ids])
 
         index = zip(*index_fields)
 
@@ -80,6 +84,12 @@ class Records():
         """Retrieve the values corresponding to
         a single key for all the records"""
         return [self.db[record][fieldname] for record in self.db]
+
+
+    def retrieve_column_with_id(self, fieldname):
+        """Like retrieve_column, but also return
+        id corresponding to each element"""
+        return [(self.db[id][fieldname], id) for id in self.db]
                 
 
 
