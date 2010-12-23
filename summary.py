@@ -19,6 +19,7 @@ class NumSummary(wx.Frame):
         self.resultpanel = wx.Panel(self.mainpanel, -1)
         self.querypanel = wx.Panel(self.mainpanel, -1)
         self.querybox = wx.ComboBox(self.querypanel, -1, choices=fieldnames, style=wx.CB_DROPDOWN)
+        self.filtersummarycheck = wx.CheckBox(self.querypanel, -1, 'Only include filtered results')
         self.minlabel = wx.StaticText(self.resultpanel, -1, "Minimum")
         self.minctrl = wx.TextCtrl(self.resultpanel, -1, "", style=wx.TE_READONLY)
         self.maxlabel = wx.StaticText(self.resultpanel, -1, "Maximum")
@@ -49,8 +50,9 @@ class NumSummary(wx.Frame):
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         mainpanelsizer = wx.BoxSizer(wx.VERTICAL)
         grid_sizer_1 = wx.FlexGridSizer(6, 2, 2, 2)
-        querypanelsizer = wx.BoxSizer(wx.HORIZONTAL)
+        querypanelsizer = wx.BoxSizer(wx.VERTICAL)
         querypanelsizer.Add(self.querybox, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 10)
+        querypanelsizer.Add(self.filtersummarycheck, 0 , wx.ALL, 1, 0)
         self.querypanel.SetSizer(querypanelsizer)
         mainpanelsizer.Add(self.querypanel, 1, wx.ALL|wx.EXPAND, 5)
         grid_sizer_1.Add(self.minlabel, 0, wx.ALIGN_CENTER_VERTICAL, 0)
@@ -81,7 +83,7 @@ class NumSummary(wx.Frame):
         """when new fieldname is chosen"""
         fieldname = self.without_parentheses(event.GetString())
         mean, stdev, minimum, maximum, total_vals, missing_vals = self.parent.summarize_numerical(
-            fieldname)
+            fieldname, self.filtersummarycheck.GetValue())
 
         self.meanctrl.SetValue(str(mean))
         self.stdctrl.SetValue(str(stdev))

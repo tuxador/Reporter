@@ -274,28 +274,43 @@ class ReportManager():
             os.startfile(pdf_file)
 
 
-    def summarize_numerical(self, fieldname):
+    def summarize_numerical(self, fieldname, FILTER_SUMMARY):
         """Calculate summary for numerical data with
         field name (key) fieldname"""
-        col = self.records.retrieve_column(fieldname)
-        numerical_cols = [str2float(val) for val in col if str2float(val) != '']
+        val_id_pairs = self.records.retrieve_column_with_id(fieldname)
+        #col = self.records.retrieve_column(fieldname)
+        # only restricted ids
+        if FILTER_SUMMARY:
+            vals = [val for (val, id) in val_id_pairs if id in self.register.restrict_ids]
+        else:
+            vals = [val for (val, id) in val_id_pairs]
+        
+        
+        
+        numerical_cols = [str2float(val) for val in vals if str2float(val) != '']
 
         mean = numpy.mean(numerical_cols)
         stdev = numpy.std(numerical_cols)
         minimum = min(numerical_cols)
         maximum = max(numerical_cols)
-        total_vals = len(col)
+        total_vals = len(vals)
         missing_vals = total_vals - len(numerical_cols)
         
         return mean, stdev, minimum, maximum, total_vals, missing_vals
 
 
-    def summarize_categorical(self, fieldname):
+    def summarize_categorical(self, fieldname, FILTER_SUMMARY):
         """summarize categorical data"""
-        col = self.records.retrieve_column(fieldname)
+        val_id_pairs = self.records.retrieve_column_with_id(fieldname)
         uniq = {}
 
-        for val in col:
+        # only restricted ids
+        if FILTER_SUMMARY:
+            vals = [val for (val, id) in val_id_pairs if id in self.register.restrict_ids]
+        else:
+            vals = [val for (val, id) in val_id_pairs]
+        
+        for val in vals:
             if val in uniq:
                 uniq[val] += 1
             else:
@@ -403,7 +418,10 @@ class Register(wx.Frame):
 
         self.parent = parent
         self.records = records
-        
+
+        # no filter
+        self.restrict_ids = records.db.keys()
+                
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL) # for the listctrl
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL) # for the buttons
         self.vbox = wx.BoxSizer(wx.VERTICAL) # for the panel
@@ -565,17 +583,15 @@ class Register(wx.Frame):
         if NUM:
             nums = [(str2float(val), id) for (val, id) in val_id_pairs if str2float(val) != '']
             innums = [(val, id) for (val, id) in val_id_pairs if str2float(val) == '']
-
             
             if len(nums) == 0:
                 self.SetStatusText('No numerical values in ', filter_label)
                 return
 
             # TODO: make this secure
-            filt_nums = [(val, id) for (val, id) in nums
+            filt_vals = [(val, id) for (val, id) in nums
                          if eval(''.join([str(val), filter_operator, filter_value]))]
 
-            return filt_nums, innums
             
         # strings
         else:
@@ -588,10 +604,14 @@ class Register(wx.Frame):
                              if eval (''.join(["'", val.lower(), "'.startswith('",
                                               filter_value.lower(), "')"]))]
             
-            print filt_vals
-        
+            
+        # create list of ids to restrict to
+        self.restrict_ids = [id for (val, id) in filt_vals]
                 
         # refresh register display
+        self.index_summary = self.records.create_index(self.restrict_ids)
+        self.refresh_records()
+
 
 
     def without_parentheses(self, label_str):
