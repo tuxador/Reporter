@@ -115,6 +115,8 @@ class CatSummary(wx.Frame):
         self.querypanel = wx.Panel(self.mainpanel, -1)
 
         self.querybox = wx.ComboBox(self.querypanel, -1, choices=fieldnames, style=wx.CB_DROPDOWN)
+        self.filtersummarycheck = wx.CheckBox(self.querypanel, -1, 'Only include filtered results')
+
         self.resultctrl = wx.ListCtrl(self.resultpanel, -1, style=wx.LC_REPORT)
         
         self.__set_properties()
@@ -134,11 +136,13 @@ class CatSummary(wx.Frame):
         mainsizer = wx.BoxSizer(wx.VERTICAL)
         mainpanelsizer = wx.BoxSizer(wx.VERTICAL)
         #grid_sizer_1 = wx.FlexGridSizer(6, 2, 2, 2)
-        querypanelsizer = wx.BoxSizer(wx.HORIZONTAL)
+        querypanelsizer = wx.BoxSizer(wx.VERTICAL)
         resultpanelsizer = wx.BoxSizer(wx.HORIZONTAL)
         
         querypanelsizer.Add(self.querybox, 0,
                             wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 10)
+        querypanelsizer.Add(self.filtersummarycheck, 0 , wx.ALL, 1, 0)
+
         self.querypanel.SetSizer(querypanelsizer)
         resultpanelsizer.Add(self.resultctrl, 1, wx.ALL|wx.EXPAND, 5)
         self.resultpanel.SetSizer(resultpanelsizer)
@@ -161,7 +165,7 @@ class CatSummary(wx.Frame):
         """when new fieldname is chosen"""
         fieldname = self.without_parentheses(event.GetString())
 
-        results = self.parent.summarize_categorical(fieldname)
+        results = self.parent.summarize_categorical(fieldname, self.filtersummarycheck.GetValue())
 
         self.resultctrl.DeleteAllItems()
         for res in results:
