@@ -558,6 +558,8 @@ class Register(wx.Frame):
         for key in self.index_summary:
             self.record_display_append(self.index_summary[key], key)
 
+        # display total records in status
+        self.SetStatusText('%s records'  %(len(self.index_summary)))
 
     def refresh_records(self):
         """Completely refresh the summary being shown"""

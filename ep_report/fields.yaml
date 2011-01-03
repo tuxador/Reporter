@@ -18,8 +18,9 @@ Demographics:
   8: [EPS Number, text, 2010/]
   9: [Procedure Start(hh.mm am), text]
   10: [Procedure End(hh.mm am), text]
-  11: [Fluoro time(seconds), text]
-  12: [Referring Physician, combo, ['Dr. Amirtha Ganesh', ''], '']
+  11: [Procedure duration (mins), text]
+  12: [Fluoro time(mins), text]
+  13: [Referring Physician, combo, ['Dr. Amirtha Ganesh', ''], '']
 ---
  
 Clinical:
@@ -102,8 +103,9 @@ Prog A Pace:
   2: [SPERP, text]
   3: [FPERP, text]
   4: [AVERP, text]
-  5: [AERP, text]
-  6: [Comments, text]
+  5: [APERP, text]
+  6: [AERP, text]
+  7: [Comments, text]
   
 ---
 
@@ -118,10 +120,11 @@ Tachycardia:
   7: [Atrial activation, combo, [concentric, eccentric], concentric]
   8: [RV overdrive, text]
   9: [RV extra, text]
-  10: [RA overdrive, text]
-  11: [RA extra, text]
-  12: [Termination, text, terminated by]
-  13: [Comment, text]
+  10: [Preexcitation index, text]
+  11: [RA overdrive, text]
+  12: [RA extra, text]
+  13: [Termination, text, terminated by]
+  14: [Comment, text]
 
 ---
 
@@ -131,8 +134,8 @@ Ablation:
   2: [Approach, combo, [transseptal, retrograde, ''], '']
   3: [Target, text]
   4: [Settings, text]
-  5: [RF applications, spin, 0, 100, 0]
-  6: [Time (seconds), spin , 0, 2000, 0]
+  5: [RF applications, text]
+  6: [Time (seconds), text]
   7: [Endpoint, text]
   8: [Comments, multitext]
 
@@ -168,3 +171,12 @@ Recommendations:
   1: [Recommendation 2, text, Follow up in Cardiology OPD (184) on Wednesday at 9 am]
   2: [Recommendation 3, text]
   3: [Recommendation 4, text]
+
+
+---
+
+Follow up:
+  0: [Date of last FU, date]
+  1: [Days since procedure, text]
+  2: [Recurrence, combo, ['yes', 'no'], 'no']
+  3: [Notes, text]

@@ -68,6 +68,8 @@ class Form(wx.Dialog):
         for label, control in zip(self.panel.labels, self.panel.controls):
             try:
                 control.SetValue(vals[label])
+            except TypeError: # coerce int to string if reqd
+                control.SetValue(str(vals[label]))
             except KeyError:
                 pass
 

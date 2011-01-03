@@ -1,3 +1,10 @@
+* Bugs / enhancements
+** TODO APERP field needed
+** TODO Total number of records to be displayed in status, update when filtered
+** TODO Change key for record when key fields change
+** TODO Need clear filter button
+
+
 * Program files
 ** DONE report.py -- Report class 
 *** Input - path to a template file (.rst), variable values as a dictionary
@@ -17,7 +24,8 @@
 *** func:: delete_record -- remove the record corresponding to id and remove entry from index
 *** func:: modify_record -- change the stored values to that in the provided dict
     
-** report_manager.py -- ReportManager class
+** DONE report_manager.py -- ReportManager class
+   CLOSED: [2010-12-24 Fri 19:23]
 *** The central controller
 *** configuration file - list the folders
 *** each folder represents a project
