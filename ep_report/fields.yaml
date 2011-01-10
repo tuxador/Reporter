@@ -100,8 +100,8 @@ Incr A Pace:
 Prog A Pace:
   0: [Preexcitation, combo, [present, absent], absent]
   1: [AH jump, combo, [present, absent], absent]
-  2: [SPERP, text]
-  3: [FPERP, text]
+  2: [FPERP, text]
+  3: [SPERP, text]
   4: [AVERP, text]
   5: [APERP, text]
   6: [AERP, text]
