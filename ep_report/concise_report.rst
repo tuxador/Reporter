@@ -96,14 +96,14 @@ Puducherry - 605006
    "**Incr RV pace**", "VA conduction ${get('Incr V Pace_VA conduction')}, VAWB ${get('Incr V Pace_VAWB')}ms, Atrial activation ${get('Incr V Pace_Atrial Activation')}"
    "**Progr RV pace**", "VA conduction ${get('Prog V Pace_VA conduction')}, VAERP ${get('Prog V Pace_VAERP')}ms, Atrial activation ${get('Prog V Pace_Atrial Activation')}, VERP ${get('Prog V Pace_VERP')}ms"
     "**Incr A pace**", "AVWB ${get('Incr A Pace_AVWB')} ms, Level of block ${get('Incr A Pace_Level of block')}, PR>RR ${get('Incr A Pace_PR>RR')}"
-    "**Prog A pace**", "AH jump ${get('Prog A Pace_AH jump')} ms, ${noblanks('FPERP ',get('Prog A Pace_FPERP'), ' ms,')} ${noblanks('SPERP ',get('Prog A Pace_SPERP'), ' ms,')}  ${noblanks('APERP ', get('Prog A Pace_APERP'), ' ms,')} ${noblanks('AVERP ', get('Prog A Pace_AVERP'), ' ms,')} AERP ${get('Prog A Pace_AERP')} ms"
+    "**Prog A pace**", "AH jump ${get('Prog A Pace_AH jump')} ms, ${noblanks('FPERP ',get('Prog A Pace_FPERP,') ' ms,')} ${noblanks('SPERP ',get('Prog A Pace_SPERP'), ' ms,')}  ${noblanks('APERP ', get('Prog A Pace_APERP,') ' ms,')} ${noblanks('AVERP ', get('Prog A Pace_AVERP'), ' ms,')} ${noblanks ('AERP ', get('Prog A Pace_AERP'),' ms')}."
 
 
 .. csv-table:: Tachycardia
    :widths: 3, 10
 
     "**Induction**", "${get('Tachycardia_Induction')}, ${get('Tachycardia_Termination')}"
-    "**Measurements**", "${get('Tachycardia_QRS')} tachycardia, CL ${get('Tachycardia_CL')}ms, ${noblanks('AH ',get('Tachycardia_AH'), ' ms')}, ${noblanks('HV ',get('Tachycardia_HV'), ' ms')}, ${noblanks('VA ',get('Tachycardia_VA'), ' ms')}"
+    "**Measurements**", "${get('Tachycardia_QRS')} tachycardia, CL ${get('Tachycardia_CL')}ms, ${noblanks('AH ',get('Tachycardia_AH'), ' ms,')} ${noblanks('HV ',get('Tachycardia_HV'), ' ms,')} ${noblanks('VA ',get('Tachycardia_VA'), ' ms')}"
     "**VA relation**", "${get('Tachycardia_VA relationship')} with ${get('Tachycardia_Atrial activation')}"
     "**RV Pacing**", "${get('Tachycardia_RV overdrive')} ${noblanks(', RV extra - ',get('Tachycardia_RV extra'), '.')}"
     "**Atrial Pacing**", "${get('Tachycardia_RA overdrive')} ${noblanks(', ', get('Tachycardia_RA extra'), '.')}"
