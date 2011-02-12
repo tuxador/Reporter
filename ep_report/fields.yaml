@@ -178,5 +178,5 @@ Recommendations:
 Follow up:
   0: [Date of last FU, date]
   1: [Days since procedure, text]
-  2: [Recurrence, combo, ['yes', 'no'], 'no']
+  2: [Recurrence, combo, ['yes', 'no', ''], '']
   3: [Notes, text]

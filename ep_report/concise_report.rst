@@ -91,7 +91,7 @@ Puducherry - 605006
    :widths: 3, 10
 
    "**Rhythm**", "${get('Baseline_Rhythm')}"
-   "**Measurements**", "${noblanks('PR ', get('Baseline_PR'), ' ms')}, ${noblanks('AH ', get('Baseline_AH'), ' ms')}, ${noblanks('HV ', get('Baseline_HV'), ' ms')}, CL ${get('Baseline_CL')}ms"
+   "**Measurements**", "${noblanks('PR ', get('Baseline_PR'), ' ms,')} ${noblanks('AH ', get('Baseline_AH,') ' ms')}, ${noblanks('HV ', get('Baseline_HV',) ' ms')}, CL ${get('Baseline_CL')}ms"
    "**ParaHisian pacing**", "${get('Baseline_Parahisian')}"
    "**Incr RV pace**", "VA conduction ${get('Incr V Pace_VA conduction')}, VAWB ${get('Incr V Pace_VAWB')}ms, Atrial activation ${get('Incr V Pace_Atrial Activation')}"
    "**Progr RV pace**", "VA conduction ${get('Prog V Pace_VA conduction')}, VAERP ${get('Prog V Pace_VAERP')}ms, Atrial activation ${get('Prog V Pace_Atrial Activation')}, VERP ${get('Prog V Pace_VERP')}ms"
