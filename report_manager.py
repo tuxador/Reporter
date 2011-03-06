@@ -54,7 +54,8 @@ class ReportManager():
 
         self.load_project()
 
-        self.records = Records(self.db_file, self.index_file)
+        self.records = Records(self.db_file, self.index_file,
+                               self.config['num_backups'], self.config['backup_freq'])
         self.register = Register(self, self.records, self.project_name)
 
 

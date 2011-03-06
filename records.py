@@ -1,20 +1,57 @@
 #!/usr/bin/env python
 
-
+import os
+import shutil
+import glob
 import shelve
 import yaml
+from datetime import datetime
+
+
+bkp_dateformat = '%d-%m-%Y'
 
 class Records():
-    """Database functions"""
-    def __init__(self, db_file, index_file):
+    """Database functions.
+    num_backups and backup_freq govern how many
+    backups will be maintained and how frequently
+    they will be created"""
+    def __init__(self, db_file, index_file, num_backups, backup_freq):
         self.db_file = db_file
         self.index_file = index_file
 
-        self.db = shelve.open(self.db_file)
-        #self.index_keys = yaml.load(open(index_file))
+        self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
+        #self.db = shelve.open(self.db_file)
 
-        #self.create_index() # init self.index
+    def bkp_and_open(self, db_file, num_backups, backup_freq):
+        """Before opening the file, check if backups need to be done"""
+        #db_directory = os.path.dirname(db_file)
+        NEED_BACKUP = False
+        
+        today = datetime.today()
+        bkp_basename = db_file + '_bkp' # all bkp files are this + date string
+        bkp_files = glob.glob(bkp_basename + '*')
+        bkp_dates = [datetime.strptime(filename.lstrip(bkp_basename), bkp_dateformat)
+                     for filename in bkp_files]
+        bkp_distances = [(today-date).days for date in bkp_dates]
 
+        if len(bkp_files) == 0:
+            NEED_BACKUP = True
+
+        else:
+            if max(bkp_distances) >= backup_freq:
+                NEED_BACKUP = True
+                
+        if NEED_BACKUP:
+            new_bkpfilename = bkp_basename + today.strftime(bkp_dateformat)
+            shutil.copy(db_file, new_bkpfilename)
+            bkp_files.append(new_bkpfilename)
+
+        if len(bkp_files) > num_backups: 
+            oldest_file = bkp_files[bkp_distances.index(max(bkp_distances))]
+            os.remove(oldest_file)
+                            
+        db = shelve.open(db_file)
+        return db
         
     def create_index(self, restrict_ids=None):
         """index is a list of tuples
@@ -101,6 +138,13 @@ def test():
     rec = Records(testdb, testindex)
 
     print rec.index
+
+
+def test_bkp():
+    testdb = '/data/tmp/test.db'
+    r = Records(testdb, '', 3, 1)
+    db = r.bkp_and_open(testdb, 3, 1)
+    
     
 def create_testdb():
     """create a db for testing"""
@@ -120,4 +164,5 @@ def create_testdb():
 
 if __name__ == '__main__':
     #test()
-    create_testdb()
+    #create_testdb()
+    test_bkp()

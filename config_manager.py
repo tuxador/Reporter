@@ -14,7 +14,9 @@ class Config():
         """Initialize with default values"""
         self.options = {
             'projects' : ['/data/Dropbox/programming/EP_report2/ep_report'],
-            'default_project' : 0
+            'default_project' : 0,
+            'backup_freq': 1,
+            'num_backups':5,
             }
         
 
