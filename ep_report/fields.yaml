@@ -130,8 +130,8 @@ Tachycardia:
 
 Ablation:
   0: [Ablation done, combo, [Done, Not done], Done]
-  1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue]
-  2: [Approach, combo, [transseptal, retrograde, ''], '']
+  1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue, 4 mm tip St Jude Therapy medium curve]
+  2: [Approach, combo, [transseptal, retrograde, Long sheath, ''], '']
   3: [Target, text]
   4: [Settings, text]
   5: [RF applications, text]
@@ -155,7 +155,7 @@ Post Ablation:
 ---
 
 Conclusions:
-  0: [Diagnosis, combo, [AVNRT, Concealed AP, WPW, AT, Fascicular VT, Mahaim, Atrial flutter, Scar VT, VT], AVNRT]
+  0: [Diagnosis, combo, [AVNRT, Concealed AP, WPW, AT, Fascicular VT, Mahaim, Atrial flutter, Scar VT, VT, EP study], AVNRT]
   1: [Success, combo, ['yes', 'no', indeterminate], 'yes']
   2: [Interesting features, combo, ['', AVNRT with AV block, AP conduction dissociation during abl], '']
   3: [Summary, text]
