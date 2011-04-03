@@ -19,8 +19,8 @@ class Records():
         self.db_file = db_file
         self.index_file = index_file
 
-        self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
-        #self.db = shelve.open(self.db_file)
+        #self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
+        self.db = shelve.open(self.db_file)
 
     def bkp_and_open(self, db_file, num_backups, backup_freq):
         """Before opening the file, check if backups need to be done"""

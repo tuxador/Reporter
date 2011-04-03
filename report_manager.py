@@ -72,7 +72,8 @@ class ReportManager():
         """load project based on options in config file"""
         self.project_dir = self.config.options['projects'][
             int(self.config.options['default_project'])]
-        
+   
+        print self.project_dir
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
         self.index_file = os.path.join(self.project_dir, 'index.yaml')
@@ -87,6 +88,7 @@ class ReportManager():
         missing_files = []
 
         if not os.path.exists(self.fields_file):
+            print 'missing fields', self.fields_file
             VALID_PROJ = False
             missing_files.append('Fields file')
 
@@ -99,7 +101,7 @@ class ReportManager():
             missing_files.append('Report_Files')
 
         if not VALID_PROJ:
-            self.register.SetStatusText('Missing files in project', 0)
+            #self.register.SetStatusText('Missing files in project', 0) TODO: register does not exist yet
             print 'Not all files required for project are present. The following files are missing'
             for f in missing_files:
                 print f
@@ -544,7 +546,6 @@ class Register(wx.Frame):
         """Load the index and display"""
         # for sorting we use the full db
         # itemdatamap must be a dict
-        
         self.record_display.itemDataMap = self.index_summary
 
         index_keys = self.records.index_keys
