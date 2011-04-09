@@ -94,7 +94,7 @@ Puducherry - 605006
    "**Measurements**", "${noblanks('PR ', get('Baseline_PR'), ' ms,')}${noblanks('AH ', get('Baseline_AH'), ' ms,')} ${noblanks('HV ', get('Baseline_HV'), ' ms')}, CL ${get('Baseline_CL')}ms"
     ${noblanks("**Parahisian pacing**, ", get('Baseline_Parahisian'), '')}
    "**Incr RV pace**", "VA conduction ${get('Incr V Pace_VA conduction')}, VAWB ${get('Incr V Pace_VAWB')}ms, Atrial activation ${get('Incr V Pace_Atrial Activation')}"
-   "**Progr RV pace**", "VA conduction ${get('Prog V Pace_VA conduction')}, VAERP ${get('Prog V Pace_VAERP')}ms, Atrial activation ${get('Prog V Pace_Atrial Activation')}, VERP ${get('Prog V Pace_VERP')}ms"
+   "**Progr RV pace**", "VA conduction ${get('Prog V Pace_VA conduction')}, VAERP ${get('Prog V Pace_VAERP')}ms, Atrial activation ${get('Prog V Pace_Atrial Activation')} ${noblanks(', VERP ', get('Prog V Pace_VERP'), ' ms')}"
     "**Incr A pace**", "AVWB ${get('Incr A Pace_AVWB')} ms, Level of block ${get('Incr A Pace_Level of block')}, PR>RR ${get('Incr A Pace_PR>RR')}"
     "**Prog A pace**", "AH jump ${get('Prog A Pace_AH jump')}, ${noblanks('FPERP ',get('Prog A Pace_FPERP'), ' ms,')}${noblanks('SPERP ',get('Prog A Pace_SPERP'), ' ms,')}${noblanks('APERP ', get('Prog A Pace_APERP'), ' ms,')}${noblanks('AVERP ', get('Prog A Pace_AVERP'), ' ms,')}${noblanks ('AERP ', get('Prog A Pace_AERP'),' ms')}."
 

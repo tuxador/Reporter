@@ -43,12 +43,12 @@ Investigations:
 ---
 
 Technical:
-  0: [Lab, combo, [EMS, SSB-1, SSB-2], EMS]
+  0: [Lab, combo, [EMS, SSB-1, SSB-2], SSB-2]
   1: [EP System, combo, [Bard, Siemens Axiom Sensis, Cordis], Bard]
   2: [3D Mapping, combo, [CARTO, Ensite, None], None]
   3: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
-  4: [Operator 2, combo, [Arunprasath, Babu, Geofi], Arunprasath]
-  5: [Technical Assistant, combo, [Gajendran, Janardhanan, Vijayakumar, Narasimhan], Narasimhan]
+  4: [Operator 2, combo, [Arunprasath, Babu, Geofi, Pradeep, Rahul, Ravishankar], Arunprasath]
+  5: [Technical Assistant, combo, [Gajendran, Janardhanan, Vijayakumar, Narasimhan], Janardhanan]
   6: [Access 1, text, RFV 2 x 5F]
   7: [Access 2, text, RFV 6F]
   8: [Access 3, text, RFV 7F]
@@ -91,7 +91,7 @@ Prog V Pace:
 Incr A Pace:
   0: [Preexcitation, combo, [present, absent], absent]
   1: [AVWB, text]
-  2: [Level of block, combo, ['', nodal, infranodal], nodal]
+  2: [Level of block, combo, ['', nodal, infranodal, AP], nodal]
   3: [PR>RR, combo, [present, absent], absent]
   4: [Comments, text]
   
@@ -130,7 +130,7 @@ Tachycardia:
 
 Ablation:
   0: [Ablation done, combo, [Done, Not done], Done]
-  1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve], 4 mm tip Webster Blue, 4 mm tip St Jude Therapy medium curve]
+  1: [Catheter, combo, [4 mm tip Webster D curve, 4 mm tip Bard Stinger E curve, 4 mm tip Bard Stinger D curve, 4 mm tip St Jude Therapy], 4 mm tip Webster Blue]
   2: [Approach, combo, [transseptal, retrograde, Long sheath, ''], '']
   3: [Target, text]
   4: [Settings, text]
@@ -168,7 +168,7 @@ Conclusions:
 
 Recommendations:
   0: [Recommendation 1, text, Aspirin 150 mg OD PO for 6 weeks]
-  1: [Recommendation 2, text, Follow up in Cardiology OPD (184) on Wednesday at 9 am]
+  1: [Recommendation 2, text, Follow up in Cardiology OPD (184) after one month on Wednesday at 9 am]
   2: [Recommendation 3, text]
   3: [Recommendation 4, text]
 
