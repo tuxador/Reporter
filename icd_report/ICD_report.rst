@@ -59,8 +59,8 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
    "**Indication for procedure**", "${get('Procedure_Indication for procedure')}"
    "**Operators**", "${list2line([get('Procedure_Operator 1'), get('Procedure_Operator 2')])}"
    "**Anaesthesia**", "${get('Procedure_Anaesthesia')}"
-   "**Incision**", "${get('Procedure_Incision')}"
-   "**Venous Access**", "${get('Procedure_Venous Access')}"
+   "**Incision**", "${get('Procedure_Procedure side')} ${get('Procedure_Incision')}"
+   "**Venous Access**", "${get('Procedure_Venous Access side')} ${get('Procedure_Venous Access')}"
    "**Pocket**", "${get('Procedure_Pocket')}"
    "**Lead**", "${get('Lead_Fixation')} ${get('Lead_Coils')} ${get('Lead_Model')}, Sl. no:${get('Lead_Serial no.')}"
    "**Pulse Generator**", "${get('Pulse Generator_Model')}, Sl. no:${get('Pulse Generator_Serial no.')} (${get('Pulse Generator_Source')})"
@@ -70,14 +70,15 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
 .. csv-table:: Intra-operative measurements
 
-   "**R wave**", "${get('Intra-operative measurements_R wave')}", "**Threshold**", "${get('Intra-operative measurements_Pacing Threshold')}", "", ""
-   "**RV Imp**", "${get('Intra-operative measurements_RV Impedance')}", "**HVB Imp**", "${get('Intra-operative measurements_HV Impedance')}", "**SVC Imp**", "${get('Intra-operative measurements_SVC Impedance')}"
+   "**R wave**", "${get('Intra operative measurements_R wave')}", "**Threshold**", "${get('Intra operative measurements_Pacing Threshold')}", "", ""
+   "**RV Imp**", "${get('Intra operative measurements_RV Impedance')}", "**HVB Imp**", "${get('Intra operative measurements_HV Impedance')}", "**SVC Imp**", "${get('Intra operative measurements_SVC Impedance')}"
    
 .. raw:: pdf
 
        Spacer 0 20
 
 .. csv-table:: Defibrillation testing
+   :widths: 3, 10
 
    "**VF induction**", "${get('DFT_VF induction')}"
    "**Sensing**", "${get('DFT_Sensing')}"

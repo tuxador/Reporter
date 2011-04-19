@@ -63,7 +63,7 @@ Pulse Generator:
 Lead:
   0: [Fixation, combo, [Active, Passive], Passive]
   1: [Coils, combo, [dual coil, single coil], dual coil]
-  2: [Model, text]
+  2: [Model, combo, [St Jude Durata 7170], St Jude Durata 7170]
   3: [Serial no., text]
 
 ---
