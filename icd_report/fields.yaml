@@ -1,0 +1,116 @@
+# Input fields to be displayed in the form
+# Examples
+
+# text input [label, text]
+# spin control [label, spin, min, max, initial]
+# combo box [label, combo, [list of choices], default]		
+
+Demographics:
+  0: [Name, text]
+  1: [Age (yrs), text]
+  2: [Sex, combo, [Male,Female], Male]
+  3: [Contact number, text]
+  4: [Date of Admission (yyyy-mm-dd), date]
+  5: [Date of Procedure (yyyy-mm-dd), date]
+  6: [Hospital Number, text]
+  7: [MRD Number, text]
+  8: [ICD Number, text]
+  9: [Referring Physician, combo, ['Dr. Amirtha Ganesh', ''], '']
+---
+ 
+Clinical:
+  0: [Presentation, multitext]
+  1: [ECG, multitext, NSR at ]
+  2: [Echo, text]
+  3: [Other investigations, multitext]
+---
+
+Investigations:
+  0: [Hb (g/dl), text]
+  1: [BT (mm.ss), text]
+  2: [CT (mm.ss), text]
+  3: [Bld Sugar (mg/dl),text]
+  4: [Bld Urea (mg/dl), text]
+  5: [Se Creat (mg/dl), text]
+  6: [HIV, text, Negative]
+  7: [HBsAg, text, Negative]
+  8: [HCV, text, Negative]
+  
+---
+
+Procedure:
+  0: [Indication for procedure, combo, [Ischemic Cardiomyopathy with VT, Non-ischemic cardiomyopathy with VT, ARVD with VT],Ischemic Cardiomyopathy with VT]
+  1: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
+  2: [Operator 2, combo, [Arunprasath, Babu, Geofi, Pradeep, Rahul, Ravishankar], Arunprasath]
+  3: [Anaesthesia, text]
+  4: [Procedure side, combo, [Left, Right], Left]
+  5: [Incision, combo, [Infraclavicular, Deltopectoral], Infraclavicular]
+  6: [Venous Access side, combo, [Left, Right], Left]
+  7: [Venous Access, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], cephalic vein cutdown]
+  8: [Pocket, combo, [Subcutaneous, Subpectoral], Subcutaneous]
+  9: [Subcutaneous closure, combo, [vicryl 2-0 in 2 layers continuous, vicryl 2-0 in 1 layer continuous, vicryl 2-0 in 1 layer interrupted], vicryl 2-0 in 2 layers continuous]
+  10: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
+
+---
+
+Pulse Generator:
+  0: [Model, combo, [Medtronic Maximo II VR, St Jude Current VR], St Jude Current VR]
+  1: [Source, combo, [New own, New Hosp, Stimubanque, Refurb Hosp], New Hosp]
+  2: [Serial no., text]
+
+---
+
+Lead:
+  0: [Fixation, combo, [Active, Passive], Passive]
+  1: [Coils, combo, [dual coil, single coil], dual coil]
+  2: [Model, text]
+  3: [Serial no., text]
+
+---
+
+Intra operative measurements:
+  0: [RV Impedance (ohms), text]
+  1: [HV Impedance (ohms), text]
+  2: [SVC Impedance (ohms), text]
+  3: [R wave (mV), text]
+  4: [Pacing Threshold (V), text]
+
+---
+
+DFT:
+  0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
+  1: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
+  2: [Shock / Success, text, 15 J - Successful]
+  3: [Charge time (sec), text]
+
+---
+
+Settings:
+  0: [Mode, combo, [VVI, DDD, VVIR, DDDR], VVI]
+  1: [Lower Rate (bpm), spin, 30, 120, 40]
+  2: [RV output ( -V @ -ms), text]
+  3: [Sensing (mV), text]
+  4: [VF rate (bpm), text, '200']
+  5: [VT rate (bpm), text, '164']
+  6: [VF therapy, text, "25J, 35 J x 5"]
+  7: [VT therapy, text, "ATP x 2, 25 J, 35 J x 4"]
+
+---
+
+Recommendations:
+  0: [Recommendation 1, text, Keep wound dry for 5 days]
+  1: [Recommendation 2, text, Restricted arm movements for 6 weeks on side of procedure]
+  2: [Recommendation 3, text, "Review in pacemaker clinic (184) after 6 weeks on wednesday at 2:30 pm"]
+  3: [Recommendation 4, text, Medications as advised]
+
+---
+
+Medications:
+
+  0: [Drug 1, combo, [Amiodarone 200 mg PO OD], Amiodarone 200 mg PO OD]
+  1: [Drug 2, combo, [Metoprolol 50 mg PO BID, Metoprolol 25 mg PO BID, Carvedilol 3.125 mg PO BID], Metoprolol 50 mg PO BID]
+  2: [Drug 3, text]
+  3: [Drug 4, text]
+  4: [Drug 5, text]
+  5: [Drug 6, text]
+  

@@ -252,7 +252,6 @@ class Pane(wx.CollapsiblePane):
                                              input_format='%Y-%m-%d',
                                              display_format='%Y-%m-%d', title='',
                                              default_to_today=1, allow_null=0))
-                                    
 
        # make widget list - keep as loop so any additional steps can be added
        widget_list = []

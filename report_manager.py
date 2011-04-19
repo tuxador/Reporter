@@ -341,6 +341,7 @@ class ReportManager():
         fields_data = yaml.load_all(open(fields_file))
 
         for data in fields_data: #collection of dictionaries
+
             prefix = data.keys()[0]
             
             for i in range(len(data[prefix])):
