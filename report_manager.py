@@ -11,7 +11,7 @@ import glob
 import subprocess
 import time
 import yaml
-import numpy
+#import numpy
 
 from records import Records
 from form import Form
@@ -42,8 +42,24 @@ def str2float(s):
     except ValueError, AttributeError:
         return ''
 
-    
 
+def meanstdv(x): 
+    """ Calculate mean and standard deviation of data x[]: 
+    mean = {\sum_i x_i \over n} 
+    std = sqrt(\sum_i (x_i - mean)^2 \over n-1) """ 
+
+    from math import sqrt 
+    n, mean, std = len(x), 0, 0 
+    for a in x: 
+        mean = mean + a 
+    mean = mean / float(n) 
+    for a in x: 
+        std = std + (a - mean)**2 
+    std = sqrt(std / float(n-1)) 
+    return mean, std
+
+
+#-----------------------------
 class ReportManager():
     """The primary controller.
     Manages one 'project' at a time.
@@ -292,8 +308,9 @@ class ReportManager():
         
         numerical_cols = [str2float(val) for val in vals if str2float(val) != '']
 
-        mean = numpy.mean(numerical_cols)
-        stdev = numpy.std(numerical_cols)
+        # mean = numpy.mean(numerical_cols)
+        # stdev = numpy.std(numerical_cols)
+        mean, stdev = meanstdv(numerical_cols)
         minimum = min(numerical_cols)
         maximum = max(numerical_cols)
         total_vals = len(vals)
