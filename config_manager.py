@@ -25,7 +25,7 @@ class Config():
             with open(self.configfile) as fi:
                 self.options = yaml.load(fi)
         except: # if file is not present or is damaged
-            print "didn't work"
+            print 'Could not find config file'
             self.write_options() # write a new file
             return # donot change defaults
             
