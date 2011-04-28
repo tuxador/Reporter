@@ -48,6 +48,14 @@ class Form(wx.Dialog):
 
         self.panel._layout()
         self.panel.panes[0].Collapse(False)
+
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(self.panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
+        self.Layout()
+        self.SetSize((600, 600))
+
+
         self.Show(True)
 
         if input_vals != None:
