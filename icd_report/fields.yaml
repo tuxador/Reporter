@@ -48,7 +48,7 @@ Procedure:
   6: [Venous Access side, combo, [Left, Right], Left]
   7: [Venous Access, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], cephalic vein cutdown]
   8: [Pocket, combo, [Subcutaneous, Subpectoral], Subcutaneous]
-  9: [Subcutaneous closure, combo, [vicryl 2-0 in 2 layers continuous, vicryl 2-0 in 1 layer continuous, vicryl 2-0 in 1 layer interrupted], vicryl 2-0 in 2 layers continuous]
+  9: [Subcutaneous closure, combo, ["vicryl 2-0 in 2 layers continuous", "vicryl 2-0 in 1 layer continuous", "vicryl 2-0 in 1 layer interrupted"], "vicryl 2-0 in 2 layers continuous"]
   10: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
 
 ---
@@ -75,14 +75,39 @@ Intra operative measurements:
   3: [R wave (mV), text]
   4: [Pacing Threshold (V), text]
 
+
 ---
 
-DFT:
+DFT1:
+  0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
+  1: [CL, spin, 100, 500, 200]
+  2: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
+  3: [Shock (J), spin, 5, 45, 15]
+  4: [Success, combo, [Successful, Unsuccessful], Successful]
+  5: [Comments, text]
+
+---
+
+DFT2:
   0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
   1: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
-  2: [Shock / Success, text, 15 J - Successful]
-  3: [Charge time (sec), text]
+  2: [Shock (J), spin, 5, 45, 15]
+  3: [Successful, combo, [Successful, Unsuccessful], Successful]
+  4: [Charge time (sec), text]
+  5: [Comments, text]
 
+---
+
+DFT3:
+  0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
+  1: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
+  2: [Shock (J), spin, 5, 45, 15]
+  3: [Successful, combo, [Successful, Unsuccessful], Successful]
+  4: [Charge time (sec), text]
+  5: [Comments, text]
+  
+
+  
 ---
 
 Settings:

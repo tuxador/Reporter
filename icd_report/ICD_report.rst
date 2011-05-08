@@ -2,7 +2,7 @@
     def get(item):
         """get from dict. Else return empty string."""
 	try:
-	    return vals[item]
+	    return str(vals[item])
 	except KeyError:
 	    return ''
 %>
@@ -19,7 +19,21 @@
 	return ', '.join([x for x in lst if x.strip() != ''])	
 %>
 
+<%
+    def noblanks(pre, var, post):
+        """If var is not empty string, return pre+var+post.
+	Else return empty string"""
+	if var.strip() == '':
+            return ''
+	else:
+	    return ''.join([pre, var, post])
+%>
 
+<%
+    def joinsep(sep, lst):
+        """Join the elemts of the list as a strng using sep"""
+	return sep.join(lst)
+%>	
 
 
 |jipmer| AICD implant discharge Summary
@@ -73,23 +87,21 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
    "**R wave**", "${get('Intra operative measurements_R wave')}", "**Threshold**", "${get('Intra operative measurements_Pacing Threshold')}", "", ""
    "**RV Imp**", "${get('Intra operative measurements_RV Impedance')}", "**HVB Imp**", "${get('Intra operative measurements_HV Impedance')}", "**SVC Imp**", "${get('Intra operative measurements_SVC Impedance')}"
    
-.. raw:: pdf
 
-       Spacer 0 20
 
-.. csv-table:: Defibrillation testing
-   :widths: 3, 10
 
-   "**VF induction**", "${get('DFT_VF induction')}"
-   "**Sensing**", "${get('DFT_Sensing')}"
-   "**Shock delivered**", "${get('DFT_Shock / Success')}"
-   "**Charge time**", "${get('DFT_Charge time')}"
-
+   
+.. csv-table:: Defibrillation Testing
+   :widths: 2, 1, 2, 1, 2, 3
+   :header-rows: 1
+   
+   "**Induction**", "**CL**", "**Sensing**", "**Shock**", "**Success**", "**Comments**"
+   ${noblanks('', get('DFT1_VF induction'), joinsep(',', ['', get('DFT1_CL'), get('DFT1_Sensing'), get('DFT1_Shock'), get('DFT1_Success'), get('DFT1_Comments')]))}
 
 .. csv-table:: Final Settings
 
    "**Mode**", "${get('Settings_Mode')}", "**Lower Rate**", "${get('Settings_Lower Rate')} bpm"
-   "**RV output**","${get('Settings_RV output')}", "**RV Sensing**, "${get('Settings_Sensing')} mV"
+   "**RV output**","${get('Settings_RV output')}", "**RV Sensing**", "${get('Settings_Sensing')} mV"
    "**VF detection**", "> ${get('Settings_VF rate')} bpm", "**VF Therapy**", "${get('Settings_VF therapy')}"
    "**VT detection**", "> ${get('Settings_VT therapy')} bpm", "**VT Therapy**", "${get('Settings_VT therapy')}"
 
