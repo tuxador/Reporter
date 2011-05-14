@@ -79,7 +79,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
    "**Lead**", "${get('Lead_Fixation')} ${get('Lead_Coils')} ${get('Lead_Model')}, Sl. no:${get('Lead_Serial no.')}"
    "**Pulse Generator**", "${get('Pulse Generator_Model')}, Sl. no:${get('Pulse Generator_Serial no.')} (${get('Pulse Generator_Source')})"
    "**Closure**", "Subcutaneous closed with ${get('Procedure_Subcutaneous closure')}. Skin closed with ${get('Procedure_Skin closure')}"
-
+   "**Comments**", "${get('Procedure_Comments')}"
 
 
 .. csv-table:: Intra-operative measurements
@@ -87,16 +87,14 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
    "**R wave**", "${get('Intra operative measurements_R wave')}", "**Threshold**", "${get('Intra operative measurements_Pacing Threshold')}", "", ""
    "**RV Imp**", "${get('Intra operative measurements_RV Impedance')}", "**HVB Imp**", "${get('Intra operative measurements_HV Impedance')}", "**SVC Imp**", "${get('Intra operative measurements_SVC Impedance')}"
    
-
-
-
    
 .. csv-table:: Defibrillation Testing
-   :widths: 2, 1, 2, 1, 2, 3
-   :header-rows: 1
+   :widths: 2, 1, 2, 1, 2, 2, 2, 3
    
-   "**Induction**", "**CL**", "**Sensing**", "**Shock**", "**Success**", "**Comments**"
-   ${noblanks('', get('DFT1_VF induction'), joinsep(',', ['', get('DFT1_CL'), get('DFT1_Sensing'), get('DFT1_Shock'), get('DFT1_Success'), get('DFT1_Comments')]))}
+   "**Induction**", "**CL**", "**Sensing**", "**Shock**", "**SVC coil**", "**Coil polarity**", "**Success**", "**Comments**"
+   ${noblanks('', get('DFT1_VF induction'), joinsep(',', ['', get('DFT1_CL'), get('DFT1_Sensing'), get('DFT1_Shock'), get('DFT1_SVC coil'), get('DFT1_Coil polarity'), get('DFT1_Success'), get('DFT1_Comments')]))}
+   ${noblanks('', get('DFT2_VF induction'), joinsep(',', ['', get('DFT2_CL'), get('DFT2_Sensing'), get('DFT2_Shock'), get('DFT2_SVC coil'), get('DFT2_Coil polarity'), get('DFT2_Success'), get('DFT2_Comments')]))}
+   ${noblanks('', get('DFT3_VF induction'), joinsep(',', ['', get('DFT3_CL'), get('DFT3_Sensing'), get('DFT3_Shock'), get('DFT3_SVC coil'), get('DFT3_Coil polarity'), get('DFT3_Success'), get('DFT3_Comments')]))}   
 
 .. csv-table:: Final Settings
 
@@ -120,10 +118,12 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
      ${list2onecolcsv([get('Medications_Drug 1'),
                       get('Medications_Drug 2'),
-		      get('Medications_Drug 3'),
-		      get('Medications_Drug 4'),
-		      get('Medications_Drug 5'),
-		      get('Medications_Drug 6')])}
+                      get('Medications_Drug 3'),
+                      get('Medications_Drug 4'),
+                      get('Medications_Drug 5'),
+                      get('Medications_Drug 6'),
+                      get('Medications_Drug 7'),
+                      get('Medications_Drug 8')])}
 		    
 .. raw:: pdf
 

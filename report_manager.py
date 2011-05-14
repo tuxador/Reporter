@@ -131,7 +131,9 @@ class ReportManager():
         # does user want to fill with template ?
         template_chooser = TemplateChooser(None, self.project_dir)
         if template_chooser.ShowModal() == wx.ID_OK:
+            print 'got OK'
             template_name = template_chooser.chosentemplate
+            print template_name
             template_chooser.Destroy()
         else:
             template_name = 'Empty'
@@ -377,6 +379,14 @@ class TemplateChooser(wx.Dialog):
         self.project_dir = project_dir
         self.templates = self.get_templates(project_dir)
 
+        # close if there are no templates
+        print self.templates
+        if len(self.templates) == 0:
+            print 'no templates'
+            self.chosentemplate = 'Empty'
+            self.EndModal(wx.ID_OK)
+            #self.Destroy()
+
         # Default is empty
         self.chosentemplate = 'Empty'
         
@@ -484,6 +494,7 @@ class Register(wx.Frame):
         panel.SetSizer(self.vbox)
 
         
+
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         mainsizer.Add(panel, 1, wx.EXPAND, 5)
         mainsizer.Fit(self)

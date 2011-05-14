@@ -50,6 +50,7 @@ Procedure:
   8: [Pocket, combo, [Subcutaneous, Subpectoral], Subcutaneous]
   9: [Subcutaneous closure, combo, ["vicryl 2-0 in 2 layers continuous", "vicryl 2-0 in 1 layer continuous", "vicryl 2-0 in 1 layer interrupted"], "vicryl 2-0 in 2 layers continuous"]
   10: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
+  11: [Comments, text]
 
 ---
 
@@ -63,7 +64,7 @@ Pulse Generator:
 Lead:
   0: [Fixation, combo, [Active, Passive], Passive]
   1: [Coils, combo, [dual coil, single coil], dual coil]
-  2: [Model, combo, [St Jude Durata 7170], St Jude Durata 7170]
+  2: [Model, combo, [St Jude Durata 7170, St Jude Durata 7120], St Jude Durata 7170]
   3: [Serial no., text]
 
 ---
@@ -83,29 +84,34 @@ DFT1:
   1: [CL, spin, 100, 500, 200]
   2: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
   3: [Shock (J), spin, 5, 45, 15]
-  4: [Success, combo, [Successful, Unsuccessful], Successful]
-  5: [Comments, text]
+  4: [SVC coil, combo, ['On', 'Off'], 'On']
+  5: [Coil polarity, combo, [Anode, Cathode], Anode]
+  6: [Success, combo, [Successful, Unsuccessful], Successful]
+  7: [Comments, text]
 
 ---
 
 DFT2:
   0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
-  1: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
-  2: [Shock (J), spin, 5, 45, 15]
-  3: [Successful, combo, [Successful, Unsuccessful], Successful]
-  4: [Charge time (sec), text]
-  5: [Comments, text]
+  1: [CL, spin, 100, 500, 200]
+  2: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
+  3: [Shock (J), spin, 5, 45, 15]
+  4: [SVC coil, combo, ['On', 'Off'], 'On']
+  5: [Coil polarity, combo, [Anode, Cathode], Anode]
+  6: [Success, combo, [Successful, Unsuccessful], Successful]
+  7: [Comments, text]
 
 ---
 
 DFT3:
   0: [VF induction, combo, [T wave shock, DC fibber], DC fibber]
-  1: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
-  2: [Shock (J), spin, 5, 45, 15]
-  3: [Successful, combo, [Successful, Unsuccessful], Successful]
-  4: [Charge time (sec), text]
-  5: [Comments, text]
-  
+  1: [CL, spin, 100, 500, 200]
+  2: [Sensing, combo, [No dropouts, Some dropouts, Poor sensing], No dropouts]
+  3: [Shock (J), spin, 5, 45, 15]
+  4: [SVC coil, combo, ['On', 'Off'], 'On']
+  5: [Coil polarity, combo, [Anode, Cathode], Anode]
+  6: [Success, combo, [Successful, Unsuccessful], Successful]
+  7: [Comments, text]
 
   
 ---
@@ -113,7 +119,7 @@ DFT3:
 Settings:
   0: [Mode, combo, [VVI, DDD, VVIR, DDDR], VVI]
   1: [Lower Rate (bpm), spin, 30, 120, 40]
-  2: [RV output ( -V @ -ms), text]
+  2: [RV output ( -V @ -ms), text, '3.5V @ 0.4ms']
   3: [Sensing (mV), text]
   4: [VF rate (bpm), text, '200']
   5: [VT rate (bpm), text, '164']
@@ -133,9 +139,11 @@ Recommendations:
 Medications:
 
   0: [Drug 1, combo, [Amiodarone 200 mg PO OD], Amiodarone 200 mg PO OD]
-  1: [Drug 2, combo, [Metoprolol 50 mg PO BID, Metoprolol 25 mg PO BID, Carvedilol 3.125 mg PO BID], Metoprolol 50 mg PO BID]
+  1: [Drug 2, combo, [Metoprolol 50 mg PO BID, Metoprolol 25 mg PO BID, Carvedilol 3.125 mg PO BID, Bisoprolol 2.5 mg PO BID], Metoprolol 50 mg PO BID]
   2: [Drug 3, text]
   3: [Drug 4, text]
   4: [Drug 5, text]
   5: [Drug 6, text]
+  6: [Drug 7, text]
+  7: [Drug 8, text]
   
