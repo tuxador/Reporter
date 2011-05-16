@@ -13,6 +13,7 @@ from mako.template import Template
 #from rst2pdf.createpdf import RstToPdf
 from rst2pdf import createpdf
 
+from windows_pdfviewer import MyPanel
 
 if wx.Platform == '__WXMSW__':
     from wx.lib.pdfwin import PDFWindow as PDFWindowWin
@@ -142,7 +143,7 @@ class ReportEditor(wx.Dialog):
         wx.Dialog.__init__(self, parent, -1, 'Edit Report',
                            style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
-
+        self.mainpanel = MyPanel(self)
         self.mainpanel = wx.Panel(self, -1)
 
         # custom statusbar
@@ -161,8 +162,10 @@ class ReportEditor(wx.Dialog):
 
         if wx.Platform == '__WXMSW__':
             self.pdfviewer = PDFWindowWin(self.pdfpanel)
+            print 'Using viewer for windows'
         elif wx.Platform == '__WXGTK__':
             self.pdfviewer = PDFWindowLin(self.pdfpanel)
+            
         self.raweditor = wx.TextCtrl(self.editorpanel, -1, "",
                                      style=wx.TE_MULTILINE)
 
@@ -179,7 +182,7 @@ class ReportEditor(wx.Dialog):
         self.__set_properties()
         self.__do_layout()
 
-        #self.CreateStatusBar()
+        self.CreateStatusBar()
         
         self._set_bindings()
         self._init_values()
@@ -225,9 +228,6 @@ class ReportEditor(wx.Dialog):
         self.pdf_file = self.report.generate_pdf()
         time.sleep(3)
         
-        self.raweditor.write(self.raw_text)
-        self.pdfviewer.LoadFile(self.pdf_file)
-
         #self.show_message('Loaded pdf')
         if self.report.STORED_RAW == True:
             self.show_message('Using stored report')
@@ -238,6 +238,10 @@ class ReportEditor(wx.Dialog):
         self.splitter.SetSashPosition(h)
         self.EDITOR_SHOWN = False
         self.editor_show_button.SetLabel("Show Editor")
+
+        self.raweditor.write(self.raw_text)
+        self.pdfviewer.LoadFile(self.pdf_file)
+
 
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
@@ -296,8 +300,9 @@ class ReportEditor(wx.Dialog):
         rootsizer.Fit(self)
 
         self.SetSize((600, 600))
-        
-        self.Layout()
+
+        self.SetAutoLayout(True)
+        #self.Layout()
         # end wxGlade
 
 
