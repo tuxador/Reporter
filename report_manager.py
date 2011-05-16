@@ -89,7 +89,6 @@ class ReportManager():
         self.project_dir = self.config.options['projects'][
             int(self.config.options['default_project'])]
    
-        print self.project_dir
         # paths
         self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
         self.index_file = os.path.join(self.project_dir, 'index.yaml')
@@ -97,6 +96,8 @@ class ReportManager():
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
 
+        self.tpl_files = glob.glob(os.path.join(self.project_dir, '*.tpl'))
+        
         self.project_name = os.path.basename(self.project_dir)
         
         # verify
@@ -129,14 +130,14 @@ class ReportManager():
         """Insert new record.
         Get values by presenting an empty form"""
         # does user want to fill with template ?
-        template_chooser = TemplateChooser(None, self.project_dir)
-        if template_chooser.ShowModal() == wx.ID_OK:
-            print 'got OK'
-            template_name = template_chooser.chosentemplate
-            print template_name
-            template_chooser.Destroy()
-        else:
-            template_name = 'Empty'
+        template_name = 'Empty'
+        # show template chooser only if there are some templates
+        if len(self.tpl_files) > 0:
+            template_chooser = TemplateChooser(None, self.project_dir, self.tpl_files)
+            if template_chooser.ShowModal() == wx.ID_OK:
+                template_name = template_chooser.chosentemplate
+                template_chooser.Destroy()
+
 
         if template_name == 'Empty':
             form = Form(None, self.fields_file, 'Fill in the values')            
@@ -373,19 +374,12 @@ class ReportManager():
 
 class TemplateChooser(wx.Dialog):
     """List the available templates and allow user to choose one"""
-    def __init__(self, parent, project_dir):
+    def __init__(self, parent, project_dir, tpl_files):
         wx.Dialog.__init__(self, parent, -1, 'Choose template to use')
 
         self.project_dir = project_dir
-        self.templates = self.get_templates(project_dir)
-
-        # close if there are no templates
-        print self.templates
-        if len(self.templates) == 0:
-            print 'no templates'
-            self.chosentemplate = 'Empty'
-            self.EndModal(wx.ID_OK)
-            #self.Destroy()
+        self.tpl_files = tpl_files
+        self.templates = self.get_templates()
 
         # Default is empty
         self.chosentemplate = 'Empty'
@@ -422,10 +416,10 @@ class TemplateChooser(wx.Dialog):
         return os.path.join(self.project_dir, name + '.tpl')
     
         
-    def get_templates(self, project_dir):
+    def get_templates(self):
         """collect template names"""
-        tpl_files = glob.glob(os.path.join(project_dir, '*.tpl'))
-        return [self._filename2templatename(filename) for filename in tpl_files]
+        #tpl_files = glob.glob(os.path.join(project_dir, '*.tpl'))
+        return [self._filename2templatename(filename) for filename in self.tpl_files]
 
 
     def cancel(self, event):
