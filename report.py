@@ -14,7 +14,8 @@ from mako.template import Template
 from rst2pdf import createpdf
 
 if wx.Platform == '__WXMSW__':
-    from wx.lib.pdfwin import PDFWindow as PDFWindowWin
+    from wx.lib.pdfwin import PDFWindow
+
 elif wx.Platform == '__WXGTK__':
     import wx.lib.wxcairo as wxcairo
     import poppler    
@@ -73,6 +74,8 @@ class Report():
 
         createpdf.main(cmd)
 
+        print tmp_pdffilename
+        
         return tmp_pdffilename
 
 
@@ -198,10 +201,10 @@ class ReportEditor(wx.Dialog):
 
 
     def prev_page(self, event):
-        self.pdfviewer.gotoPreviousPage()
+        self.pdfviewer.goto_prevpage()
 
     def next_page(self, event):
-        self.pdfviewer.gotoNextPage()
+        self.pdfviewer.goto_nextpage()
 
     def print_pdf(self, event):
         pass #TODO:
@@ -234,7 +237,9 @@ class ReportEditor(wx.Dialog):
         self.editor_show_button.SetLabel("Show Editor")
 
         self.raweditor.write(self.raw_text)
-        self.pdfviewer.LoadFile(self.pdf_file)
+        self.pdfviewer.load_file(self.pdf_file)
+        #print 'pdf file name', self.pdf_file
+        #self.pdfviewer.load_file('F:/EP_report2/ep_report/reports/arun.pdf')
 
 
     def refresh_pdf(self, event):
@@ -244,7 +249,7 @@ class ReportEditor(wx.Dialog):
         self.pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
         time.sleep(2)
 
-        self.pdfviewer.LoadFile(self.pdf_file)
+        self.pdfviewer.load_file(self.pdf_file)
         self.pdfviewer.Refresh()
         self.show_message('Reloaded pdf')
 
@@ -324,6 +329,27 @@ class ReportEditor(wx.Dialog):
         self.statusbar.SetLabel(msg)
         
 
+class PDFWindowWin(wx.Panel):
+    """Adobe based pdf viewer for windows"""
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        #PDFWindow.__init__(self, style = wx.SUNKEN_BORDER)
+        self.pdfwin = PDFWindow(self)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(self.pdfwin, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+        
+    def goto_prevpage(self):
+        self.gotoPreviousPage()
+
+    def goto_nextpage(self):
+        self.gotoNextPage()
+
+    def load_file(self, file):
+        self.pdfwin.LoadFile(file)
+
+        
+        
 class PDFWindowLin(wx.ScrolledWindow):
     """pdf viewer window. Taken from
     http://code.activestate.com/recipes/577195-wxpython-pdf-viewer-using-poppler/"""
@@ -345,21 +371,21 @@ class PDFWindowLin(wx.ScrolledWindow):
         self.width = None
         self.height = None
         # Connect panel events
-        self.panel.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.panel.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        self.panel.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-        self.panel.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+        self.panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self.panel.Bind(wx.EVT_KEY_DOWN, self.on_keydown)
+        self.panel.Bind(wx.EVT_LEFT_DOWN, self.on_leftdown)
+        self.panel.Bind(wx.EVT_RIGHT_DOWN, self.on_rightdown)
 
         #self.LoadDocument('/tmp/tmpLSvo1m.pdf')
 
-    def LoadFile(self, file):
+    def load_file(self, file):
         self.document = poppler.document_new_from_file("file://" + file, None)
         self.n_pages = self.document.get_n_pages()
         self.current_page = self.document.get_page(self.n_page)
         self.width, self.height = self.current_page.get_size() 
-        self._UpdateSize()
+        self._update_size()
 
-    def OnPaint(self, event):
+    def on_paint(self, event):
         dc = wx.PaintDC(self.panel)
         cr = wxcairo.ContextFromDC(dc)
         cr.set_source_rgb(1, 1, 1)  # White background
@@ -376,32 +402,32 @@ class PDFWindowLin(wx.ScrolledWindow):
         if self.current_page:
             self.current_page.render(cr)
 
-    def OnLeftDown(self, event):
-        self._UpdateScale(self.scale + 0.2)
+    def on_leftdown(self, event):
+        self._update_scale(self.scale + 0.2)
 
-    def OnRightDown(self, event):
-        self._UpdateScale(self.scale - 0.2)
+    def on_rightdown(self, event):
+        self._update_scale(self.scale - 0.2)
 
-    def _UpdateScale(self, new_scale):
+    def _update_scale(self, new_scale):
         if new_scale >= PDFWindowLin.MIN_SCALE and new_scale <= PDFWindowLin.MAX_SCALE:
             self.scale = new_scale
             # Obtain the current scroll position
             prev_position = self.GetViewStart() 
             # Scroll to the beginning because I'm going to redraw all the panel
             self.Scroll(0, 0) 
-            # Redraw (calls OnPaint and such)
+            # Redraw (calls on_paint and such)
             self.Refresh() 
             # Update panel Size and scrollbar config
-            self._UpdateSize()
+            self._update_size()
             # Get to the previous scroll position
             self.Scroll(prev_position[0], prev_position[1]) 
 
-    def _UpdateSize(self):
+    def _update_size(self):
         u = PDFWindowLin.SCROLLBAR_UNITS
         self.panel.SetSize((self.width*self.scale, self.height*self.scale))
         self.SetScrollbars(u, u, (self.width*self.scale)/u, (self.height*self.scale)/u)
 
-    def OnKeyDown(self, event):
+    def on_keydown(self, event):
         update = True
         # More keycodes in http://docs.wxwidgets.org/stable/wx_keycodes.html#keycodes
         keycode = event.GetKeyCode() 
@@ -417,7 +443,7 @@ class PDFWindowLin(wx.ScrolledWindow):
             self.Refresh()
 
 
-    def gotoNextPage(self):
+    def goto_nextpage(self):
         """go to next page"""
         if self.n_page + 1 <= self.n_pages:
             self.n_page += 1
@@ -428,7 +454,7 @@ class PDFWindowLin(wx.ScrolledWindow):
             print 'Already at last page'
             return
 
-    def gotoPreviousPage(self):
+    def goto_prevpage(self):
         """go to previous page"""
         if self.n_page > 0:
             self.n_page -= 1
@@ -441,9 +467,33 @@ class PDFWindowLin(wx.ScrolledWindow):
 
         
 
+def test():
+    """
+    Primarily for debugging the pdf window problems on windows
+    """
+    app = wx.PySimpleApp()
+    # create window/frame, no parent, -1 is default ID, title, size
+    frame = wx.Frame(None, -1, "PDFWindow", size = (640, 480))
+    # make an instance of the class
+    panel = wx.Panel(frame)
+    p = PDFWindowWin(panel)
+    # show the frame
+    mainsizer = wx.BOXSIZER(wx.VERTICAL)
+    panelsizer = wx.BOXSIZER(wx.VERTICAL)
+
+    panelsizer.Add(p, 1, wx.EXPAND)
+    panel.SetSizer(panelsizer)
+
+    mainsizer.Add(panel, 1, wx.EXPAND)
+    frame.SetSizer(mainsizer)
+    frame.SetAutoLayout(True)
+    
+    frame.Show(True)
+    # start the event loop
+    app.MainLoop()
     
     
 
 if __name__ == '__main__':
-    #editor_test()
-    pass
+    test()
+
