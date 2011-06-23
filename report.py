@@ -59,6 +59,9 @@ class Report():
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
+        #TODO: for debug only
+        #tmp_pdffilename = 'F:/EP_report2/test.pdf'
+        
         if not raw:
             raw = self.raw_report
         
@@ -74,8 +77,6 @@ class Report():
 
         createpdf.main(cmd)
 
-        print tmp_pdffilename
-        
         return tmp_pdffilename
 
 
@@ -237,10 +238,12 @@ class ReportEditor(wx.Dialog):
         self.editor_show_button.SetLabel("Show Editor")
 
         self.raweditor.write(self.raw_text)
+        #time.sleep(10)
         self.pdfviewer.load_file(self.pdf_file)
         #print 'pdf file name', self.pdf_file
         #self.pdfviewer.load_file('F:/EP_report2/ep_report/reports/arun.pdf')
-
+        #self.pdfviewer.load_file('c:\docume~1\raja\locals~1\temp\tmpltu2dh.pdf')
+        
 
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
@@ -348,7 +351,7 @@ class PDFWindowWin(wx.Panel):
     def load_file(self, file):
         self.pdfwin.LoadFile(file)
 
-        
+
         
 class PDFWindowLin(wx.ScrolledWindow):
     """pdf viewer window. Taken from

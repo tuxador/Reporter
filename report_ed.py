@@ -41,8 +41,10 @@ class MyFrame(wx.Frame):
         self.buttonpanel8 = wx.Panel(self.pdfbuttonpanel, -1)
         
         #self.pdfviewer = wx.TextCtrl(self.split1, -1, "", style=wx.TE_MULTILINE)
+        self.split1panel = wx.Panel(self.split1)
+        
         if PLATFORM == 'linux':
-            self.pdfviewer = PDFWindowLin(self.split1)
+            self.pdfviewer = PDFWindowLin(self.split1panel)
         elif PLATFORM == 'windows':
             self.pdfviewer = PDFWindowWin(self.split1)
             
@@ -88,8 +90,15 @@ class MyFrame(wx.Frame):
         buttonpanel1sizer = wx.BoxSizer(wx.HORIZONTAL)
         buttonpanel7sizer = wx.BoxSizer(wx.HORIZONTAL)
         buttonpanel8sizer = wx.BoxSizer(wx.HORIZONTAL)
+
         
-        sizer_1.Add(self.pdfviewer, 4, wx.ALL|wx.EXPAND, 4)
+        #sizer_1.Add(self.pdfviewer, 4, wx.ALL|wx.EXPAND, 4)
+        split1panelsizer = wx.BoxSizer(wx.HORIZONTAL)
+        split1panelsizer.Add(self.pdfviewer, 1, wx.EXPAND)
+        self.split1panel.SetSizer(split1panelsizer)
+        sizer_1.Add(self.split1panel, 4, wx.ALL|wx.EXPAND, 4)
+
+
         buttonpanel1sizer.Add(self.prevbutton, 0,
                               wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5)
         self.buttonpanel1.SetSizer(buttonpanel1sizer)
