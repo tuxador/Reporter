@@ -4,6 +4,7 @@
 with mako and render the report to a pdf with rst2pdf"""
 
 import wx
+import os
 #import subprocess
 import time
 import shutil
@@ -14,9 +15,11 @@ from mako.template import Template
 from rst2pdf import createpdf
 
 if wx.Platform == '__WXMSW__':
+    OS = 'windows'
     from wx.lib.pdfwin import PDFWindow
 
 elif wx.Platform == '__WXGTK__':
+    OS = 'linux'
     import wx.lib.wxcairo as wxcairo
     import poppler    
 
@@ -33,7 +36,8 @@ class Report():
         self.vals = vals
         self.raw_report = raw_report
         self.stylefile = stylefile
-
+        self.template_file = template_file
+        
         self.template = Template(filename=template_file)
 
         # flag to indicate if stored raw report is used
@@ -57,11 +61,17 @@ class Report():
         Use given rst text or use raw_report"""
         # get the temp names
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
+
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
-        #TODO: for debug only
-        #tmp_pdffilename = 'F:/EP_report2/test.pdf'
-        
+        # on Windows, pdf does not get rendered if the pdf is created in the
+        # system temp folder (? reason)
+        if OS == 'windows':
+            tmp_folder = os.path.join(os.path.dirname(self.template_file), 'tmp')
+            tmp_pdffilename = os.path.join(tmp_folder, 'report.pdf')
+            if not os.path.exists(tmp_folder):
+                os.mkdir(tmp_folder)
+            
         if not raw:
             raw = self.raw_report
         
@@ -75,6 +85,8 @@ class Report():
         else:
             cmd = [tmp_rstfilename, '-o', tmp_pdffilename]
 
+        print 'command', cmd
+            
         createpdf.main(cmd)
 
         return tmp_pdffilename
