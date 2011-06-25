@@ -85,7 +85,6 @@ class Report():
         else:
             cmd = [tmp_rstfilename, '-o', tmp_pdffilename]
 
-        print 'command', cmd
             
         createpdf.main(cmd)
 
