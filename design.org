@@ -1,9 +1,8 @@
 * Bugs / enhancements
-** TODO APERP field needed
-** TODO Total number of records to be displayed in status, update when filtered
-** TODO Change key for record when key fields change
+** DONE APERP field needed
+** DONE Total number of records to be displayed in status, update when filtered
+** DONE Change key for record when key fields change
 ** TODO Need clear filter button
-
 
 * Program files
 ** DONE report.py -- Report class 
