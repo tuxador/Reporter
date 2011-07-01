@@ -19,8 +19,8 @@ class Records():
         self.db_file = db_file
         self.index_file = index_file
 
-        #self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
-        self.db = shelve.open(self.db_file)
+        self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
+        #self.db = shelve.open(self.db_file)
 
     def bkp_and_open(self, db_file, num_backups, backup_freq):
         """Before opening the file, check if backups need to be done"""
@@ -30,7 +30,7 @@ class Records():
         today = datetime.today()
         bkp_basename = db_file + '_bkp' # all bkp files are this + date string
         bkp_files = glob.glob(bkp_basename + '*')
-        bkp_dates = [datetime.strptime(filename.lstrip(bkp_basename), bkp_dateformat)
+        bkp_dates = [datetime.strptime(filename.split(bkp_basename)[1], bkp_dateformat)
                      for filename in bkp_files]
         bkp_distances = [(today-date).days for date in bkp_dates]
 
