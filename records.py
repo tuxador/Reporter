@@ -30,10 +30,21 @@ class Records():
         today = datetime.today()
         bkp_basename = db_file + '_bkp' # all bkp files are this + date string
         bkp_files = glob.glob(bkp_basename + '*')
-        bkp_dates = [datetime.strptime(filename.lstrip(bkp_basename), bkp_dateformat)
-                     for filename in bkp_files]
-        bkp_distances = [(today-date).days for date in bkp_dates]
+        #bkp_dates = [datetime.strptime(filename.lstrip(bkp_basename), bkp_dateformat)
+        #             for filename in bkp_files]
+        #bkp_distances = [(today-date).days for date in bkp_dates]
 
+        for f in bkp_files:
+            print '-----'
+            print type(f)
+            print f
+            print bkp_basename
+            print f.lstrip(bkp_basename)
+            
+        
+        print 'current backups'
+        print '-------------'
+        
         if len(bkp_files) == 0:
             NEED_BACKUP = True
 
