@@ -487,8 +487,6 @@ class Register(wx.Frame):
 
         panel.SetSizer(self.vbox)
 
-        
-
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         mainsizer.Add(panel, 1, wx.EXPAND, 5)
         mainsizer.Fit(self)
