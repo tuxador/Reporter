@@ -34,6 +34,7 @@ class Records():
                      for filename in bkp_files]
         bkp_distances = [(today-date).days for date in bkp_dates]
 
+
         if len(bkp_files) == 0:
             NEED_BACKUP = True
 
