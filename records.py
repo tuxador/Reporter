@@ -21,7 +21,9 @@ class Records():
 
         self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
         #self.db = shelve.open(self.db_file)
+        self.retrieve_pass(self.db)
 
+        
     def bkp_and_open(self, db_file, num_backups, backup_freq):
         """Before opening the file, check if backups need to be done"""
         #db_directory = os.path.dirname(db_file)
@@ -55,7 +57,20 @@ class Records():
                             
         db = shelve.open(db_file)
         return db
+
+
+    def retrieve_pass(self):
+        """If the db has a stored password hash, retrieve it.
+        else create a new password as a blank string"""
+        try:
+            self.passhash = self.db['passhash']
+        except KeyError:
+            # md5 hash for blank string
+            self.passhash = 'd41d8cd98f00b204e9800998ecf8427e'
+            self.db['passhash'] = 'd41d8cd98f00b204e9800998ecf8427e'
+            self.db.sync()
         
+    
     def create_index(self, restrict_ids=None):
         """index is a list of tuples
         corresponding to the values in index file.
