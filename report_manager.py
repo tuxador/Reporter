@@ -11,6 +11,7 @@ import glob
 import subprocess
 import time
 import yaml
+import hashlib
 #import numpy
 
 from records import Records
@@ -21,6 +22,7 @@ from summary import NumSummary, CatSummary
 
 ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
+ID_LOCK = wx.NewId()
 ID_REMOVE = wx.NewId()
 ID_PREF = wx.NewId()
 ID_FLUSH = wx.NewId()
@@ -147,6 +149,9 @@ class ReportManager():
 
         if form.ShowModal() == wx.ID_OK:
             form.get_values()
+
+            # Initialise lock as open
+            form.vals['LOCK_STATUS'] = 'unlocked'
             self.records.insert_record(form.vals)
 
             # recreate index
@@ -220,6 +225,38 @@ class ReportManager():
         form.Destroy()
         
 
+    def toggle_lock(self):
+        """Toggle the locked status of the selected record.
+        Only priveleges user (admin) should be allowed to use this"""
+        selected_record = self.register.record_display.GetFirstSelected()
+        
+        if selected_record == -1:
+            self.register.SetStatusText('No record selected', 0)
+            return
+
+        id = str(''.join([self.register.record_display.GetItem(
+                        selected_record, x).GetText()
+                        for x in range(len(self.records.index_keys))]))
+
+        record_vals = self.records.retrieve_record(id)
+
+        # if there is no lock_status, it is unlocked
+        try:
+            lock_status = record_vals['LOCK_STATUS']
+        except KeyError:
+            lock_status = 'unlocked'
+        
+        if lock_status == 'unlocked':
+            record_vals['LOCK_STATUS'] = 'locked'
+            self.register.SetStatusText('Locked selected record')
+        else:
+            record_vals['LOCK_STATUS'] = 'unlocked'
+            self.register.SetStatusText('Unlocked selected record')
+
+        self.records.delete_record(id)
+        self.records.insert_record(record_vals)
+        self.register.refresh_records()
+            
 
     def flush_report(self, event):
         """Remove the stored raw report for the record if it exists"""
@@ -509,6 +546,7 @@ class Register(wx.Frame):
         file_menu = wx.Menu()
         file_menu.Append(ID_NEW, "&New Record","Create a new record")
         file_menu.Append(ID_EDIT, "&Edit Record", "Edit an existing record")
+        file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
         file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
         file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
         file_menu.Append(ID_QUIT, "&Quit","Quit the program")
@@ -548,6 +586,7 @@ class Register(wx.Frame):
         
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
+        self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
@@ -584,6 +623,28 @@ class Register(wx.Frame):
         # display total records in status
         self.SetStatusText('%s records'  %(len(self.index_summary)))
 
+
+    def toggle_lock(self, event):
+        """If user has admin priveleges, allow him
+        to toggle lock status of selected record"""
+        #TODO: check if record is selected before asking password
+        if self.user_has_key():
+            self.parent.toggle_lock()
+        else:
+            self.SetStatusText('Authentication failed')
+
+
+    def user_has_key(self):
+        """Check if user knows password"""
+        passdlg = wx.PasswordEntryDialog(self, 'Enter password')
+        if passdlg.ShowModal() == wx.ID_OK:
+            entry = passdlg.GetValue()
+            if hashlib.md5(entry).hexdigest() == self.records.passhash:
+                return True
+        else:
+            return False
+            
+        
     def refresh_records(self):
         """Completely refresh the summary being shown"""
         self.record_display.ClearAll()
@@ -676,6 +737,9 @@ class Register(wx.Frame):
     # def load_and_edit_record(self):
     #     pass
 
+        
+
+        
     def remove_record(self, event):
         """delete the selected record"""
         selected_record = self.record_display.GetFirstSelected()

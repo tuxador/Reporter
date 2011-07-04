@@ -21,7 +21,7 @@ class Records():
 
         self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
         #self.db = shelve.open(self.db_file)
-        self.retrieve_pass(self.db)
+        self.retrieve_pass()
 
         
     def bkp_and_open(self, db_file, num_backups, backup_freq):
@@ -69,7 +69,7 @@ class Records():
             self.passhash = 'd41d8cd98f00b204e9800998ecf8427e'
             self.db['passhash'] = 'd41d8cd98f00b204e9800998ecf8427e'
             self.db.sync()
-        
+
     
     def create_index(self, restrict_ids=None):
         """index is a list of tuples
@@ -80,11 +80,15 @@ class Records():
         self.index_keys = yaml.load(open(self.index_file))
         index_fields = []
 
+        # passhash is key used for storing password hash
         if restrict_ids == None:
             restrict_ids = self.db.keys()
+            restrict_ids.remove('passhash')
 
+            
         for field in self.index_keys:
-            index_fields.append([self.db[rec][field] for rec in self.db if rec in restrict_ids])
+            index_fields.append([self.db[rec][field] for rec in self.db
+                                 if rec in restrict_ids])
 
         index = zip(*index_fields)
 
