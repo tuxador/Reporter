@@ -78,16 +78,23 @@ class Records():
         listctrl.
         restrict_ids is a list of ids to restrict to"""
         self.index_keys = yaml.load(open(self.index_file))
+
+        # add lock_status
+        self.index_keys.append('LOCK_STATUS')
+        
         index_fields = []
 
         # passhash is key used for storing password hash
         if restrict_ids == None:
             restrict_ids = self.db.keys()
             restrict_ids.remove('passhash')
-
+        
+        elif 'passhash' in restrict_ids:
+            restrict_ids.remove('passhash')
             
+        
         for field in self.index_keys:
-            index_fields.append([self.db[rec][field] for rec in self.db
+            index_fields.append([self.get_field_rec(rec, field) for rec in self.db
                                  if rec in restrict_ids])
 
         index = zip(*index_fields)
@@ -99,6 +106,16 @@ class Records():
 
         return index_dict
 
+
+    def get_field_rec(self, rec, field):
+        """from self.db, get the value of the field
+        for the rec. If they field is not present,
+        return empty string"""
+        try:
+            return self.db[rec][field]
+        except KeyError:
+            return ''
+    
 
     def insert_record(self, record):
         """Insert a record into the database.

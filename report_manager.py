@@ -648,6 +648,7 @@ class Register(wx.Frame):
     def refresh_records(self):
         """Completely refresh the summary being shown"""
         self.record_display.ClearAll()
+        self.index_summary = self.records.create_index()
         self.load_records()
         
 
