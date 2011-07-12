@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import shutil
 import glob
 import shelve
@@ -15,12 +16,13 @@ class Records():
     num_backups and backup_freq govern how many
     backups will be maintained and how frequently
     they will be created"""
-    def __init__(self, db_file, index_file, num_backups, backup_freq):
+    def __init__(self, db_file, index_file, passfile,
+                 num_backups, backup_freq):
         self.db_file = db_file
         self.index_file = index_file
-
+        self.passfile = passfile
+        
         self.db = self.bkp_and_open(self.db_file, num_backups, backup_freq)
-        #self.db = shelve.open(self.db_file)
         self.retrieve_pass()
 
         
@@ -63,12 +65,15 @@ class Records():
         """If the db has a stored password hash, retrieve it.
         else create a new password as a blank string"""
         try:
-            self.passhash = self.db['passhash']
+            #self.passhash = self.db['passhash']
+            self.passhash = open(self.passfile).read()
         except KeyError:
+            print 'password file missing'
+            sys.exit(1)
             # md5 hash for blank string
-            self.passhash = 'd41d8cd98f00b204e9800998ecf8427e'
-            self.db['passhash'] = 'd41d8cd98f00b204e9800998ecf8427e'
-            self.db.sync()
+            # self.passhash = 'd41d8cd98f00b204e9800998ecf8427e'
+            # self.db['passhash'] = 'd41d8cd98f00b204e9800998ecf8427e'
+            # self.db.sync()
 
     
     def create_index(self, restrict_ids=None):
@@ -80,22 +85,27 @@ class Records():
         self.index_keys = yaml.load(open(self.index_file))
 
         # add lock_status
-        self.index_keys.append('LOCK_STATUS')
+        #self.index_keys.append('LOCK_STATUS')
         
         index_fields = []
 
         # passhash is key used for storing password hash
         if restrict_ids == None:
             restrict_ids = self.db.keys()
-            restrict_ids.remove('passhash')
+        #     restrict_ids.remove('passhash')
         
-        elif 'passhash' in restrict_ids:
-            restrict_ids.remove('passhash')
+        # elif 'passhash' in restrict_ids:
+        #     restrict_ids.remove('passhash')
             
         
         for field in self.index_keys:
             index_fields.append([self.get_field_rec(rec, field) for rec in self.db
                                  if rec in restrict_ids])
+
+            
+            # lock status also needs to be sent to register
+        index_fields.append([self.get_field_rec(rec, 'LOCK_STATUS')
+                             for rec in self.db])
 
         index = zip(*index_fields)
 

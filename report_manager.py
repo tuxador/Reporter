@@ -72,8 +72,9 @@ class ReportManager():
 
         self.load_project()
 
-        self.records = Records(self.db_file, self.index_file,
-                               self.config.options['num_backups'], self.config.options['backup_freq'])
+        self.records = Records(self.db_file, self.index_file, self.passfile,
+                               self.config.options['num_backups'],
+                               self.config.options['backup_freq'])
         self.register = Register(self, self.records, self.project_name)
 
 
@@ -97,7 +98,8 @@ class ReportManager():
         self.report_files = glob.glob(os.path.join(self.project_dir, '*.rst'))
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
-
+        self.passfile = os.path.join(self.project_dir, 'pass.hsh')
+        
         self.tpl_files = glob.glob(os.path.join(self.project_dir, '*.tpl'))
         
         self.project_name = os.path.basename(self.project_dir)
@@ -120,7 +122,6 @@ class ReportManager():
             missing_files.append('Report_Files')
 
         if not VALID_PROJ:
-            #self.register.SetStatusText('Missing files in project', 0) TODO: register does not exist yet
             print 'Not all files required for project are present. The following files are missing'
             for f in missing_files:
                 print f
@@ -615,7 +616,8 @@ class Register(wx.Frame):
             keyname = val.split('_')[1]
             self.record_display.InsertColumn(i, keyname)
 
-        
+        self.record_display.InsertColumn(i+1, 'Lock')
+            
         #self.record_display.ClearAll()
         for key in self.index_summary:
             self.record_display_append(self.index_summary[key], key)
@@ -720,12 +722,14 @@ class Register(wx.Frame):
         """add the rec to display"""
         # convert everything to a string
         rec = [str(x) for x in rec]
+
+        print 'rec', rec
         
         id = self.record_display.InsertStringItem(sys.maxint, rec[0])
 
         for col in range(1, len(rec)):
             self.record_display.SetStringItem(id, col, rec[col])
-
+            
         self.record_display.SetItemData(id, key) 
             
         
