@@ -500,8 +500,8 @@ class Register(wx.Frame):
         
         # load the records and create index
         self.index_summary = self.records.create_index()
-        # listcontrol
-        self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys))
+        # listcontrol - number of cols to sort, add 1 for locking
+        self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys)+1)
 
         # buttons
         self.edit_button = wx.Button(panel, -1,  'Edit Record')
@@ -650,7 +650,7 @@ class Register(wx.Frame):
     def refresh_records(self):
         """Completely refresh the summary being shown"""
         self.record_display.ClearAll()
-        self.index_summary = self.records.create_index()
+        #self.index_summary = self.records.create_index()
         self.load_records()
         
 
@@ -693,7 +693,10 @@ class Register(wx.Frame):
                              if eval (''.join(["'", val.lower(), "'.startswith('",
                                               filter_value.lower(), "')"]))]
             
-            
+
+        print 'filter_values'
+        print filt_vals
+                
         # create list of ids to restrict to
         self.restrict_ids = [id for (val, id) in filt_vals]
                 
