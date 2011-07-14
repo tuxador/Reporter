@@ -103,7 +103,7 @@ class Records():
                                  if rec in restrict_ids])
 
             
-            # lock status also needs to be sent to register
+        # lock status also needs to be sent to register
         index_fields.append([self.get_field_rec(rec, 'LOCK_STATUS')
                              for rec in self.db])
 
@@ -111,7 +111,6 @@ class Records():
 
         index_dict = {}
         for i, rec in enumerate(index):
-            #rec_key = str(''.join([str(x) for x in rec]))
             index_dict[i] = rec
 
         return index_dict

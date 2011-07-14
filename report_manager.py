@@ -723,8 +723,6 @@ class Register(wx.Frame):
         # convert everything to a string
         rec = [str(x) for x in rec]
 
-        print 'rec', rec
-        
         id = self.record_display.InsertStringItem(sys.maxint, rec[0])
 
         for col in range(1, len(rec)):
