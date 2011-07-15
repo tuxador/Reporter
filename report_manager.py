@@ -787,7 +787,7 @@ class Register(wx.Frame):
                         selected_record, x).GetText()
                         for x in range(len(self.records.index_keys))]))
 
-        if self.is_locked(selected_record):
+        if self.parent.is_locked(selected_record):
             self.SetStatusText('Cannot delete locked record')
             return
         
