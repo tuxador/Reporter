@@ -774,7 +774,6 @@ class Register(wx.Frame):
         sys.exit()
 
         
-        
     def remove_record(self, event):
         """delete the selected record"""
         selected_record = self.record_display.GetFirstSelected()
@@ -796,7 +795,6 @@ class Register(wx.Frame):
         self.index_summary = self.records.create_index()
         self.refresh_records()
 
-        
         
 
 class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
