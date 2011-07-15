@@ -31,6 +31,7 @@ ID_DELTEMPLATE = wx.NewId()
 ID_QUIT = wx.NewId()
 ID_NUM_SUMMARY = wx.NewId()
 ID_CAT_SUMMARY = wx.NewId()
+ID_PASS = wx.NewId()
 
 #----------------------------
 # Utility functions
@@ -256,6 +257,9 @@ class ReportManager():
 
         self.records.delete_record(id)
         self.records.insert_record(record_vals)
+        self.register.index_summary = self.records.create_index(self.register.restrict_ids)
+        #self.index_summary = self.records.create_index()
+        
         self.register.refresh_records()
             
 
@@ -554,7 +558,8 @@ class Register(wx.Frame):
    
         edit_menu = wx.Menu()
         edit_menu.Append(ID_PREF, "Preferences", "Edit preferences")
-
+        edit_menu.Append(ID_PASS, "Change Password", "Change Admin Password")
+        
         report_gen_menu = wx.Menu()
         for i in range(len(self.parent.report_files)):
             report_name = os.path.basename(self.parent.report_files[i]).rstrip('.rst')
@@ -570,8 +575,8 @@ class Register(wx.Frame):
         info_menu.Append(ID_CAT_SUMMARY, "&Categorical Summary", "Provide summary for categorical data")
         
         self.MenuBar.Append(file_menu, "&File")
+        self.MenuBar.Append(edit_menu, "&Edit")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
-        #self.MenuBar.Append(report_edit_menu, "&Edit Report")
         self.MenuBar.Append(template_menu, "&Template")
         self.MenuBar.Append(info_menu, "&Info")
         
@@ -588,6 +593,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
+        self.Bind(wx.EVT_MENU, self.change_pass, id=ID_PASS)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
@@ -621,6 +627,7 @@ class Register(wx.Frame):
         #self.record_display.ClearAll()
         for key in self.index_summary:
             self.record_display_append(self.index_summary[key], key)
+            print self.index_summary[key]
 
         # display total records in status
         self.SetStatusText('%s records'  %(len(self.index_summary)))
@@ -632,9 +639,11 @@ class Register(wx.Frame):
         #TODO: check if record is selected before asking password
         if self.user_has_key():
             self.parent.toggle_lock()
+            print 'lock changed'
         else:
             self.SetStatusText('Authentication failed')
-
+            print 'wrong password'
+            
 
     def user_has_key(self):
         """Check if user knows password"""
@@ -645,7 +654,25 @@ class Register(wx.Frame):
                 return True
         else:
             return False
-            
+
+
+    def change_pass(self, event):
+        """User wants to change password"""
+        if self.user_has_key():
+            newpassdlg = wx.PasswordEntryDialog(self, 'Enter new password')
+            if newpassdlg.ShowModal() == wx.ID_OK:
+                newentry = newpassdlg.GetValue()
+                newpasshash = hashlib.md5(newentry).hexdigest()
+                with open(self.parent.passfile, 'w') as f:
+                    f.write(newpasshash)
+                self.SetStatusText('Password changed successfully')
+            else:
+                self.SetStatusText('Password not changed')
+
+        else:
+            self.SetStatusText('Incorrect password')
+                
+        
         
     def refresh_records(self):
         """Completely refresh the summary being shown"""
@@ -694,9 +721,6 @@ class Register(wx.Frame):
                                               filter_value.lower(), "')"]))]
             
 
-        print 'filter_values'
-        print filt_vals
-                
         # create list of ids to restrict to
         self.restrict_ids = [id for (val, id) in filt_vals]
                 
@@ -726,6 +750,8 @@ class Register(wx.Frame):
         # convert everything to a string
         rec = [str(x) for x in rec]
 
+        print 'rec', rec
+        
         id = self.record_display.InsertStringItem(sys.maxint, rec[0])
 
         for col in range(1, len(rec)):
