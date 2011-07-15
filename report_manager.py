@@ -774,11 +774,6 @@ class Register(wx.Frame):
         sys.exit()
 
         
-    # def load_and_edit_record(self):
-    #     pass
-
-        
-
         
     def remove_record(self, event):
         """delete the selected record"""
@@ -792,6 +787,10 @@ class Register(wx.Frame):
                         selected_record, x).GetText()
                         for x in range(len(self.records.index_keys))]))
 
+        if self.is_locked(selected_record):
+            self.SetStatusText('Cannot delete locked record')
+            return
+        
         self.records.delete_record(id)
         
         self.index_summary = self.records.create_index()
