@@ -275,16 +275,12 @@ class ReportManager():
                     selected_record, x).GetText()
                     for x in range(len(self.records.index_keys))]))
         
-        #template_file = self.report_files[event.Id // 2]
-        #record_vals = self.records.retrieve_record(id)
         record_vals = self.records.retrieve_record(id)
 
         record_vals['raw_report'] = ''
-        #form = Form(None, self.fields_file, 'Edit the values', record_vals)
 
         self.records.delete_record(id)
         self.records.insert_record(record_vals)
-        #self.register.refresh_records()
 
         
     def show_n_edit_report(self, event):
@@ -299,6 +295,9 @@ class ReportManager():
         id = str(''.join([self.register.record_display.GetItem(
                     selected_record, x).GetText()
                     for x in range(len(self.records.index_keys))]))
+
+
+        print self.register.record_display.GetItem(selected_record, 'locked')
         
         template_file = self.report_files[event.Id // 2]
         record_vals = self.records.retrieve_record(id)
