@@ -97,9 +97,6 @@ class Records():
         # elif 'passhash' in restrict_ids:
         #     restrict_ids.remove('passhash')
 
-        print 'restrict_ids'
-        print restrict_ids
-
             
         for field in self.index_keys:
             index_fields.append([self.get_field_rec(rec, field) for rec in self.db

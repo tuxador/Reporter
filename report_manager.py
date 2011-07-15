@@ -215,18 +215,33 @@ class ReportManager():
 
         record_vals = self.records.retrieve_record(id)
 
-        form = Form(None, self.fields_file, 'Edit the values', record_vals)
+        if self.is_locked(selected_record):
+            form = Form(None, self.fields_file,
+                        'Locked record. Cannot edit', record_vals)
+            if form.ShowModal() == wx.ID_OK:
+                form.Destroy
+        else:
+            form = Form(None, self.fields_file, 'Edit the values', record_vals)
 
-        if form.ShowModal() == wx.ID_OK:
-            form.get_values()
-            # delete the prev record
-            self.records.delete_record(id)
-            self.records.insert_record(form.vals)
-            self.register.refresh_records()
+            if form.ShowModal() == wx.ID_OK:
+                form.get_values()
+                # delete the prev record
+                self.records.delete_record(id)
+                self.records.insert_record(form.vals)
+                self.register.refresh_records()
 
-        form.Destroy()
+            form.Destroy()
         
 
+    def is_locked(self, record):
+        """Is the record locked. record is index obained from the listctrl"""
+        # last entry will always be lock status
+        if self.register.index_summary[record][-1] == 'locked':
+            return True
+        else:
+            return False
+
+        
     def toggle_lock(self):
         """Toggle the locked status of the selected record.
         Only priveleges user (admin) should be allowed to use this"""
@@ -296,8 +311,6 @@ class ReportManager():
                     selected_record, x).GetText()
                     for x in range(len(self.records.index_keys))]))
 
-
-        print self.register.record_display.GetItem(selected_record, 'locked')
         
         template_file = self.report_files[event.Id // 2]
         record_vals = self.records.retrieve_record(id)
@@ -626,7 +639,6 @@ class Register(wx.Frame):
         #self.record_display.ClearAll()
         for key in self.index_summary:
             self.record_display_append(self.index_summary[key], key)
-            print self.index_summary[key]
 
         # display total records in status
         self.SetStatusText('%s records'  %(len(self.index_summary)))
@@ -638,10 +650,9 @@ class Register(wx.Frame):
         #TODO: check if record is selected before asking password
         if self.user_has_key():
             self.parent.toggle_lock()
-            print 'lock changed'
+
         else:
             self.SetStatusText('Authentication failed')
-            print 'wrong password'
             
 
     def user_has_key(self):
@@ -749,8 +760,6 @@ class Register(wx.Frame):
         # convert everything to a string
         rec = [str(x) for x in rec]
 
-        print 'rec', rec
-        
         id = self.record_display.InsertStringItem(sys.maxint, rec[0])
 
         for col in range(1, len(rec)):
