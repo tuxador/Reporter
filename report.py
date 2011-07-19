@@ -8,6 +8,7 @@ import os
 #import subprocess
 import time
 import shutil
+import re
 
 import tempfile
 from mako.template import Template
@@ -26,7 +27,8 @@ elif wx.Platform == '__WXGTK__':
 class Report():
     """
     """
-    def __init__(self, template_file, vals, raw_report='', stylefile=None):
+    def __init__(self, template_file, vals, image_folder,
+                 raw_report='', stylefile=None):
         """template_file is full path to a .rst file that is the template.
         vals is a dictionary containing the variable value.
         raw_report is previously generated filled template if stored.
@@ -35,6 +37,7 @@ class Report():
         #self.template_file = template_file
         self.vals = vals
         self.raw_report = raw_report
+        self.image_folder = image_folder
         self.stylefile = stylefile
         self.template_file = template_file
         
@@ -47,8 +50,6 @@ class Report():
         if self.raw_report == '':
             self.STORED_RAW = True
             self.generate_raw()
-
-        print 'initing report with', self.raw_report
     
 
     def generate_raw(self, event=None):
@@ -74,11 +75,26 @@ class Report():
             
         if not raw:
             raw = self.raw_report
-        
+
+        # convert image filenames to full path (will vary per system)
+        # templates (and generated rst) will have image paths specified as
+        # {{image_folder/logo.png}}
+        def replace_with_full_path(imagefilename_match):
+            print imagefilename_match.group(0)
+            return os.path.join(self.image_folder,
+                                imagefilename_match.group('imagefilename'))
+
+        # print '#############'
+        # print raw
+        # print '############'
+        m = re.search('{{(?P<imagefilename>[\w\s\d\.]*)}}', raw)
+        print m.group(0)
+        raw = re.sub('{{(?P<imagefilename>[\w\s\d\.]*)}}', replace_with_full_path, raw)
+            
         # write the raw_report as a file
         with open(tmp_rstfilename,'w') as fi:
             fi.write(raw)
-
+            
         # invoke rst2pdf
         if self.stylefile:
             cmd = ['-s', self.stylefile, tmp_rstfilename, '-o', tmp_pdffilename]

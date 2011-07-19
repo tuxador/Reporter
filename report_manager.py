@@ -100,6 +100,9 @@ class ReportManager():
         self.db_file = os.path.join(self.project_dir, 'records.db')
         self.all_stylefile = os.path.join(self.project_dir, 'all.sty')
         self.passfile = os.path.join(self.project_dir, 'pass.hsh')
+
+        # images (including logo) will all be stored in an image folder.
+        self.image_folder = os.path.join(self.project_dir, 'images')
         
         self.tpl_files = glob.glob(os.path.join(self.project_dir, '*.tpl'))
         
@@ -327,11 +330,14 @@ class ReportManager():
         global_stylefile = os.path.join(os.path.dirname(template_file), 'all.sty')
         
         if os.path.exists(local_stylefile):
-            rep = Report(template_file, record_vals, raw_report, local_stylefile)
+            rep = Report(template_file, record_vals, self.image_folder,
+                         raw_report, local_stylefile)
         elif os.path.exists(global_stylefile):
-            rep = Report(template_file, record_vals, raw_report, global_stylefile)
+            rep = Report(template_file, record_vals, self.image_folder,
+                         raw_report, global_stylefile)
         else:
-            rep = Report(template_file, record_vals, raw_report)
+            rep = Report(template_file, record_vals, self.image_folder,
+                         raw_report)
 
         raw_report =  rep.edit_report()
         
