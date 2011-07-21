@@ -32,7 +32,7 @@ ID_QUIT = wx.NewId()
 ID_NUM_SUMMARY = wx.NewId()
 ID_CAT_SUMMARY = wx.NewId()
 ID_PASS = wx.NewId()
-
+ID_PROJ = wx.NewId()
 #----------------------------
 # Utility functions
 
@@ -70,15 +70,24 @@ class ReportManager():
     def __init__(self):
         configfile = self.get_configfile()
         self.config = Config(configfile)
+        self.init_project()
 
+
+    def init_project(self):
+        """Common code for initialising project"""
         self.load_project()
 
         self.records = Records(self.db_file, self.index_file, self.passfile,
                                self.config.options['num_backups'],
                                self.config.options['backup_freq'])
         self.register = Register(self, self.records, self.project_name)
+        
 
-
+    def unload_current_project(self):
+        """Close cleanly current loaded project"""
+        self.register.Destroy()
+        
+        
     def get_configfile(self):
         """Get path to config file"""
         platform = sys.platform
@@ -133,6 +142,18 @@ class ReportManager():
             sys.exit()
 
 
+    def change_project(self, event):
+        """Load a new project"""
+        project_chooser = ProjectChooser(None, self.config)
+        if project_chooser.ShowModal() == wx.ID_OK:
+            chosen_project = project_chooser.default_project
+            self.config.options['default_project'] = chosen_project
+            project_chooser.Destroy()
+
+        self.unload_current_project()
+        self.init_project()
+
+            
     def new_record(self, event):
         """Insert new record.
         Get values by presenting an empty form"""
@@ -493,6 +514,61 @@ class TemplateChooser(wx.Dialog):
         self.EndModal(wx.ID_OK)
 
 
+# TODO: integrate this with template chooser
+class ProjectChooser(wx.Dialog):
+    """List the registered projects, show the default project
+    and allow user to choose a new one"""
+    def __init__(self, parent, config_dict):
+        # config is dict of options loaded by the project manager
+        wx.Dialog.__init__(self, parent, -1, 'Choose project to load')
+
+        self.config_dict = config_dict
+        (self.project_names, self.project_paths,
+         self.default_project) = self.get_projects()
+
+        panel  = wx.Panel(self, -1)
+        panelsizer = wx.BoxSizer(wx.VERTICAL)
+        buttonsizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.choices = wx.RadioBox(panel, -1, "Choose project",
+                                   choices=self.project_names, style=wx.RA_VERTICAL)
+        # set default project
+        self.choices.SetSelection(self.default_project)
+        self.cancel_button = wx.Button(panel, -1, 'Cancel')
+        self.done_button = wx.Button(panel, -1, 'Done')
+
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+        self.done_button.Bind(wx.EVT_BUTTON, self.ondone)
+
+        buttonsizer.Add(self.cancel_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.done_button, 0, wx.ALL, 10)
+
+        panelsizer.Add(self.choices, 10, wx.ALL|wx.EXPAND, 2)
+        panelsizer.Add(buttonsizer, 1, wx.ALL, 2)
+        
+        panel.SetSizer(panelsizer)
+        self.Layout()
+
+        
+    def get_projects(self):
+        """collect projects details"""
+        project_names = [os.path.basename(pth)
+                         for pth in self.config_dict.options['projects']]
+        return (project_names, self.config_dict.options['projects'],
+                self.config_dict.options['default_project'])
+    
+
+    def cancel(self, event):
+        """Cancel and discard edits"""
+        self.EndModal(wx.ID_CANCEL)
+        
+
+    def ondone(self, event):
+        """returns the filename to the template file"""
+        self.default_project = self.choices.GetSelection()
+        self.EndModal(wx.ID_OK)
+        
+
     
 class Register(wx.Frame):
     """Display the index and allow selection and operation on records"""
@@ -569,6 +645,7 @@ class Register(wx.Frame):
         file_menu = wx.Menu()
         file_menu.Append(ID_NEW, "&New Record","Create a new record")
         file_menu.Append(ID_EDIT, "&Edit Record", "Edit an existing record")
+        file_menu.Append(ID_PROJ, "&Change Project", "Load a new project")
         file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
         file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
         file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
@@ -609,6 +686,7 @@ class Register(wx.Frame):
         self.remove_button.Bind(wx.EVT_BUTTON, self.remove_record)
         
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
+        self.Bind(wx.EVT_MENU, self.parent.change_project, id=ID_PROJ)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
         self.Bind(wx.EVT_MENU, self.change_pass, id=ID_PASS)
