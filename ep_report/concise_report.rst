@@ -161,7 +161,7 @@ Puducherry - 605006
 
        
      
-.. |jipmer| image:: /data/Dropbox/programming/EP_report2/ep_report/jipmer_logo.png
+.. |jipmer| image:: {{jipmer_logo.png}}
               :height: 1in
     	      :width: 1in
 	      :align: middle
