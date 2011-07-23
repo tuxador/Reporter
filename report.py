@@ -80,8 +80,11 @@ class Report():
         # templates (and generated rst) will have image paths specified as
         # {{image_folder/logo.png}}
         def replace_with_full_path(imagefilename_match):
-            return os.path.join(self.image_folder,
+            fullpath =  os.path.join(self.image_folder,
                                 imagefilename_match.group('imagefilename'))
+            print fullpath
+            print 'path exists', os.path.exists(fullpath)
+            return fullpath
 
         raw = re.sub('{{(?P<imagefilename>[\w\s\d\.]*)}}', replace_with_full_path, raw)
             

@@ -137,7 +137,7 @@ Jawaharlal Institute of Postgraduate Medical Education and Research
 
       
      
-.. |jipmer| image:: {{jipmerlogo.png}}
+.. |jipmer| image:: {{jipmerlogo.jpg}}
                   :height: 1in
                   :width: 1in
 		  :align: middle

@@ -643,17 +643,25 @@ class Register(wx.Frame):
         self.MenuBar = wx.MenuBar()
 
         file_menu = wx.Menu()
-        file_menu.Append(ID_NEW, "&New Record","Create a new record")
-        file_menu.Append(ID_EDIT, "&Edit Record", "Edit an existing record")
+        #file_menu.Append(ID_NEW, "&New Record","Create a new record")
+        #file_menu.Append(ID_EDIT, "&Edit Record", "Edit an existing record")
         file_menu.Append(ID_PROJ, "&Change Project", "Load a new project")
-        file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
-        file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
+        #file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
+        #file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
         file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
         file_menu.Append(ID_QUIT, "&Quit","Quit the program")
    
         edit_menu = wx.Menu()
         edit_menu.Append(ID_PREF, "Preferences", "Edit preferences")
         edit_menu.Append(ID_PASS, "Change Password", "Change Admin Password")
+
+
+        record_menu = wx.Menu()
+        record_menu.Append(ID_NEW, "&New Record", "Create a new record")
+        record_menu.Append(ID_EDIT, "&Edit Record", "Edit existing record")
+        record_menu.Append(ID_LOCK, "&Toggle Lock\tCtrl-T", "Toggle locking of record")
+        record_menu.Append(ID_REMOVE, "Remove Record", "Remove existing record")
+        
         
         report_gen_menu = wx.Menu()
         for i in range(len(self.parent.report_files)):
@@ -670,6 +678,7 @@ class Register(wx.Frame):
         info_menu.Append(ID_CAT_SUMMARY, "&Categorical Summary", "Provide summary for categorical data")
         
         self.MenuBar.Append(file_menu, "&File")
+        self.MenuBar.Append(record_menu, "&Record")
         self.MenuBar.Append(edit_menu, "&Edit")
         self.MenuBar.Append(report_gen_menu, "&Generate Report")
         self.MenuBar.Append(template_menu, "&Template")
@@ -770,9 +779,12 @@ class Register(wx.Frame):
         
     def refresh_records(self):
         """Completely refresh the summary being shown"""
+        # store currently sorted column and sort direction
+        col, direction = self.record_display.GetSortState()
         self.record_display.ClearAll()
         #self.index_summary = self.records.create_index()
         self.load_records()
+        self.record_display.SortListItems(col, direction)
         
 
     def apply_filter(self, event):
