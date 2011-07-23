@@ -819,13 +819,10 @@ class Register(wx.Frame):
         else:
             if filter_operator == 'contains':
                 filt_vals = [(val, id) for (val, id) in val_id_pairs
-                         if eval (''.join(["'", filter_value.lower(), "' in", 
-                                           "'",  val.lower(), "'"]))]
+                             if filter_value.lower() in val.lower()]
             elif filter_operator == 'starts with':
                 filt_vals = [(val, id) for (val, id) in val_id_pairs
-                             if eval (''.join(["'", val.lower(), "'.startswith('",
-                                              filter_value.lower(), "')"]))]
-            
+                             if val.lower().startswith(filter_value.lower())]
 
         # create list of ids to restrict to
         self.restrict_ids = [id for (val, id) in filt_vals]
