@@ -449,6 +449,8 @@ class ReportManager():
                 suffix = data[prefix][i][0]
                 fieldnames.append(prefix + '_' + suffix)
 
+        # for searching all
+        fieldnames = ['Anywhere'] + fieldnames
         return fieldnames
                     
             
@@ -799,12 +801,13 @@ class Register(wx.Frame):
         NUM = filter_operator in ['<', '>']
 
         val_id_pairs = self.records.retrieve_column_with_id(filter_label)
-
+        print val_id_pairs[:3]
+        
         # numerical
         # separate into vals coaxable into numbers and those no
         if NUM:
             nums = [(str2float(val), id) for (val, id) in val_id_pairs if str2float(val) != '']
-            innums = [(val, id) for (val, id) in val_id_pairs if str2float(val) == '']
+            #innums = [(val, id) for (val, id) in val_id_pairs if str2float(val) == '']
             
             if len(nums) == 0:
                 self.SetStatusText('No numerical values in ', filter_label)

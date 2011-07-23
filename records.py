@@ -174,7 +174,11 @@ class Records():
     def retrieve_column_with_id(self, fieldname):
         """Like retrieve_column, but also return
         id corresponding to each element"""
-        return [(self.db[id][fieldname], id) for id in self.db]
+        if fieldname == 'Anywhere':
+            return [(''.join([str(val) for val in self.db[id].values()]), id)
+                    for id in self.db]
+        else:
+            return [(self.db[id][fieldname], id) for id in self.db]
                 
 
 
