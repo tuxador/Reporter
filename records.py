@@ -40,14 +40,15 @@ class Records():
                      for filename in bkp_files]
         bkp_distances = [(today-date).days for date in bkp_dates]
 
-
         if len(bkp_files) == 0:
             NEED_BACKUP = True
 
         else:
-            if max(bkp_distances) >= backup_freq:
+            # is it time for a fresh backup?
+            if min(bkp_distances) >= backup_freq:
                 NEED_BACKUP = True
-                
+
+
         if NEED_BACKUP:
             new_bkpfilename = bkp_basename + today.strftime(bkp_dateformat)
             shutil.copy(db_file, new_bkpfilename)
