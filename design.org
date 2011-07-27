@@ -4,7 +4,7 @@
 ** DONE Change key for record when key fields change
 ** TODO Need clear filter button
 
-** TODO Images will be in a separate folder and reference only by image name
+** DONE Images will be in a separate folder and reference only by image name
 * Program files
 ** DONE report.py -- Report class 
 *** Input - path to a template file (.rst), variable values as a dictionary
