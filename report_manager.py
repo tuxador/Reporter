@@ -486,6 +486,10 @@ class TemplateChooser(wx.Dialog):
         panelsizer.Add(buttonsizer, 1, wx.ALL, 2)
         
         panel.SetSizer(panelsizer)
+
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
         self.Layout()
 
         
