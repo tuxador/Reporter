@@ -95,7 +95,6 @@ class Form(wx.Dialog):
         self.EndModal(wx.ID_OK)
 
 
-
 class FormPanel(scrolled.ScrolledPanel):
     """A Frame  with several collapsible sections that contain
     parts of the form"""

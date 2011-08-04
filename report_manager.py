@@ -260,7 +260,9 @@ class ReportManager():
     def is_locked(self, record):
         """Is the record locked. record is index obained from the listctrl"""
         # last entry will always be lock status
-        if self.register.index_summary[record][-1] == 'locked':
+        lock_status = self.register.record_display.GetItem(record,
+                           len(self.records.index_keys)).GetText()
+        if lock_status == 'locked':
             return True
         else:
             return False
@@ -809,7 +811,6 @@ class Register(wx.Frame):
         NUM = filter_operator in ['<', '>']
 
         val_id_pairs = self.records.retrieve_column_with_id(filter_label)
-        print val_id_pairs[:3]
         
         # numerical
         # separate into vals coaxable into numbers and those no
