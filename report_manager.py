@@ -615,7 +615,7 @@ class Register(wx.Frame):
         self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys)+1)
 
         # buttons
-        self.edit_button = wx.Button(panel, -1,  'Edit Record')
+        self.edit_button = wx.Button(panel, -1,  'View / Edit Record')
         self.new_button = wx.Button(panel, -1, 'New Record')
         self.remove_button = wx.Button(panel, -1, 'Remove Record')
         
