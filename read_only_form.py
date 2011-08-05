@@ -71,10 +71,11 @@ class ReadOnlyForm(wx.Dialog):
     def set_values(self, vals):
         """Fill in the form according to the dict vals"""
         for label, control in zip(self.panel.labels, self.panel.controls):
+            # TODO: change font
             try:
-                control.SetValue(vals[label])
+                control.SetLabel(vals[label])
             except TypeError: # coerce int to string if reqd
-                control.SetValue(str(vals[label]))
+                control.SetLabel(str(vals[label]))
             except KeyError:
                 pass
 
@@ -126,8 +127,8 @@ class FormPanel(scrolled.ScrolledPanel):
         for cp in self.panes:
             sizer.Add(cp, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 25)
 
-        button_sizer.Add(self.parent.reset_button, 0, wx.ALL, 25)
-        button_sizer.Add(self.parent.cancel_button, 0, wx.ALL, 25)
+        #button_sizer.Add(self.parent.reset_button, 0, wx.ALL, 25)
+        #button_sizer.Add(self.parent.cancel_button, 0, wx.ALL, 25)
         button_sizer.Add(self.parent.done_button, 0, wx.ALL, 25)
         
         sizer.Add(button_sizer, 0 ,wx.ALL)
@@ -215,7 +216,7 @@ class Pane(wx.CollapsiblePane):
        for i in range(len(self.pane_data)):
            control_data = self.pane_data[i]
            label = control_data[0]
-           control_type = control_data[1]
+           #control_type = control_data[1]
 
            # keep a list of labels
            self.labels.append(self.name + '_' +
@@ -226,7 +227,7 @@ class Pane(wx.CollapsiblePane):
                                             style=wx.ALIGN_CENTER_VERTICAL))
 
            #
-           self.controls.append(wx.TextCtrl(self.pane, -1))
+           self.controls.append(wx.StaticText(self.pane, -1))
            # dont set any default values
            # # control
            # if control_type == 'text':

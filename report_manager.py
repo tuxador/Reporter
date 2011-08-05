@@ -16,6 +16,7 @@ import hashlib
 
 from records import Records
 from form import Form
+from read_only_form import ReadOnlyForm
 from report import Report
 from config_manager import Config
 from summary import NumSummary, CatSummary
@@ -240,7 +241,7 @@ class ReportManager():
         record_vals = self.records.retrieve_record(id)
 
         if self.is_locked(selected_record):
-            form = Form(None, self.fields_file,
+            form = ReadOnlyForm(None, self.fields_file,
                         'Locked record. Cannot edit', record_vals)
             if form.ShowModal() == wx.ID_OK:
                 form.Destroy
