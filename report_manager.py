@@ -718,6 +718,9 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.cat_summary, id=ID_CAT_SUMMARY)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
+        # double click on record opens it for edit / read
+        self.record_display.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.parent.edit_record)
+        
         self.filter_value.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         #self.filter_operator.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         
