@@ -768,6 +768,7 @@ class Register(wx.Frame):
         passdlg = wx.PasswordEntryDialog(self, 'Enter password')
         if passdlg.ShowModal() == wx.ID_OK:
             entry = passdlg.GetValue()
+            passdlg.Destroy()
             if hashlib.md5(entry).hexdigest() == self.records.passhash:
                 return True
         else:
