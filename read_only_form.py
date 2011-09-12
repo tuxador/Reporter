@@ -24,6 +24,8 @@ import wx.lib.scrolledpanel as scrolled
 
 from datectrl import DateCtrl
 
+
+
 class ReadOnlyForm(wx.Dialog):
     def __init__(self, parent, fields_file, project_name='', input_vals=None):
         """fields_file is the file to use to construct fields
@@ -181,7 +183,7 @@ class Pane(wx.CollapsiblePane):
         #widget_list = []
         self.make_layout(widget_list)
 
-
+        
     def on_collapse_state_changed(self, event):
         self.panel.on_pane_changed(event)
         self.panel.Layout()
@@ -225,41 +227,11 @@ class Pane(wx.CollapsiblePane):
            # statictext label
            self.control_labels.append(wx.StaticText(self.pane, -1, label,
                                             style=wx.ALIGN_CENTER_VERTICAL))
-
+           BOLDFONT = wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.BOLD)
+           self.control_labels[-1].SetFont(BOLDFONT)
+           
            #
            self.controls.append(wx.StaticText(self.pane, -1))
-           # dont set any default values
-           # # control
-           # if control_type == 'text':
-           #     self.controls.append(wx.TextCtrl(self.pane, -1))
-           #     try:
-           #         self.controls[-1].SetValue(control_data[2])
-           #     except IndexError:
-           #         pass # no default value
-
-           # elif control_type == 'multitext':
-           #     self.controls.append(wx.TextCtrl(self.pane, -1,
-           #                                      style=wx.TE_MULTILINE))
-           #     try:
-           #         self.controls[-1].SetValue(control_data[2])
-           #     except IndexError:
-           #         pass
-                   
-           # elif control_type == 'spin':
-           #     self.controls.append(wx.SpinCtrl(self.pane, -1,
-           #                          min=control_data[2], max=control_data[3],
-           #                                      initial=control_data[4]))
-
-           # elif control_type == 'combo':
-           #     self.controls.append(wx.ComboBox(self.pane, -1, choices=control_data[2]))
-           #     self.controls[-1].SetValue(control_data[3])
-
-           # # use yyyy-mm-dd format for date to allow easy sorting
-           # elif control_type == 'date':
-           #     self.controls.append(DateCtrl(self.pane, (130, -1), (150,80),
-           #                                   input_format='%Y-%m-%d',
-           #                                   display_format='%Y-%m-%d', title='',
-           #                                   default_to_today=1, allow_null=0))
 
        # make widget list - keep as loop so any additional steps can be added
        widget_list = []
