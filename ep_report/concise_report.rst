@@ -57,7 +57,7 @@ Puducherry - 605006
 .. csv-table:: Demographics
 
           "**Name**", "${get('Demographics_Name')}", "**Age**", "${get('Demographics_Age')} yrs", "**Sex**", "${get('Demographics_Sex')}"
-	  "**Date of Adm.**", "${invert_date(get('Demographics_Date of Admission'))}", "**Proc. date**", "${invert_date(get('Demographics_Date of Procedure'))}", "**Contact No.**", "${get('Demographics_Contact number')}"
+	  "**Date of Adm.**", "${invert_date(get('Demographics_Date of Admission'))}", "**Proc. date**", "${invert_date(get('Demographics_Date of Procedure'))}", "**Date of Disch.**", ""
 	  "**IP No.**", "${get('Demographics_IP Number')}", "**MRD No.**", "${get('Demographics_MRD Number')}", "**EPS No.**", "${get('Demographics_EPS Number')}"
 	  "**Lab**", "${get('Technical_Lab')}", "**EP System**", "${get('Technical_EP System')}", "**3 D mapping**", "${get('Technical_3D Mapping')}"
 	  "**Operator 1**", "${get('Technical_Operator 1')}", "**Operator 2**", "${get('Technical_Operator 2')}", "**Tech. Asst**", "${get('Technical_Technical Assistant')}"
@@ -70,7 +70,7 @@ Puducherry - 605006
     "**ECG**", "${get('Clinical_ECG')}"
     "**ECG during tachy**", "${get('Clinical_ECG during tachycardia')}"
     "**Other inv**", "${get('Clinical_Other investigations')}"
-    ${noblanks("**Drugs**, ", get('Clinical_Drugs'), '')}
+    ${noblanks('"**Drugs**","' , get('Clinical_Drugs'), '"')}
 
 .. csv-table:: Investigations
 
