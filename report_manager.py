@@ -12,6 +12,7 @@ import subprocess
 import time
 import yaml
 import hashlib
+import csv
 #import numpy
 
 from records import Records
@@ -33,6 +34,7 @@ ID_NUM_SUMMARY = wx.NewId()
 ID_CAT_SUMMARY = wx.NewId()
 ID_PASS = wx.NewId()
 ID_PROJ = wx.NewId()
+ID_EXPORT = wx.NewId()
 #----------------------------
 # Utility functions
 
@@ -661,12 +663,12 @@ class Register(wx.Frame):
         #file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
         #file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
         file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
+        file_menu.Append(ID_EXPORT, "&Export", "Export records as csv")
         file_menu.Append(ID_QUIT, "&Quit","Quit the program")
    
         edit_menu = wx.Menu()
         edit_menu.Append(ID_PREF, "Preferences", "Edit preferences")
         edit_menu.Append(ID_PASS, "Change Password", "Change Admin Password")
-
 
         record_menu = wx.Menu()
         record_menu.Append(ID_NEW, "&New Record", "Create a new record")
@@ -711,6 +713,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
         self.Bind(wx.EVT_MENU, self.change_pass, id=ID_PASS)
+        self.Bind(wx.EVT_MENU, self.export_records, id=ID_EXPORT)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
@@ -729,6 +732,17 @@ class Register(wx.Frame):
             self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i)
 
 
+    def export_records(self, event):
+        """
+        Export selected fields from selected records 
+        """
+        export_dlg = ExportDlg(self, self.records.db)
+        #if exportdlg.ShowModal() == wx.ID_OK:
+        #    pass
+
+        #print export_options
+            
+            
     def load_records(self):
         """Load the index and display"""
         # for sorting we use the full db
@@ -917,6 +931,24 @@ class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
         return self
 
 
+class ExportDlg(wx.Dialog):
+    """Collect options for export"""
+    def __init__(self, parent, record_db):
+        wx.Dialog.__init__(self, parent, -1, "Export as csv")
+        self.record_db = record_db
+        self.export()
+        
+    def export(self):
+        fields = self.get_fields()
+        writer = csv.writer(open('/data/tmp/test.csv', 'wb'))
+        #TODO: filters for the records
+        for rec in self.record_db:
+            row = [self.record_db[rec][field] for field in fields]
+            writer.writerow(row)
+
+
+    def get_fields(self):
+        return ['Demographics_Name', 'Demographics_Age']
 
 
 def test():
