@@ -12,6 +12,7 @@ import subprocess
 import time
 import yaml
 import hashlib
+import csv
 #import numpy
 
 from records import Records
@@ -34,6 +35,7 @@ ID_NUM_SUMMARY = wx.NewId()
 ID_CAT_SUMMARY = wx.NewId()
 ID_PASS = wx.NewId()
 ID_PROJ = wx.NewId()
+ID_EXPORT = wx.NewId()
 #----------------------------
 # Utility functions
 
@@ -604,7 +606,8 @@ class Register(wx.Frame):
         panel = wx.Panel(self, -1)
 
         # filter for records
-        self.filter_label = wx.ComboBox(panel, -1, choices=parent.get_fieldnames(parent.fields_file))
+        self.fieldnames = parent.get_fieldnames(parent.fields_file)
+        self.filter_label = wx.ComboBox(panel, -1, choices=self.fieldnames)
         self.filter_operator = wx.ComboBox(panel, -1,
                                choices=['==', '<' ,'>', 'contains', 'starts with'])
         self.filter_value = wx.TextCtrl(panel, -1, style=wx.TE_PROCESS_ENTER)
@@ -662,12 +665,12 @@ class Register(wx.Frame):
         #file_menu.Append(ID_LOCK, "&Toggle Lock", "Toggle locking of record")
         #file_menu.Append(ID_REMOVE, "&Remove Record", "Remove existing record")
         file_menu.Append(ID_FLUSH, "&Flush report", "Remove stored report")
+        file_menu.Append(ID_EXPORT, "&Export", "Export records as csv")
         file_menu.Append(ID_QUIT, "&Quit","Quit the program")
    
         edit_menu = wx.Menu()
         edit_menu.Append(ID_PREF, "Preferences", "Edit preferences")
         edit_menu.Append(ID_PASS, "Change Password", "Change Admin Password")
-
 
         record_menu = wx.Menu()
         record_menu.Append(ID_NEW, "&New Record", "Create a new record")
@@ -712,6 +715,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
         self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
         self.Bind(wx.EVT_MENU, self.change_pass, id=ID_PASS)
+        self.Bind(wx.EVT_MENU, self.export_records, id=ID_EXPORT)
         self.Bind(wx.EVT_MENU, self.parent.flush_report, id=ID_FLUSH)
         self.Bind(wx.EVT_MENU, self.parent.new_template, id=ID_NEWTEMPLATE)
         self.Bind(wx.EVT_MENU, self.parent.del_template, id=ID_DELTEMPLATE)
@@ -719,6 +723,9 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.cat_summary, id=ID_CAT_SUMMARY)
         self.Bind(wx.EVT_MENU, self.on_quit, id=ID_QUIT)
 
+        # double click on record opens it for edit / read
+        self.record_display.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.parent.edit_record)
+        
         self.filter_value.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         #self.filter_operator.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         
@@ -727,6 +734,17 @@ class Register(wx.Frame):
             self.Bind(wx.EVT_MENU, self.parent.show_n_edit_report, id=2*i)
 
 
+    def export_records(self, event):
+        """
+        Export selected fields from selected records 
+        """
+        export_dlg = ExportDlg(self, self.records.db)
+        if export_dlg.ShowModal() == wx.ID_OK:
+            pass
+
+        #print export_options
+            
+            
     def load_records(self):
         """Load the index and display"""
         # for sorting we use the full db
@@ -766,6 +784,7 @@ class Register(wx.Frame):
         passdlg = wx.PasswordEntryDialog(self, 'Enter password')
         if passdlg.ShowModal() == wx.ID_OK:
             entry = passdlg.GetValue()
+            passdlg.Destroy()
             if hashlib.md5(entry).hexdigest() == self.records.passhash:
                 return True
         else:
@@ -914,6 +933,77 @@ class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
         return self
 
 
+class ExportDlg(wx.Dialog):
+    """Collect options for export"""
+    def __init__(self, parent, record_db):
+        wx.Dialog.__init__(self, parent, -1, "Export as csv")
+        self.parent = parent
+        fieldnames = [self.without_parentheses(f) for f in parent.fieldnames]
+        
+        panel = wx.Panel(self, -1)
+        self.clbox = wx.CheckListBox(panel, -1, choices = fieldnames)
+        self.cancel_button = wx.Button(panel, -1, 'Cancel')
+        self.export_button = wx.Button(panel, -1, 'Export')
+
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+        self.export_button.Bind(wx.EVT_BUTTON, self.export)
+
+        panelsizer = wx.BoxSizer(wx.VERTICAL)
+        buttonsizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        buttonsizer.Add(self.cancel_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.export_button, 0, wx.ALL, 10)
+        panelsizer.Add(self.clbox, 8, wx.ALL|wx.EXPAND, 2)
+        panelsizer.Add(buttonsizer, 2, wx.ALL, 2)
+
+        panel.SetSizer(panelsizer)
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
+        self.Layout()
+        
+        self.record_db = record_db
+        #self.export()
+
+        #self.fieldnames = self.parent.
+
+    def cancel(self, event):
+        """"""
+        self.EndModal(wx.ID_CANCEL)
+    
+        
+    def export(self, event):
+        #print self.parent.restrict_ids
+        fields = self.clbox.GetCheckedStrings()
+        savedlg = wx.FileDialog(self, "Choose file to save...", 
+                    style=wx.SAVE | wx.OVERWRITE_PROMPT)
+
+        if savedlg.ShowModal() == wx.ID_OK:
+            savefilename = savedlg.GetPath()
+        else:
+            return
+
+        writer = csv.writer(open(savefilename, 'wb'))
+        #TODO: filters for the records
+        for rec in self.record_db:
+            if rec in self.parent.restrict_ids:
+                row = [self.record_db[rec][field] for field in fields]
+                writer.writerow(row)
+        self.EndModal(wx.ID_OK)
+            
+
+    # reusing function from pane class
+    def without_parentheses(self, label_str):
+            """Remove terminal text within parentheses
+            >>> without_parentheses(self, "test(within)")
+                "test"
+            """
+            opening_brace_pos = label_str.find('(')
+
+            if opening_brace_pos == -1:
+                return label_str
+
+            return label_str[:opening_brace_pos].strip()
 
 
 def test():
