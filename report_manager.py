@@ -605,7 +605,8 @@ class Register(wx.Frame):
         panel = wx.Panel(self, -1)
 
         # filter for records
-        self.filter_label = wx.ComboBox(panel, -1, choices=parent.get_fieldnames(parent.fields_file))
+        self.fieldnames = parent.get_fieldnames(parent.fields_file)
+        self.filter_label = wx.ComboBox(panel, -1, choices=self.fieldnames)
         self.filter_operator = wx.ComboBox(panel, -1,
                                choices=['==', '<' ,'>', 'contains', 'starts with'])
         self.filter_value = wx.TextCtrl(panel, -1, style=wx.TE_PROCESS_ENTER)
@@ -737,8 +738,8 @@ class Register(wx.Frame):
         Export selected fields from selected records 
         """
         export_dlg = ExportDlg(self, self.records.db)
-        #if exportdlg.ShowModal() == wx.ID_OK:
-        #    pass
+        if export_dlg.ShowModal() == wx.ID_OK:
+            pass
 
         #print export_options
             
@@ -935,20 +936,73 @@ class ExportDlg(wx.Dialog):
     """Collect options for export"""
     def __init__(self, parent, record_db):
         wx.Dialog.__init__(self, parent, -1, "Export as csv")
-        self.record_db = record_db
-        self.export()
+        self.parent = parent
+        fieldnames = [self.without_parentheses(f) for f in parent.fieldnames]
         
-    def export(self):
-        fields = self.get_fields()
-        writer = csv.writer(open('/data/tmp/test.csv', 'wb'))
+        panel = wx.Panel(self, -1)
+        self.clbox = wx.CheckListBox(panel, -1, choices = fieldnames)
+        self.cancel_button = wx.Button(panel, -1, 'Cancel')
+        self.export_button = wx.Button(panel, -1, 'Export')
+
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+        self.export_button.Bind(wx.EVT_BUTTON, self.export)
+
+        panelsizer = wx.BoxSizer(wx.VERTICAL)
+        buttonsizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        buttonsizer.Add(self.cancel_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.export_button, 0, wx.ALL, 10)
+        panelsizer.Add(self.clbox, 8, wx.ALL|wx.EXPAND, 2)
+        panelsizer.Add(buttonsizer, 2, wx.ALL, 2)
+
+        panel.SetSizer(panelsizer)
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
+        self.Layout()
+        
+        self.record_db = record_db
+        #self.export()
+
+        #self.fieldnames = self.parent.
+
+    def cancel(self, event):
+        """"""
+        self.EndModal(wx.ID_CANCEL)
+    
+        
+    def export(self, event):
+        #print self.parent.restrict_ids
+        fields = self.clbox.GetCheckedStrings()
+        savedlg = wx.FileDialog(self, "Choose file to save...", 
+                    style=wx.SAVE | wx.OVERWRITE_PROMPT)
+
+        if savedlg.ShowModal() == wx.ID_OK:
+            savefilename = savedlg.GetPath()
+        else:
+            return
+
+        writer = csv.writer(open(savefilename, 'wb'))
         #TODO: filters for the records
         for rec in self.record_db:
-            row = [self.record_db[rec][field] for field in fields]
-            writer.writerow(row)
+            if rec in self.parent.restrict_ids:
+                row = [self.record_db[rec][field] for field in fields]
+                writer.writerow(row)
+        self.EndModal(wx.ID_OK)
+            
 
+    # reusing function from pane class
+    def without_parentheses(self, label_str):
+            """Remove terminal text within parentheses
+            >>> without_parentheses(self, "test(within)")
+                "test"
+            """
+            opening_brace_pos = label_str.find('(')
 
-    def get_fields(self):
-        return ['Demographics_Name', 'Demographics_Age']
+            if opening_brace_pos == -1:
+                return label_str
+
+            return label_str[:opening_brace_pos].strip()
 
 
 def test():
