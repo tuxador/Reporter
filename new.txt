@@ -1,0 +1,11 @@
+
+Version 0.6
+02 October 2011
+---------------
+Double click on a record to view/edit.
+
+Records that are 'locked' will appear as read only.
+
+Records can be exported as csv.
+
+
