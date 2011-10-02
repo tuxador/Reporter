@@ -1,5 +1,5 @@
 
-Version 0.6
+Version 0.95
 02 October 2011
 ---------------
 Double click on a record to view/edit.
