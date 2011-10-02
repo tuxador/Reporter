@@ -71,6 +71,16 @@ class ReportManager():
     Manages one 'project' at a time.
     Coordinates the form for input, records for storage and report for generating output"""
     def __init__(self):
+        # if 'new.txt' exists, show it in a dialog
+        if os.path.exists('new.txt'):
+            msg = open('new.txt').read()
+            new_dlg = WhatsNew(self, msg)
+            if new_dlg.ShowModal() == wx.ID_CANCEL:
+                os.remove('new.txt')
+            else:
+                pass
+                
+        
         configfile = self.get_configfile()
         self.config = Config(configfile)
         self.init_project()
@@ -460,6 +470,54 @@ class ReportManager():
                     
             
 
+class WhatsNew(wx.Dialog):
+    """
+    Dialog announcing new features on new release
+    """
+    def __init__(self, parent, message):
+        wx.Dialog.__init__(self, None, -1, "What is new?")
+
+        # widgets
+        panel = wx.Panel(self, -1)
+        self.msgbox = wx.StaticText(panel, -1, label=message)
+        self.ok_button = wx.Button(panel, -1, "OK")
+        self.not_again_button = wx.Button(panel, -1, "Do not show again")
+
+        # Bindings
+        self.ok_button.Bind(wx.EVT_BUTTON, self.done)
+        self.not_again_button.Bind(wx.EVT_BUTTON, self.not_again)
+
+        # sizers
+        panelsizer = wx.BoxSizer(wx.VERTICAL)
+        buttonsizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        buttonsizer.Add(self.not_again_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.ok_button, 0, wx.ALL, 10)
+        panelsizer.Add(self.msgbox, 10, wx.ALL|wx.EXPAND, 2)
+        panelsizer.Add(buttonsizer, 1, wx.ALL, 2)
+        
+        panel.SetSizer(panelsizer)
+
+        mainsizer = wx.BoxSizer(wx.HORIZONTAL)
+        mainsizer.Add(panel, 1, wx.EXPAND, 5)
+        mainsizer.Fit(self)
+        self.SetSize((400, 450))
+        self.Layout()
+
+
+    def done(self, event):
+        self.EndModal(wx.ID_OK)
+        self.Destroy()
+
+    def not_again(self, event):
+        """"""
+        # this should trigger removal of the message file
+        self.EndModal(wx.ID_CANCEL)
+        self.Destroy()
+
+
+        
+    
 class TemplateChooser(wx.Dialog):
     """List the available templates and allow user to choose one"""
     def __init__(self, parent, project_dir, tpl_files):
