@@ -83,38 +83,44 @@ class Records():
         Convert into a dictionary to allow sorting in the
         listctrl.
         restrict_ids is a list of ids to restrict to"""
-        self.index_keys = yaml.load(open(self.index_file))
-
-        # add lock_status
-        #self.index_keys.append('LOCK_STATUS')
-        
-        index_fields = []
-
-        # passhash is key used for storing password hash
+        index_fields = yaml.load(open(self.index_file))
         if restrict_ids == None:
             restrict_ids = self.db.keys()
-        #     restrict_ids.remove('passhash')
-        
-        # elif 'passhash' in restrict_ids:
-        #     restrict_ids.remove('passhash')
 
+        index = {}
+        for id in restrict_ids:
+            index[id] = {}
+            for field in self.db[id]:
+                if field in index_fields:
+                    index[id][field] = self.db[id][field]
+            index[id]['LOCK_STATUS'] = self.db[id]['LOCK_STATUS']
+
+        return index
+
+
+        # #------------------------------------------
+        # self.index_keys = yaml.load(open(self.index_file))
+        # index_fields = []
+
+        # # passhash is key used for storing password hash
+        # if restrict_ids == None:
+        #     restrict_ids = self.db.keys()
             
-        for field in self.index_keys:
-            index_fields.append([self.get_field_rec(rec, field) for rec in self.db
-                                 if rec in restrict_ids])
-
+        # for field in self.index_keys:
+        #     index_fields.append([self.get_field_rec(rec, field) for rec in self.db
+        #                          if rec in restrict_ids])
             
-        # lock status also needs to be sent to register
-        index_fields.append([self.get_field_rec(rec, 'LOCK_STATUS')
-                             for rec in self.db if rec in restrict_ids])
+        # # lock status also needs to be sent to register
+        # index_fields.append([self.get_field_rec(rec, 'LOCK_STATUS')
+        #                      for rec in self.db if rec in restrict_ids])
 
-        index = zip(*index_fields)
+        # index = zip(*index_fields)
 
-        index_dict = {}
-        for i, rec in enumerate(index):
-            index_dict[i] = rec
+        # index_dict = {}
+        # for i, rec in enumerate(index):
+        #     index_dict[i] = rec
 
-        return index_dict
+        # return index_dict
 
 
     def get_field_rec(self, rec, field):
@@ -198,6 +204,54 @@ def test_bkp():
     r = Records(testdb, '', 3, 1)
     db = r.bkp_and_open(testdb, 3, 1)
     
+
+def create_index(records, restrict_ids, index_fields):
+    """records is a dict.
+    Create a smaller dict index
+    that contains only keys in restrict_ids
+    and only fields in index_fields
+    """
+    index_parts = []
+
+    for field in index_fields:
+        index_parts.append([records[rec][field] for rec in records
+                             if rec in restrict_ids])
+
+    index = zip(*index_parts)
+
+    index_dict = {}
+    for i, rec in enumerate(index):
+        index_dict[i] = rec
+
+    return index_dict
+
+
+def create_index2(records, restrict_ids, index_fields):
+    """
+    Create index as above. But use the same key for the index
+    """
+    index = {}
+    for id in restrict_ids:
+        index[id] = {}
+        for field in records[id]:
+            if field in index_fields:
+                index[id][field] = records[id][field]
+
+    return index
+    
+
+def test_create_index():
+    """Test for the function
+    create_index"""
+    records = {1:{'Name':'John', 'Age':35, 'Sex':'Male'},
+               2:{'Name':'Jane', 'Age':36, 'Sex':'Female'},
+               3:{'Name':'Johnny', 'Age':13, 'Sex':'Male'},
+               4:{'Name':'Joan', 'Age':25, 'Sex':'Female'}}
+    restrict_ids = [2, 3]
+    index_fields = ['Name', 'Age']
+
+    create_index2(records, restrict_ids, index_fields)
+
     
 def create_testdb():
     """create a db for testing"""
@@ -218,4 +272,9 @@ def create_testdb():
 if __name__ == '__main__':
     #test()
     #create_testdb()
-    test_bkp()
+    import time
+    stime = time.time()
+    for t in range(10000):
+        test_create_index()
+    print time.time() - stime
+        
