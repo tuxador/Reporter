@@ -261,12 +261,9 @@ class ReportManager():
             if form.ShowModal() == wx.ID_OK:
                 form.get_values()
                 # delete the prev record
-                print 'before\n',self.records.db, self.register.index_summary
                 self.records.delete_record(id)
                 self.records.insert_record(form.vals)
                 self.register.refresh_records()
-                print 'after\n', self.records.db, self.register.index_summary
-
 
             form.Destroy()
         
@@ -275,7 +272,8 @@ class ReportManager():
         """Is the record locked. record is index obained from the listctrl"""
         # last entry will always be lock status
         lock_status = self.register.record_display.GetItem(record,
-                      len(self.records.index_fields)).GetText()
+                      len(self.records.index_fields)-1).GetText()
+
         if lock_status == 'locked':
             return True
         else:
@@ -292,11 +290,6 @@ class ReportManager():
             return
 
         id = str(self.register.record_display.GetItemData(selected_record))
-
-        # #id = str(''.join([self.register.record_display.GetItem(
-        #                 selected_record, x).GetText()
-        #                 for x in range(len(self.records.index_keys))]))
-
         record_vals = self.records.retrieve_record(id)
 
         # if there is no lock_status, it is unlocked
@@ -877,7 +870,6 @@ class Register(wx.Frame):
         self.record_display.ClearAll()
         self.index_summary = self.records.create_index(self.restrict_ids)
         self.load_records()
-        #print col, direction
         self.record_display.SortListItems(col, direction)
         
 
@@ -1037,7 +1029,6 @@ class ExportDlg(wx.Dialog):
     
         
     def export(self, event):
-        #print self.parent.restrict_ids
         fields = self.clbox.GetCheckedStrings()
         savedlg = wx.FileDialog(self, "Choose file to save...", 
                     style=wx.SAVE | wx.OVERWRITE_PROMPT)
