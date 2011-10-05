@@ -82,18 +82,22 @@ class Records():
         corresponding to the values in index file.
         Convert into a dictionary to allow sorting in the
         listctrl.
-        restrict_ids is a list of ids to restrict to"""
-        index_fields = yaml.load(open(self.index_file))
+        restrict_ids is a list of ids to restrict to
+        The keys for index have to be integers to allow
+        sorting in the listctrl"""
+        self.index_fields = yaml.load(open(self.index_file))
         if restrict_ids == None:
             restrict_ids = self.db.keys()
 
         index = {}
         for id in restrict_ids:
-            index[id] = {}
-            for field in self.db[id]:
-                if field in index_fields:
-                    index[id][field] = self.db[id][field]
-            index[id]['LOCK_STATUS'] = self.db[id]['LOCK_STATUS']
+            index[int(id)] = [self.db[id].get(field, '') for field in self.index_fields]
+
+            # index[id] = {}
+            # for field in self.db[id]:
+            #     if field in self.index_fields:
+            #         index[id][field] = self.db[id].get(field, '') # empty if non-existent
+            #index[id]['LOCK_STATUS'] = self.db[id]['LOCK_STATUS']
 
         return index
 
@@ -134,17 +138,23 @@ class Records():
     
 
     def insert_record(self, record):
-        """Insert a record into the database.
-        The key for each record is a unique id
-        constructed by joining all the index elements.
-        record is a dict
-        eg: {'Name': 'Raja', 'Age': 39}"""
-        unique_id = ''.join([str(record[k]) for k in self.index_keys])
+        """Insert a record into the database."""
+        #unique_id = ''.join([str(record[k]) for k in self.index_keys])
+        unique_id = self.generate_new_id()
         
         # insert this record
         self.db[unique_id] = record
         self.db.sync() #sync immediately
 
+
+    def generate_new_id(self):
+        """
+        Generate a new unique id for a new entry in the db.
+        ids have to be strings, bu they are string form
+        of ints making them easier to track
+        """
+        return str(max([int(x) for x in self.db.keys()])+1)
+        
 
     def retrieve_record(self, unique_id):
         """Get the specified record"""
@@ -230,12 +240,13 @@ def create_index2(records, restrict_ids, index_fields):
     """
     Create index as above. But use the same key for the index
     """
+    print index_fields
     index = {}
     for id in restrict_ids:
-        index[id] = {}
-        for field in records[id]:
-            if field in index_fields:
-                index[id][field] = records[id][field]
+        index[id] = [records[id][field] for field in index_fields]
+        # for field in records[id]:
+        #     if field in index_fields:
+        #         index[id][field] = records[id][field]
 
     return index
     
@@ -250,8 +261,8 @@ def test_create_index():
     restrict_ids = [2, 3]
     index_fields = ['Name', 'Age']
 
-    create_index2(records, restrict_ids, index_fields)
-
+    print create_index2(records, restrict_ids, index_fields)
+    
     
 def create_testdb():
     """create a db for testing"""
@@ -274,7 +285,7 @@ if __name__ == '__main__':
     #create_testdb()
     import time
     stime = time.time()
-    for t in range(10000):
-        test_create_index()
+    #for t in range(10000):
+    print test_create_index()
     print time.time() - stime
         

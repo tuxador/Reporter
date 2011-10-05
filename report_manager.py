@@ -246,9 +246,7 @@ class ReportManager():
             self.register.SetStatusText('No record selected', 0)
             return
 
-        id = str(''.join([self.register.record_display.GetItem(
-                        selected_record, x).GetText()
-                        for x in range(len(self.records.index_keys))]))
+        id = str(self.register.record_display.GetItemData(selected_record))
 
         record_vals = self.records.retrieve_record(id)
 
@@ -263,9 +261,12 @@ class ReportManager():
             if form.ShowModal() == wx.ID_OK:
                 form.get_values()
                 # delete the prev record
+                print 'before\n',self.records.db, self.register.index_summary
                 self.records.delete_record(id)
                 self.records.insert_record(form.vals)
                 self.register.refresh_records()
+                print 'after\n', self.records.db, self.register.index_summary
+
 
             form.Destroy()
         
@@ -274,7 +275,7 @@ class ReportManager():
         """Is the record locked. record is index obained from the listctrl"""
         # last entry will always be lock status
         lock_status = self.register.record_display.GetItem(record,
-                           len(self.records.index_keys)).GetText()
+                      len(self.records.index_fields)).GetText()
         if lock_status == 'locked':
             return True
         else:
@@ -290,9 +291,11 @@ class ReportManager():
             self.register.SetStatusText('No record selected', 0)
             return
 
-        id = str(''.join([self.register.record_display.GetItem(
-                        selected_record, x).GetText()
-                        for x in range(len(self.records.index_keys))]))
+        id = str(self.register.record_display.GetItemData(selected_record))
+
+        # #id = str(''.join([self.register.record_display.GetItem(
+        #                 selected_record, x).GetText()
+        #                 for x in range(len(self.records.index_keys))]))
 
         record_vals = self.records.retrieve_record(id)
 
@@ -325,9 +328,11 @@ class ReportManager():
             print 'No record selected'
             return
 
-        id = str(''.join([self.register.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.records.index_keys))]))
+        id = str(self.register.record_display.GetItemData(selected_record))
+
+        # id = str(''.join([self.register.record_display.GetItem(
+        #             selected_record, x).GetText()
+        #             for x in range(len(self.records.index_keys))]))
         
         record_vals = self.records.retrieve_record(id)
 
@@ -346,10 +351,11 @@ class ReportManager():
             return
 
         # convert to string coz unicode object does not work
-        id = str(''.join([self.register.record_display.GetItem(
-                    selected_record, x).GetText()
-                    for x in range(len(self.records.index_keys))]))
+        id = str(self.register.record_display.GetItemData(selected_record))
 
+        # id = str(''.join([self.register.record_display.GetItem(
+        #             selected_record, x).GetText()
+        #             for x in range(len(self.records.index_keys))]))
         
         template_file = self.report_files[event.Id // 2]
         record_vals = self.records.retrieve_record(id)
@@ -673,7 +679,7 @@ class Register(wx.Frame):
         # load the records and create index
         self.index_summary = self.records.create_index()
         # listcontrol - number of cols to sort, add 1 for locking
-        self.record_display = AutoWidthListCtrl(panel, len(self.records.index_keys)+1)
+        self.record_display = AutoWidthListCtrl(panel, len(self.records.index_fields))
 
         # buttons
         self.edit_button = wx.Button(panel, -1,  'View / Edit Record')
@@ -809,16 +815,13 @@ class Register(wx.Frame):
         # itemdatamap must be a dict
         self.record_display.itemDataMap = self.index_summary
 
-        index_keys = self.records.index_keys
+        index_keys = self.records.index_fields
 
         # create the columns
         for i, val in enumerate(index_keys):
             keyname = val.split('_')[1]
             self.record_display.InsertColumn(i, keyname)
 
-        self.record_display.InsertColumn(i+1, 'Lock')
-            
-        #self.record_display.ClearAll()
         for key in self.index_summary:
             self.record_display_append(self.index_summary[key], key)
 
@@ -872,8 +875,9 @@ class Register(wx.Frame):
         # store currently sorted column and sort direction
         col, direction = self.record_display.GetSortState()
         self.record_display.ClearAll()
-        #self.index_summary = self.records.create_index()
+        self.index_summary = self.records.create_index(self.restrict_ids)
         self.load_records()
+        #print col, direction
         self.record_display.SortListItems(col, direction)
         
 
@@ -948,7 +952,7 @@ class Register(wx.Frame):
         for col in range(1, len(rec)):
             self.record_display.SetStringItem(id, col, rec[col])
             
-        self.record_display.SetItemData(id, key) 
+        self.record_display.SetItemData(id, key)
             
         
     def on_quit(self, event):
@@ -964,10 +968,12 @@ class Register(wx.Frame):
         if selected_record == -1:
             self.SetStatusText('No record selected', 0)
             return
+        
+        id = str(self.record_display.GetItemData(selected_record))
 
-        id = str(''.join([self.record_display.GetItem(
-                        selected_record, x).GetText()
-                        for x in range(len(self.records.index_keys))]))
+        # id = str(''.join([self.record_display.GetItem(
+        #                 selected_record, x).GetText()
+        #                 for x in range(len(self.records.index_keys))]))
 
         if self.parent.is_locked(selected_record):
             self.SetStatusText('Cannot delete locked record')
