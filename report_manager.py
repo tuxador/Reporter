@@ -322,10 +322,6 @@ class ReportManager():
             return
 
         id = str(self.register.record_display.GetItemData(selected_record))
-
-        # id = str(''.join([self.register.record_display.GetItem(
-        #             selected_record, x).GetText()
-        #             for x in range(len(self.records.index_keys))]))
         
         record_vals = self.records.retrieve_record(id)
 
@@ -345,10 +341,6 @@ class ReportManager():
 
         # convert to string coz unicode object does not work
         id = str(self.register.record_display.GetItemData(selected_record))
-
-        # id = str(''.join([self.register.record_display.GetItem(
-        #             selected_record, x).GetText()
-        #             for x in range(len(self.records.index_keys))]))
         
         template_file = self.report_files[event.Id // 2]
         record_vals = self.records.retrieve_record(id)

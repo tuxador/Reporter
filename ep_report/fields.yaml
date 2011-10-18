@@ -144,25 +144,27 @@ Ablation:
 Post Ablation:
   0: [Rhythm, text]
   1: [CL, text]
-  2: [AH, text]
-  3: [HV, text]
-  4: [Parahisian, combo, [not done, nodal, extranodal, indeterminate], nodal]
-  5: [Incr V Pace, text]
-  6: [Prog V Pace, text]
-  7: [Incr A Pace, text]
-  8: [Prog A Pace, text]
-  9: [Comments, multitext]
+  2: [PR, text]
+  3: [AH, text]
+  4: [HV, text]
+  5: [Parahisian, combo, [not done, nodal, extranodal, indeterminate], nodal]
+  6: [Incr V Pace, text]
+  7: [Prog V Pace, text]
+  8: [Incr A Pace, text]
+  9: [Prog A Pace, text]
+  10: [Comments, multitext]
 ---
 
 Conclusions:
   0: [Diagnosis, combo, [AVNRT, Concealed AP, WPW, AT, Fascicular VT, Mahaim, Atrial flutter, Scar VT, VT, EP study], AVNRT]
   1: [Success, combo, ['yes', 'no', indeterminate], 'yes']
   2: [Interesting features, combo, ['', AVNRT with AV block, AP conduction dissociation during abl], '']
-  3: [Summary, text]
-  4: [Conclusion 1, text]
-  5: [Conclusion 2, text]
-  6: [Conclusion 3, text]
-  7: [Conclusion 4, text]
+  3: [Complications. combo, ['None', 'AV block', 'Pericardial effusion with tamponade'], None]
+  4: [Summary, text]
+  5: [Conclusion 1, text]
+  6: [Conclusion 2, text]
+  7: [Conclusion 3, text]
+  8: [Conclusion 4, text]
 
 ---
 
