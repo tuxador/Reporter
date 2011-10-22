@@ -68,7 +68,8 @@ Baseline:
   3: [AH (ms), text]
   4: [HV (ms), text]
   5: [Parahisian, combo, ['', not done, nodal, extranodal, indeterminate], '']
-
+  6: [Comments, text]
+  
 ---
 
 Incr V Pace:
