@@ -15,7 +15,7 @@ Demographics:
   5: [Date of Procedure (yyyy-mm-dd), date]
   6: [MRD Number, text]
   7: [IP Number, text]
-  8: [EPS Number, text, 2010/]
+  8: [EPS Number, text, 2011/]
   9: [Procedure Start(hh.mm am), text]
   10: [Procedure End(hh.mm am), text]
   11: [Procedure duration (mins), text]
@@ -68,7 +68,8 @@ Baseline:
   3: [AH (ms), text]
   4: [HV (ms), text]
   5: [Parahisian, combo, ['', not done, nodal, extranodal, indeterminate], '']
-
+  6: [Comments, text]
+  
 ---
 
 Incr V Pace:
@@ -80,7 +81,7 @@ Incr V Pace:
 ---
 
 Prog V Pace:
-  0: [VA conduction, combo, [non-decremental, decremental], non-decremental]
+  0: [VA conduction, combo, [non-decremental, decremental, absent], non-decremental]
   1: [VAERP, text]
   2: [Atrial Activation, combo, [concentric, eccentric], concentric]
   3: [VERP, text]
@@ -116,7 +117,7 @@ Tachycardia:
   3: [AH, text]
   4: [HV, text]
   5: [VA, text]
-  6: [VA relationship, combo, ['1:1', '2:1', '1:2'], '1:1']
+  6: [VA relationship, combo, ['1:1', '2:1', '1:2'], '1:1', 'dissociation']
   7: [Atrial activation, combo, [concentric, eccentric], concentric]
   8: [RV overdrive, text]
   9: [RV extra, text]
@@ -153,6 +154,7 @@ Post Ablation:
   8: [Incr A Pace, text]
   9: [Prog A Pace, text]
   10: [Comments, multitext]
+
 ---
 
 Conclusions:

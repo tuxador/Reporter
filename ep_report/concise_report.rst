@@ -97,7 +97,7 @@ Puducherry - 605006
     "**Incr A pace**", "${noblanks('AVWB ',get('Incr A Pace_AVWB'),' ms,')} ${noblanks('Level of block ',get('Incr A Pace_Level of block'),',')} ${noblanks('PR>RR ',get('Incr A Pace_PR>RR'),'')}"
     "**Prog A pace**", "${noblanks('AH jump ',get('Prog A Pace_AH jump'),',')} ${noblanks('FPERP ',get('Prog A Pace_FPERP'), ' ms,')}${noblanks('SPERP ',get('Prog A Pace_SPERP'), ' ms,')}${noblanks('APERP ', get('Prog A Pace_APERP'), ' ms,')}${noblanks('AVERP ', get('Prog A Pace_AVERP'), ' ms,')}${noblanks ('AERP ', get('Prog A Pace_AERP'),' ms')}."
     ${noblanks("**Parahisian pacing**, ", get('Baseline_Parahisian'), '')}
-
+    ${noblanks("**Comments**, ", get('Baseline_Comments'), '')}
 
 .. csv-table:: Tachycardia
    :widths: 3, 10
