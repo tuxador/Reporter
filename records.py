@@ -59,6 +59,7 @@ class Records():
             os.remove(oldest_file)
                             
         db = shelve.open(db_file)
+
         return db
 
 
@@ -85,6 +86,7 @@ class Records():
         restrict_ids is a list of ids to restrict to
         The keys for index have to be integers to allow
         sorting in the listctrl"""
+        # TODO: Dont read from the file each time
         self.index_fields = yaml.load(open(self.index_file))
         if restrict_ids == None:
             restrict_ids = self.db.keys()
@@ -93,38 +95,7 @@ class Records():
         for id in restrict_ids:
             index[int(id)] = [self.db[id].get(field, '') for field in self.index_fields]
 
-            # index[id] = {}
-            # for field in self.db[id]:
-            #     if field in self.index_fields:
-            #         index[id][field] = self.db[id].get(field, '') # empty if non-existent
-            #index[id]['LOCK_STATUS'] = self.db[id]['LOCK_STATUS']
-
         return index
-
-
-        # #------------------------------------------
-        # self.index_keys = yaml.load(open(self.index_file))
-        # index_fields = []
-
-        # # passhash is key used for storing password hash
-        # if restrict_ids == None:
-        #     restrict_ids = self.db.keys()
-            
-        # for field in self.index_keys:
-        #     index_fields.append([self.get_field_rec(rec, field) for rec in self.db
-        #                          if rec in restrict_ids])
-            
-        # # lock status also needs to be sent to register
-        # index_fields.append([self.get_field_rec(rec, 'LOCK_STATUS')
-        #                      for rec in self.db if rec in restrict_ids])
-
-        # index = zip(*index_fields)
-
-        # index_dict = {}
-        # for i, rec in enumerate(index):
-        #     index_dict[i] = rec
-
-        # return index_dict
 
 
     def get_field_rec(self, rec, field):

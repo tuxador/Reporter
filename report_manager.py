@@ -194,7 +194,7 @@ class ReportManager():
             self.records.insert_record(form.vals)
 
             # recreate index
-            self.register.index_summary = self.records.create_index()
+            #self.register.index_summary = self.records.create_index()
             self.register.refresh_records()
                                     
         form.Destroy()
@@ -645,7 +645,8 @@ class Register(wx.Frame):
         self.records = records
 
         # no filter
-        self.restrict_ids = records.db.keys()
+        #self.restrict_ids = records.db.keys()
+        self.FILTER = False  # flag if filter is applied
                 
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL) # for the listctrl
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL) # for the buttons
@@ -860,7 +861,12 @@ class Register(wx.Frame):
         # store currently sorted column and sort direction
         col, direction = self.record_display.GetSortState()
         self.record_display.ClearAll()
-        self.index_summary = self.records.create_index(self.restrict_ids)
+        
+        if self.FILTER:
+            self.index_summary = self.records.create_index(self.restrict_ids)
+        else:
+            self.index_summary = self.records.create_index()
+            
         self.load_records()
         self.record_display.SortListItems(col, direction)
         
@@ -904,6 +910,9 @@ class Register(wx.Frame):
 
         # create list of ids to restrict to
         self.restrict_ids = [id for (val, id) in filt_vals]
+
+        self.FILTER = True
+        # TODO: Need a clear filter to remove this
                 
         # refresh register display
         self.index_summary = self.records.create_index(self.restrict_ids)
