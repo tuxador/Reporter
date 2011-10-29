@@ -236,17 +236,17 @@ class ReportEditor(wx.Dialog):
 
     def save_pdf(self, event):
         """Save pdf by copying temp file"""
-        print 'creating dialog'
-        dlg = wx.FileDialog(None, 'Save pdf as', style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
+        dlg = wx.FileDialog(self, 'Save pdf as', style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_OK:
-            print 'returned'
             savefile = dlg.GetPath()
-            
-        print self.pdf_file, savefile
+
+        # # Difficult to track segmentation fault when file does not exist
+        # if not os.path.exists(savefile):
+        #     open(savefile, 'w').close()
+
+        dlg.Destroy()
 
         shutil.copyfile(self.pdf_file, savefile)
-
-        
         
 # end wxGlade
     def _init_values(self):

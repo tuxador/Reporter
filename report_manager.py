@@ -1037,6 +1037,7 @@ class ExportDlg(wx.Dialog):
 
         if savedlg.ShowModal() == wx.ID_OK:
             savefilename = savedlg.GetPath()
+            #savedlg.Destroy()
         else:
             return
 

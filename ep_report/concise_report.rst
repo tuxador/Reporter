@@ -23,6 +23,17 @@
 
 
 <%
+    def list2twocolcsv(lst):
+        """convert list of strings to two col csv table.
+	In each pair of strings, first is field and second is value"""
+	pairs = zip(lst[::2], lst[1::2])
+	non_empty_pairs = [pair for pair in pairs if pair[1].strip() != '']
+	pair_strings = [''.join(('**', a, '**,', b)) for (a,b) in non_empty_pairs]
+	return '\n    '.join(pair_strings)
+%>
+
+
+<%
     def noblanks(pre, var, post):
         """If var is not empty string, return pre+var+post.
 	Else return empty string"""
@@ -108,9 +119,43 @@ Puducherry - 605006
 				   get('Technical_Catheter 5')])}"
 
 
+
+
+
+.. csv-table:: Test
+   :widths: 3, 10
+
+   ${list2twocolcsv(['Name', 'Raja',
+                     'Age', '36',
+		     'Sex', noblanks('Male', get('Baseline_PR'), '')])}
+
+
+				   
 .. csv-table:: Baseline
    :widths: 3, 10
 
+   ${list2twocolcsv(['Rhythm', get('Baseline_Rhythm'), 'Measurements', noblanks('PR ', get('Baseline_PR'), ' ms, ')])}
+
+
+		    .. noblanks('AH ', get('Baseline_AH'), ' ms, ')])} 
+
+
+
+
+.. noblanks('HV ', get('Baseline_HV'), ' ms, ')\
+.. noblanks('CL ', get(', Baseline_CL'), ' ms'),
+..                     'Incr RV pace', 'noblanks('VA conduction ', get('Incr V Pace_VA conduction'), '')\
+.. noblanks(', VAWB ', get('Incr V Pace_VAWB'), ' ms')\
+.. noblanks(', atrial activation ',get('Incr V Pace_Atrial Activation'), '')',
+..                     'Progr RV pace', 'noblanks('VA conduction ', get('Prog V Pace_VA conduction'), '')\
+.. noblanks(', VAERP ', get('Prog V Pace_VAERP'), ' ms')\
+.. noblanks(', atrial activation ',get('Prog V Pace_Atrial Activation'), '')\
+.. noblanks(', VERP ', get('Prog V Pace_VERP'), ' ms')'])}
+
+
+.. csv-table:: Tachycardia
+   :widths: 3, 10
+   
    "**Rhythm**", "${get('Baseline_Rhythm')}"
    "**Measurements**", "${noblanks('PR ', get('Baseline_PR'), ' ms, ')}\
 ${noblanks('AH ', get('Baseline_AH'), ' ms, ')}\
