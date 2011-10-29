@@ -108,10 +108,14 @@ class Records():
             return ''
     
 
-    def insert_record(self, record):
-        """Insert a record into the database."""
-        #unique_id = ''.join([str(record[k]) for k in self.index_keys])
-        unique_id = self.generate_new_id()
+    def insert_record(self, record, unique_id=None):
+        """Insert a record into the database.
+        If id is given, the record is being modified"""
+        if unique_id:
+            del self.db[unique_id]
+
+        else:
+            unique_id = self.generate_new_id()
         
         # insert this record
         self.db[unique_id] = record

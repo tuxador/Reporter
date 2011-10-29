@@ -261,8 +261,9 @@ class ReportManager():
             if form.ShowModal() == wx.ID_OK:
                 form.get_values()
                 # delete the prev record
-                self.records.delete_record(id)
-                self.records.insert_record(form.vals)
+                #self.records.delete_record(id)
+                # insert record with same id
+                self.records.insert_record(form.vals, id)
                 self.register.refresh_records()
 
             form.Destroy()
@@ -307,7 +308,7 @@ class ReportManager():
 
         self.records.delete_record(id)
         self.records.insert_record(record_vals)
-        self.register.index_summary = self.records.create_index(self.register.restrict_ids)
+        self.register.index_summary = self.records.create_index()
         #self.index_summary = self.records.create_index()
         
         self.register.refresh_records()
@@ -369,7 +370,7 @@ class ReportManager():
         raw_report =  rep.edit_report()
         
         record_vals['raw_report'] = raw_report
-        self.records.insert_record(record_vals)
+        self.records.insert_record(record_vals, id)
 
         
         

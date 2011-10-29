@@ -236,11 +236,16 @@ class ReportEditor(wx.Dialog):
 
     def save_pdf(self, event):
         """Save pdf by copying temp file"""
+        print 'creating dialog'
         dlg = wx.FileDialog(None, 'Save pdf as', style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
         if dlg.ShowModal() == wx.ID_OK:
+            print 'returned'
             savefile = dlg.GetPath()
+            
+        print self.pdf_file, savefile
 
         shutil.copyfile(self.pdf_file, savefile)
+
         
         
 # end wxGlade
