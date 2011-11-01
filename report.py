@@ -346,11 +346,15 @@ class ReportEditor(wx.Dialog):
         w,h = self.GetSize()
         
         if self.EDITOR_SHOWN:
-            self.splitter.SetSashPosition(h)
+            #if self.splitter.IsSplit():
+            self.splitter.Unsplit()
+
+            #self.splitter.SetSashPosition(h)
             self.EDITOR_SHOWN = False
             self.editor_show_button.SetLabel("Show Editor")
 
         else:
+            self.splitter.SplitHorizontally(self.pdfpanel, self.editorpanel)
             self.splitter.SetSashPosition(h/2)
             self.EDITOR_SHOWN = True
             self.editor_show_button.SetLabel("Hide Editor")
