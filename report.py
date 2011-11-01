@@ -260,8 +260,9 @@ class ReportEditor(wx.Dialog):
         else:
             self.show_message('Creating new report')
         
-        w, h = self.GetSize()
-        self.splitter.SetSashPosition(h)
+        #w, h = self.GetSize()
+        #self.splitter.SetSashPosition(h)
+        self.splitter.Unsplit()
         self.EDITOR_SHOWN = False
         self.editor_show_button.SetLabel("Show Editor")
 
