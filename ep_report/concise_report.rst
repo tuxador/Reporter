@@ -2,11 +2,24 @@
     def get(item):
         """get from dict. Else return empty string."""
 	try:
-	    return vals[item]
+	    return vals[item] 
 	except KeyError:
 	    return ''
 %>
 
+<%
+    def get_quoted(item):
+        """get from dict. Else return empty string. Quote returned string"""
+	try:
+	    val = vals[item]
+	except KeyError:
+	    return ''
+	if val.strip() == '':
+	    return ''
+	else:
+	    return '"' + vals[item] + '"'
+
+%>
 
 <%
     def list2line(lst):
@@ -34,14 +47,22 @@
 
 
 <%
-    def noblanks(pre, var, post):
-        """If var is not empty string, return pre+var+post.
-	Else return empty string"""
-	if var.strip() == '':
-            return ''
+    def noblanks(lst):
+        """
+	Given list of 3-tuples, for each tuple, join as string if
+	middle element is not empty. Return final joined string
+	within quotes
+	"""
+        lst = [pre+var+post  if var.strip() != '' else '' for (pre, var, post) in lst]
+	# strip empty strings
+	lst = [s for s in lst if s != '']
+	
+	if len(lst) == 0:
+	    return ''
 	else:
-	    return ''.join([pre, var, post])
+	    return '"' + ', '.join(lst) + '"'
 %>
+
 
 <%
     def invert_date(dt):
@@ -93,7 +114,7 @@ Puducherry - 605006
     "**ECG**", "${get('Clinical_ECG')}"
     "**ECG during tachy**", "${get('Clinical_ECG during tachycardia')}"
     "**Other inv**", "${get('Clinical_Other investigations')}"
-    ${noblanks('"**Drugs**","' , get('Clinical_Drugs'), '"')}
+    ${noblanks([('"**Drugs**","' , get('Clinical_Drugs'), '"')])}
 
 .. csv-table:: Investigations
 
@@ -118,98 +139,71 @@ Puducherry - 605006
 				   get('Technical_Catheter 4'), \
 				   get('Technical_Catheter 5')])}"
 
-
-
-
-
-.. csv-table:: Test
-   :widths: 3, 10
-
-   ${list2twocolcsv(['Name', 'Raja',
-                     'Age', '36',
-		     'Sex', noblanks('Male', get('Baseline_PR'), '')])}
-
-
 				   
 .. csv-table:: Baseline
    :widths: 3, 10
 
-   ${list2twocolcsv(['Rhythm', get('Baseline_Rhythm'), 'Measurements', noblanks('PR ', get('Baseline_PR'), ' ms, ')])}
+   ${list2twocolcsv(['Rhythm', get_quoted('Baseline_Rhythm'),
+      'Measurements', noblanks([ ('PR ', get('Baseline_PR'), ' ms'),
+                              ('AH ', get('Baseline_AH'), ' ms'),
+			      ('HV ', get('Baseline_HV'), ' ms'),
+			      ('CL ', get(', Baseline_CL'), 'ms')]),
+      'Incr RV pace', noblanks([ ('VA conduction ', get('Incr V Pace_VA conduction'), ''),
+                              ('VAWB ', get('Incr V Pace_VAWB'), ' ms'),
+			      ('atrial activation ',get('Incr V Pace_Atrial Activation'), '')]),
+      'Progr RV pace', noblanks([('VA conduction ', get('Prog V Pace_VA conduction'), ''),
+                              ('VAERP ', get('Prog V Pace_VAERP'), ' ms'),
+			      ('atrial activation ',get('Prog V Pace_Atrial Activation'), ''),
+			      ('VERP ', get('Prog V Pace_VERP'), ' ms') ]) ])}
 
-
-		    .. noblanks('AH ', get('Baseline_AH'), ' ms, ')])} 
-
-
-
-
-.. noblanks('HV ', get('Baseline_HV'), ' ms, ')\
-.. noblanks('CL ', get(', Baseline_CL'), ' ms'),
-..                     'Incr RV pace', 'noblanks('VA conduction ', get('Incr V Pace_VA conduction'), '')\
-.. noblanks(', VAWB ', get('Incr V Pace_VAWB'), ' ms')\
-.. noblanks(', atrial activation ',get('Incr V Pace_Atrial Activation'), '')',
-..                     'Progr RV pace', 'noblanks('VA conduction ', get('Prog V Pace_VA conduction'), '')\
-.. noblanks(', VAERP ', get('Prog V Pace_VAERP'), ' ms')\
-.. noblanks(', atrial activation ',get('Prog V Pace_Atrial Activation'), '')\
-.. noblanks(', VERP ', get('Prog V Pace_VERP'), ' ms')'])}
 
 
 .. csv-table:: Tachycardia
    :widths: 3, 10
-   
-   "**Rhythm**", "${get('Baseline_Rhythm')}"
-   "**Measurements**", "${noblanks('PR ', get('Baseline_PR'), ' ms, ')}\
-${noblanks('AH ', get('Baseline_AH'), ' ms, ')}\
-${noblanks('HV ', get('Baseline_HV'), ' ms, ')}\
-${noblanks('CL ', get(', Baseline_CL'), ' ms')}"
-   "**Incr RV pace**", "${noblanks('VA conduction ', get('Incr V Pace_VA conduction'), '')}\
-${noblanks(', VAWB ', get('Incr V Pace_VAWB'), ' ms')}\
-${noblanks(', atrial activation ',get('Incr V Pace_Atrial Activation'), '')}"
-   "**Progr RV pace**", "${noblanks('VA conduction ', get('Prog V Pace_VA conduction'), '')}\
-${noblanks(', VAERP ', get('Prog V Pace_VAERP'), ' ms')}\
-${noblanks(', atrial activation ',get('Prog V Pace_Atrial Activation'), '')}\
-${noblanks(', VERP ', get('Prog V Pace_VERP'), ' ms')}"
-    "**Incr A pace**", "${noblanks('AVWB ',get('Incr A Pace_AVWB'),' ms')}\
-${noblanks(', Level of block ',get('Incr A Pace_Level of block'),'')}\
-${noblanks(', PR>RR ',get('Incr A Pace_PR>RR'),'')}"
-    "**Prog A pace**", "${noblanks('AH jump ',get('Prog A Pace_AH jump'), '')}\
-${noblanks(', FPERP ',get('Prog A Pace_FPERP'), ' ms')}\
-${noblanks(', SPERP ',get('Prog A Pace_SPERP'), ' ms')}\
-${noblanks(', APERP ', get('Prog A Pace_APERP'), ' ms')}\
-${noblanks(', AVERP ', get('Prog A Pace_AVERP'), ' ms')}\
-${noblanks (', AERP ', get('Prog A Pace_AERP'),' ms')}"
-    ${noblanks("**Parahisian pacing**, ", get('Baseline_Parahisian'), '')}
-    ${noblanks("**Comments**, ", get('Baseline_Comments'), '')}
 
-.. csv-table:: Tachycardia
-   :widths: 3, 10
-
-    "**Induction**", "${get('Tachycardia_Induction')}, ${get('Tachycardia_Termination')}"
-    "**Measurements**", "${get('Tachycardia_QRS')} tachycardia, CL ${get('Tachycardia_CL')}ms, ${noblanks('AH ',get('Tachycardia_AH'), ' ms,')}${noblanks('HV ',get('Tachycardia_HV'), ' ms,')}${noblanks('VA ',get('Tachycardia_VA'), ' ms')}"
-    "**VA relation**", "${get('Tachycardia_VA relationship')} with ${get('Tachycardia_Atrial activation')} atrial activation"
-    "**RV Pacing**", "${get('Tachycardia_RV overdrive')} ${noblanks(', RV extra - ',get('Tachycardia_RV extra'), '.')}"
-    "**Atrial Pacing**", "${get('Tachycardia_RA overdrive')} ${noblanks(', ', get('Tachycardia_RA extra'), '.')}"
-    "**Comment**", "${get('Tachycardia_Comment')}"
+   ${list2twocolcsv(['Induction', noblanks([('', get('Tachycardia_Induction'), ''),
+                                            ('', get('Tachycardia_Termination'), '')]),
+       'Measurements', noblanks([('', get('Tachycardia_QRS'), ' tachycardia'),
+                                 ('CL ', get('Tachycardia_CL'), ' ms'),
+				 ('AH ', get('Tachycardia_AH'), ' ms'),
+				 ('HV ', get('Tachycardia_HV'), ' ms' ),
+				 ('VA ', get('Tachycardia_VA'), ' ms')]),
+       'VA relation', noblanks([('VA relation ', get('Tachycardia_VA relationship'), ''),
+                                ('atrial activation ', get('Tachycardia_Atrial activation'), '')]),
+       'RV Pacing', noblanks([('', get('Tachycardia_RV overdrive'), ''),
+                              ('RV extra - ', get('Tachycardia_RV extra'), '')]),
+       'Atrial Pacing', noblanks([('', get('Tachycardia_RA overdrive'), ''),
+                                  ('', get('Tachycardia_RA extra'), '')]),
+       'Comment', get_quoted('Tachycardia_Comment')])}
 
 
 
 .. csv-table:: Mapping and RF ablation
     :widths: 3, 10
 
-    "**Catheter**", "${get('Ablation_Catheter')}"
-    ${noblanks("**Approach**, ", get('Ablation_Approach'), '')}
-    "**Target**", "${get('Ablation_Target')}"
-    "**RF**", "Settings - ${get('Ablation_Settings')}, RF applications - ${get('Ablation_RF applications')}, RF time - ${get('Ablation_Time')} seconds"
-    "**Endpoint**", "${get('Ablation_Endpoint')}"
-    "**Comments**", "${get('Ablation_Comments')}"
+    ${list2twocolcsv(['Catheter', get_quoted('Ablation_Catheter'),
+                      'Approach', get_quoted('Ablation_Approach'),
+    		      'Target', get_quoted('Ablation_Target'),
+		      'RF', noblanks([('Settings - ', get('Ablation_Settings'), ''),
+		                      ('RF applications - ', get('Ablation_RF applications'), '' ),
+				      ('RF time - ', get('Ablation_Time'), ' seconds')]),
+                      'Endpoint', get_quoted('Ablation_Endpoint'),
+		      'Comments', get_quoted('Ablation_Comments')])}
 
 
 .. csv-table:: Post ablation
-   :widths: 5, 8, 5, 8
+   :widths: 3, 10
 
-      "**Measurements**", "${get('Post Ablation_Rhythm')}, CL ${get('Post Ablation_CL')}ms, AH ${get('Post Ablation_AH')}, HV ${get('Post Ablation_HV')}", "**ParaHisian pacing**", "${get('Post Ablation_Parahisian')}"
-    "**Incr RV pace**", "${get('Post Ablation_Incr V Pace')}",     "**Prog RV pace**", "${get('Post Ablation_Prog V Pace')}"
-    "**Incr A pace**", "${get('Post Ablation_Incr A Pace')}", "**Prog A pace**", "${get('Post Ablation_Prog A Pace')}"
-    "**Comments**", "${get('Post Ablation_Comments')}", "", ""
+   ${list2twocolcsv(['Measurements', noblanks([('Rhythm ', get('Post Ablation_Rhythm'), ''),
+                                               ('CL ', get('Post Ablation_CL'), ' ms'),
+					       ('AH ', get('Post Ablation_AH'), ' ms'),
+					       ('HV ', get('Post Ablation_HV'), ' ms')]),
+                     'ParaHisian pacing', get_quoted('Post Ablation_Parahisian'),
+		     'Incr RV pace', get_quoted('Post Ablation_Incr V Pace'),
+		     'Prog RV pace', get_quoted('Post Ablation_Prog V Pace'),
+		     'Incr A pace', get_quoted('Post Ablation_Incr A Pace'),
+		     'Prog A pace', get_quoted('Post Ablation_Prog A Pace'),
+		     'Comments', get_quoted('Post Ablation_Comments')])}
     
 
 .. csv-table:: Conclusions
@@ -251,3 +245,5 @@ ${noblanks (', AERP ', get('Prog A Pace_AERP'),' ms')}"
 
    EP report  Pg.###Page###
 	      
+       
+
