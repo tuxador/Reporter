@@ -332,8 +332,8 @@ class ReportManager():
 
         record_vals['raw_report'] = ''
 
-        self.records.delete_record(id)
-        self.records.insert_record(record_vals)
+        #self.records.delete_record(id)
+        self.records.insert_record(record_vals, id)
 
         
     def show_n_edit_report(self, event):
