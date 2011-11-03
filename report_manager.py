@@ -363,13 +363,13 @@ class ReportManager():
         
         if os.path.exists(local_stylefile):
             rep = Report(template_file, record_vals, self.image_folder,
-                         raw_report, local_stylefile)
+                         id, raw_report, local_stylefile)
         elif os.path.exists(global_stylefile):
             rep = Report(template_file, record_vals, self.image_folder,
-                         raw_report, global_stylefile)
+                         id, raw_report, global_stylefile)
         else:
             rep = Report(template_file, record_vals, self.image_folder,
-                         raw_report)
+                         id, raw_report)
 
         raw_report =  rep.edit_report()
         

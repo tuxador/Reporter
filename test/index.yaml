@@ -1,3 +1,9 @@
+
+register_keys:
  - Demographics_Name
  - Demographics_Age
+ - LOCK_STATUS
+ 
+pdffilename:
+  - Demographics_Name
  

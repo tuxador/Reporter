@@ -10,6 +10,8 @@ import time
 import shutil
 import re
 
+import yaml
+
 import tempfile
 from mako.template import Template
 #from rst2pdf.createpdf import RstToPdf
@@ -28,7 +30,7 @@ class Report():
     """
     """
     def __init__(self, template_file, vals, image_folder,
-                 raw_report='', stylefile=None):
+                 uniq_id, raw_report='', stylefile=None):
         """template_file is full path to a .rst file that is the template.
         vals is a dictionary containing the variable value.
         raw_report is previously generated filled template if stored.
@@ -40,6 +42,7 @@ class Report():
         self.image_folder = image_folder
         self.stylefile = stylefile
         self.template_file = template_file
+        self.uniq_id = uniq_id
         
         self.template = Template(filename=template_file)
 
@@ -57,6 +60,24 @@ class Report():
         self.raw_report = self.template.render(vals=self.vals)
         
 
+    def get_pdffilename(self):
+        """
+        generated pdf will be stored in the reports folder inside the project folder.
+        Name will be generated from first field in index and uniq_id
+        """
+        project_dir = os.path.dirname(self.template_file)
+        print yaml.load(open(os.path.join(project_dir, 'index.yaml')))
+
+        index_key = yaml.load(open(os.path.join(project_dir, 'index.yaml')))[0]
+        filename = os.path.join(project_dir, 'reports',
+                                ''.join([self.vals[index_key], '_', self.uniq_id, '.pdf']))
+
+        #TODO: uniq_id is still not really unique and there is small theoretical possiblity
+        # that filename may reflect older patient. However this will happen only if the
+        # older record is deleted, so should not matter much.
+        return filename
+    
+
     def generate_pdf(self, raw=None):
         """Creat pdf and return path to pdf file.
         Use given rst text or use raw_report"""
@@ -64,6 +85,8 @@ class Report():
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
 
         tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
+
+        print self.get_pdffilename()
 
         # on Windows, pdf does not get rendered if the pdf is created in the
         # system temp folder (? reason)
@@ -259,19 +282,13 @@ class ReportEditor(wx.Dialog):
             self.show_message('Using stored report')
         else:
             self.show_message('Creating new report')
-        
-        #w, h = self.GetSize()
-        #self.splitter.SetSashPosition(h)
+
         self.splitter.Unsplit()
         self.EDITOR_SHOWN = False
         self.editor_show_button.SetLabel("Show Editor")
 
         self.raweditor.write(self.raw_text)
-        #time.sleep(10)
         self.pdfviewer.load_file(self.pdf_file)
-        #print 'pdf file name', self.pdf_file
-        #self.pdfviewer.load_file('F:/EP_report2/ep_report/reports/arun.pdf')
-        #self.pdfviewer.load_file('c:\docume~1\raja\locals~1\temp\tmpltu2dh.pdf')
         
 
     def refresh_pdf(self, event):

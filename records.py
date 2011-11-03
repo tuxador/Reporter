@@ -87,7 +87,8 @@ class Records():
         The keys for index have to be integers to allow
         sorting in the listctrl"""
         # TODO: Dont read from the file each time
-        self.index_fields = yaml.load(open(self.index_file))
+        print yaml.load(open(self.index_file))
+        self.index_fields = yaml.load(open(self.index_file))['register_keys']
         if restrict_ids == None:
             restrict_ids = self.db.keys()
 
