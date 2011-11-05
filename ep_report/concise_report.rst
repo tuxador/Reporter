@@ -110,11 +110,12 @@ Puducherry - 605006
 .. csv-table:: Clinical
    :widths: 3, 10
 
-    "**Presentation**", "${get('Clinical_Presentation')}"
-    "**ECG**", "${get('Clinical_ECG')}"
-    "**ECG during tachy**", "${get('Clinical_ECG during tachycardia')}"
-    "**Other inv**", "${get('Clinical_Other investigations')}"
-    ${noblanks([('"**Drugs**","' , get('Clinical_Drugs'), '"')])}
+   ${list2twocolcsv(['Presentation', get('Clinical_Presentation'),
+                     'ECG', get('Clinical_ECG'),
+		     'ECG during tachy', get('Clinical_ECG during tachycardia'),
+		     'Other inv', get('Clinical_Other investigations'),
+		     'Drugs', get_quoted('Clinical_Drugs') ])}
+
 
 .. csv-table:: Investigations
 
