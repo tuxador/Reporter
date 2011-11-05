@@ -26,6 +26,7 @@ elif wx.Platform == '__WXGTK__':
     import wx.lib.wxcairo as wxcairo
     import poppler    
 
+
 class Report():
     """
     """
@@ -66,11 +67,11 @@ class Report():
         Name will be generated from first field in index and uniq_id
         """
         project_dir = os.path.dirname(self.template_file)
-        print yaml.load(open(os.path.join(project_dir, 'index.yaml')))
+        #print yaml.load(open(os.path.join(project_dir, 'index.yaml')))
 
-        index_key = yaml.load(open(os.path.join(project_dir, 'index.yaml')))[0]
+        pdfkeys  = yaml.load(open(os.path.join(project_dir, 'index.yaml')))['pdffilename']
         filename = os.path.join(project_dir, 'reports',
-                                ''.join([self.vals[index_key], '_', self.uniq_id, '.pdf']))
+                                ''.join(['_'.join([self.vals[key] for key in pdfkeys]), '_', self.uniq_id, '.pdf']))
 
         #TODO: uniq_id is still not really unique and there is small theoretical possiblity
         # that filename may reflect older patient. However this will happen only if the
@@ -84,18 +85,23 @@ class Report():
         # get the temp names
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
 
-        tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
+        #tmp_pdffilename = tempfile.mkstemp(suffix='.pdf')[1]
 
-        print self.get_pdffilename()
+        pdffilename =  self.get_pdffilename()
 
         # on Windows, pdf does not get rendered if the pdf is created in the
         # system temp folder (? reason)
-        if OS == 'windows':
-            tmp_folder = os.path.join(os.path.dirname(self.template_file), 'tmp')
-            tmp_pdffilename = os.path.join(tmp_folder, 'report.pdf')
-            if not os.path.exists(tmp_folder):
-                os.mkdir(tmp_folder)
-            
+        # if OS == 'windows':
+        #     tmp_folder = os.path.join(os.path.dirname(self.template_file), 'tmp')
+        #     tmp_pdffilename = os.path.join(tmp_folder, 'report.pdf')
+        #     if not os.path.exists(tmp_folder):
+        #         os.mkdir(tmp_folder)
+
+        # If previously rendered pdf is available, display it
+        if os.path.exists(pdffilename):
+            return pdffilename
+
+        # previously rendered pdf does not exist, create new one
         if not raw:
             raw = self.raw_report
 
@@ -116,14 +122,14 @@ class Report():
             
         # invoke rst2pdf
         if self.stylefile:
-            cmd = ['-s', self.stylefile, tmp_rstfilename, '-o', tmp_pdffilename]
+            cmd = ['-s', self.stylefile, tmp_rstfilename, '-o', pdffilename]
         else:
-            cmd = [tmp_rstfilename, '-o', tmp_pdffilename]
+            cmd = [tmp_rstfilename, '-o', pdffilename]
 
             
         createpdf.main(cmd)
 
-        return tmp_pdffilename
+        return pdffilename
 
 
     def edit_report(self):
