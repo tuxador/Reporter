@@ -79,9 +79,12 @@ class Report():
         return filename
     
 
-    def generate_pdf(self, raw=None):
+    def generate_pdf(self, raw=None, FORCE=False):
         """Creat pdf and return path to pdf file.
-        Use given rst text or use raw_report"""
+        Use given rst text or use raw_report.
+        if FORCE is true, create a new pdf even if stored one
+        exists
+        """
         # get the temp names
         tmp_rstfilename = tempfile.mkstemp(suffix='.rst')[1]
 
@@ -98,7 +101,7 @@ class Report():
         #         os.mkdir(tmp_folder)
 
         # If previously rendered pdf is available, display it
-        if os.path.exists(pdffilename):
+        if os.path.exists(pdffilename) and not FORCE:
             return pdffilename
 
         # previously rendered pdf does not exist, create new one
@@ -300,9 +303,7 @@ class ReportEditor(wx.Dialog):
     def refresh_pdf(self, event):
         """refresh the displayed pdf"""
         self.show_message('Refreshing pdf ...')
-        time.sleep(1)
-        self.pdf_file = self.report.generate_pdf(self.raweditor.GetValue())
-        time.sleep(2)
+        self.pdf_file = self.report.generate_pdf(self.raweditor.GetValue(), FORCE=True)
 
         self.pdfviewer.load_file(self.pdf_file)
         self.pdfviewer.Refresh()
