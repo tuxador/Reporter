@@ -161,7 +161,7 @@ Conclusions:
   0: [Diagnosis, combo, [AVNRT, Concealed AP, WPW, AT, Fascicular VT, Mahaim, Atrial flutter, Scar VT, VT, EP study], AVNRT]
   1: [Success, combo, ['yes', 'no', indeterminate], 'yes']
   2: [Interesting features, combo, ['', AVNRT with AV block, AP conduction dissociation during abl], '']
-  3: [Complications. combo, ['None', 'AV block', 'Pericardial effusion with tamponade'], None]
+  3: [Complications, combo, ['None', 'AV block', 'Pericardial effusion with tamponade'], None]
   4: [Summary, text]
   5: [Conclusion 1, text]
   6: [Conclusion 2, text]
