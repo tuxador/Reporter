@@ -304,16 +304,8 @@ class ReportManager():
             record_vals['LOCK_STATUS'] = 'unlocked'
             self.register.SetStatusText('Unlocked selected record')
 
-        from pprint import pprint
-        pprint(self.records.db)
-
-        #self.records.delete_record(id)
         self.records.insert_record(record_vals, id)
         self.register.index_summary = self.records.create_index()
-        #self.index_summary = self.records.create_index()
-        pprint(self.records.db)
-
-        
         
         self.register.refresh_records()
             
