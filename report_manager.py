@@ -426,7 +426,7 @@ class ReportManager():
         result = []
         for key in uniq:
             result.append((key, str(uniq[key])))
-                
+              
         return result
 
 
@@ -497,8 +497,10 @@ class WhatsNew(wx.Dialog):
         self.EndModal(wx.ID_OK)
         self.Destroy()
 
+
     def not_again(self, event):
-        """"""
+        """
+        """
         # this should trigger removal of the message file
         self.EndModal(wx.ID_CANCEL)
         self.Destroy()
@@ -570,7 +572,7 @@ class TemplateChooser(wx.Dialog):
                               self.choices.GetStringSelection())
         self.EndModal(wx.ID_OK)
 
-
+        
 # TODO: integrate this with template chooser
 class ProjectChooser(wx.Dialog):
     """List the registered projects, show the default project
@@ -1022,11 +1024,14 @@ class ExportDlg(wx.Dialog):
         #self.fieldnames = self.parent.
 
     def cancel(self, event):
-        """"""
+        """
+        """
         self.EndModal(wx.ID_CANCEL)
     
         
     def export(self, event):
+        """
+        """
         fields = self.clbox.GetCheckedStrings()
         savedlg = wx.FileDialog(self, "Choose file to save...", 
                     style=wx.SAVE | wx.OVERWRITE_PROMPT)
