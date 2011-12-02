@@ -36,6 +36,7 @@ ID_CAT_SUMMARY = wx.NewId()
 ID_PASS = wx.NewId()
 ID_PROJ = wx.NewId()
 ID_EXPORT = wx.NewId()
+ID_RECEXPORT = wx.NewId()
 #----------------------------
 # Utility functions
 
@@ -267,6 +268,50 @@ class ReportManager():
             form.Destroy()
         
 
+    def export_record(self, event):
+        """Export the selected record into another project db.
+        Matching fields are alone exported while others are ignored"""
+        # get project to export to
+        project_chooser = ProjectChooser(None, self.config)
+        if project_chooser.ShowModal() == wx.ID_OK:
+            chosen_project = project_chooser.default_project
+
+        # cancel export otherwise
+        else:
+            return
+         
+        # Get the record vals
+        selected_record = self.register.record_display.GetFirstSelected()
+        if selected_record == -1:
+            self.register.SetStatusText('No record selected', 0)
+            return
+
+        id = str(self.register.record_display.GetItemData(selected_record))
+        record_vals = self.records.retrieve_record(id)
+        record_vals['LOCK_STATUS'] = 'unlocked'
+
+        # if same project is selected, clone it
+        if chosen_project == self.config.options['default_project']:
+            self.records.insert_record(record_vals)
+            self.register.refresh_records()
+
+        # if other project selected, open that db and enter compatible vals
+        # get values for other project
+        other_project_dir = self.config.options['projects'][chosen_project]
+   
+        # load paths for other project
+        #self.fields_file = os.path.join(self.project_dir, 'fields.yaml')
+        index_file = os.path.join(other_project_dir, 'index.yaml')
+        db_file = os.path.join(other_project_dir, 'records.db')
+        passfile = os.path.join(other_project_dir, 'pass.hsh')
+
+        self.recipient_records = Records(db_file, index_file, passfile,
+                                         self.config.options['num_backups'],
+                                         self.config.options['backup_freq'])
+        self.recipient_records.insert_record(record_vals)
+        # TODO: close the loaded records
+        
+            
     def is_locked(self, record):
         """Is the record locked. record is index obained from the listctrl"""
         # last entry will always be lock status
@@ -638,7 +683,7 @@ class Register(wx.Frame):
 
     def __init__(self, parent, records, project_name):
         """records is a Records instance - provides the db functions"""
-        wx.Frame.__init__(self, None, -1, project_name, size=(640, 800))
+        wx.Frame.__init__(self, None, -1, project_name, size=(720, 900))
 
         self.parent = parent
         self.records = records
@@ -693,7 +738,7 @@ class Register(wx.Frame):
         mainsizer.Fit(self)
         self.Layout()
         # self.SetSizer(mainsizer)
-        self.SetSize((600, 600))
+        self.SetSize((640, 720))
         
         self.CreateStatusBar(2)
         
@@ -725,6 +770,7 @@ class Register(wx.Frame):
         record_menu.Append(ID_NEW, "&New Record", "Create a new record")
         record_menu.Append(ID_EDIT, "&Edit Record", "Edit existing record")
         record_menu.Append(ID_LOCK, "&Toggle Lock\tCtrl-T", "Toggle locking of record")
+        record_menu.Append(ID_RECEXPORT, "&Export Record", "Export to another project")        
         record_menu.Append(ID_REMOVE, "Remove Record", "Remove existing record")
         
         
@@ -762,6 +808,7 @@ class Register(wx.Frame):
         self.Bind(wx.EVT_MENU, self.parent.new_record, id=ID_NEW)
         self.Bind(wx.EVT_MENU, self.parent.change_project, id=ID_PROJ)
         self.Bind(wx.EVT_MENU, self.parent.edit_record, id=ID_EDIT)
+        self.Bind(wx.EVT_MENU, self.parent.export_record, id=ID_RECEXPORT)        
         self.Bind(wx.EVT_MENU, self.toggle_lock, id=ID_LOCK)
         self.Bind(wx.EVT_MENU, self.change_pass, id=ID_PASS)
         self.Bind(wx.EVT_MENU, self.export_records, id=ID_EXPORT)
