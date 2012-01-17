@@ -23,6 +23,7 @@ import yaml
 import wx.lib.scrolledpanel as scrolled
 
 from datectrl import DateCtrl
+from actextctrl import ACTextControl
 
 class Form(wx.Dialog):
     def __init__(self, parent, fields_file, project_name='', input_vals=None):
@@ -252,7 +253,8 @@ class Pane(wx.CollapsiblePane):
            elif control_type == 'combo':
                self.controls.append(wx.ComboBox(self.pane, -1, choices=control_data[2]))
                self.controls[-1].SetValue(control_data[3])
-
+               
+               
            # use yyyy-mm-dd format for date to allow easy sorting
            elif control_type == 'date':
                self.controls.append(DateCtrl(self.pane, (130, -1), (150,80),

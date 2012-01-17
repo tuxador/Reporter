@@ -125,7 +125,7 @@ class Records():
     def generate_new_id(self):
         """
         Generate a new unique id for a new entry in the db.
-        ids have to be strings, bu they are string form
+        ids have to be strings, but they are string form
         of ints making them easier to track
         """
         return str(max([int(x) for x in self.db.keys()])+1)
@@ -137,7 +137,7 @@ class Records():
     
         
     def delete_record(self, unique_id):
-        """Delete record corresponsing to record_id"""
+        """Delete record corresponding to record_id"""
         del self.db[unique_id]
         self.db.sync()
 
