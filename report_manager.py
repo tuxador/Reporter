@@ -3,7 +3,7 @@
 # Author: Raja Selvaraj <rajajs@gmail.com>
 # License: GPL
 import wx
-from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin
+from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin, ListRowHighlighter
 
 import os
 import sys
@@ -36,6 +36,9 @@ ID_CAT_SUMMARY = wx.NewId()
 ID_PASS = wx.NewId()
 ID_PROJ = wx.NewId()
 ID_EXPORT = wx.NewId()
+
+GREY = (220, 220, 220)
+
 #----------------------------
 # Utility functions
 
@@ -786,6 +789,7 @@ class Register(wx.Frame):
 
         # double click on record opens it for edit / read
         self.record_display.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.parent.edit_record)
+        self.record_display.Bind(wx.EVT_LIST_COL_CLICK, self.refresh_row_colors)
         
         self.filter_value.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         #self.filter_operator.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
@@ -880,7 +884,22 @@ class Register(wx.Frame):
             
         self.load_records()
         self.record_display.SortListItems(col, direction)
-        
+        # refresh the row hightlighting
+        self.record_display.RefreshRows()
+
+    def refresh_row_colors(self, event):
+        """When column header is clicked, sort the col
+        and then refresh row colouring"""
+        col_clicked = event.Column
+        last_column, ascending = self.record_display.GetSortState()
+
+        direction = 1
+        if last_column == col_clicked:
+            direction = not ascending # toggle between 0 and 1
+            
+        self.record_display.SortListItems(event.Column, direction)
+        self.record_display.RefreshRows()         
+
 
     def apply_filter(self, event):
         """Restrict the record display according to the applied filter"""
@@ -957,10 +976,10 @@ class Register(wx.Frame):
             self.record_display.SetStringItem(id, col, rec[col])
 
         # alternate row colours
-        if id % 2:
-            self.record_display.SetItemBackgroundColour(id, "white")
-        else:
-            self.record_display.SetItemBackgroundColour(id, (220, 220, 220))
+        # if id % 2:
+        #     self.record_display.SetItemBackgroundColour(id, "white")
+        # else:
+        #     self.record_display.SetItemBackgroundColour(id, GREY)
             
         self.record_display.SetItemData(id, key)
             
@@ -996,13 +1015,14 @@ class Register(wx.Frame):
 
         
 
-class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
+class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin, ListRowHighlighter):
     def __init__(self, parent, columns_to_sort):
         # columns_to_sort is number of columns
         wx.ListCtrl.__init__(self, parent, -1, style=wx.LC_REPORT)
         ListCtrlAutoWidthMixin.__init__(self)
         ColumnSorterMixin.__init__(self, columns_to_sort)
-
+        ListRowHighlighter.__init__(self)
+        
     def GetListCtrl(self):
         return self
 
