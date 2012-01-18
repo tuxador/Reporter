@@ -3,7 +3,7 @@
 # Author: Raja Selvaraj <rajajs@gmail.com>
 # License: GPL
 import wx
-from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin
+from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin, ColumnSorterMixin, ListRowHighlighter
 
 import os
 import sys
@@ -37,6 +37,7 @@ ID_PASS = wx.NewId()
 ID_PROJ = wx.NewId()
 ID_EXPORT = wx.NewId()
 ID_RECEXPORT = wx.NewId()
+
 #----------------------------
 # Utility functions
 
@@ -172,16 +173,20 @@ class ReportManager():
         """Insert new record.
         Get values by presenting an empty form"""
         # does user want to fill with template ?
-        template_name = 'Empty'
+        template_name = None
         # show template chooser only if there are some templates
         if len(self.tpl_files) > 0:
             template_chooser = TemplateChooser(None, self.project_dir, self.tpl_files)
-            if template_chooser.ShowModal() == wx.ID_OK:
+
+            if templatechooser.ShowModal() == wx.ID_CANCEL:
+                return
+
+            elif template_chooser.ShowModal() == wx.ID_OK:
                 template_name = template_chooser.chosentemplate
                 template_chooser.Destroy()
 
 
-        if template_name == 'Empty':
+        if template_name == None:
             form = Form(None, self.fields_file, 'Fill in the values')            
         else:
             template_vals = yaml.load(open(template_name))
@@ -572,13 +577,15 @@ class TemplateChooser(wx.Dialog):
         self.choices = wx.RadioBox(panel, -1, "Choose template",
                                    choices=self.templates, style=wx.RA_VERTICAL)
         self.cancel_button = wx.Button(panel, -1, 'Cancel')
-        self.done_button = wx.Button(panel, -1, 'Done')
+        self.no_template_button = wx.Button(panel, -1, 'No template')
+        self.use_template_button = wx.Button(panel, -1, 'Use template')
 
         self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
-        self.done_button.Bind(wx.EVT_BUTTON, self.ondone)
+        self.no_template_button.Bind(wx.EVT_BUTTON, self.no_template)
+        self.use_template_button.Bind(wx.EVT_BUTTON, self.use_template)
 
-        buttonsizer.Add(self.cancel_button, 0, wx.ALL, 10)
-        buttonsizer.Add(self.done_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.no_template_button, 0, wx.ALL, 10)
+        buttonsizer.Add(self.use_template_button, 0, wx.ALL, 10)
 
         panelsizer.Add(self.choices, 10, wx.ALL|wx.EXPAND, 2)
         panelsizer.Add(buttonsizer, 1, wx.ALL, 2)
@@ -590,6 +597,7 @@ class TemplateChooser(wx.Dialog):
         mainsizer.Fit(self)
         self.Layout()
 
+        self.SetSize((300, 500))
         
     def _filename2templatename(self, name):
         """from filename, get the template name"""
@@ -611,7 +619,12 @@ class TemplateChooser(wx.Dialog):
         """Cancel and discard edits"""
         self.EndModal(wx.ID_CANCEL)
 
-    def ondone(self, event):
+
+    def no_template(self, event):
+        self.chosentemplate = None
+        self.EndModal(wx.ID_OK)
+        
+    def use_template(self, event):
         """returns the filename to the template file"""
         self.chosentemplate = self._templatename2filename(
                               self.choices.GetStringSelection())
@@ -821,6 +834,7 @@ class Register(wx.Frame):
 
         # double click on record opens it for edit / read
         self.record_display.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.parent.edit_record)
+        self.record_display.Bind(wx.EVT_LIST_COL_CLICK, self.refresh_row_colors)
         
         self.filter_value.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
         #self.filter_operator.Bind(wx.EVT_TEXT_ENTER, self.apply_filter)
@@ -915,7 +929,22 @@ class Register(wx.Frame):
             
         self.load_records()
         self.record_display.SortListItems(col, direction)
-        
+        # refresh the row hightlighting
+        self.record_display.RefreshRows()
+
+    def refresh_row_colors(self, event):
+        """When column header is clicked, sort the col
+        and then refresh row colouring"""
+        col_clicked = event.Column
+        last_column, ascending = self.record_display.GetSortState()
+
+        direction = 1
+        if last_column == col_clicked:
+            direction = not ascending # toggle between 0 and 1
+            
+        self.record_display.SortListItems(event.Column, direction)
+        self.record_display.RefreshRows()         
+
 
     def apply_filter(self, event):
         """Restrict the record display according to the applied filter"""
@@ -990,6 +1019,12 @@ class Register(wx.Frame):
 
         for col in range(1, len(rec)):
             self.record_display.SetStringItem(id, col, rec[col])
+
+        # alternate row colours
+        # if id % 2:
+        #     self.record_display.SetItemBackgroundColour(id, "white")
+        # else:
+        #     self.record_display.SetItemBackgroundColour(id, GREY)
             
         self.record_display.SetItemData(id, key)
             
@@ -1025,13 +1060,14 @@ class Register(wx.Frame):
 
         
 
-class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin):
+class AutoWidthListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin, ColumnSorterMixin, ListRowHighlighter):
     def __init__(self, parent, columns_to_sort):
         # columns_to_sort is number of columns
         wx.ListCtrl.__init__(self, parent, -1, style=wx.LC_REPORT)
         ListCtrlAutoWidthMixin.__init__(self)
         ColumnSorterMixin.__init__(self, columns_to_sort)
-
+        ListRowHighlighter.__init__(self)
+        
     def GetListCtrl(self):
         return self
 
