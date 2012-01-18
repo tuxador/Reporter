@@ -23,7 +23,7 @@ import yaml
 import wx.lib.scrolledpanel as scrolled
 
 from datectrl import DateCtrl
-from actextctrl import ACTextControl
+
 
 class Form(wx.Dialog):
     def __init__(self, parent, fields_file, project_name='', input_vals=None):
