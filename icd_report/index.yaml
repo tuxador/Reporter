@@ -1,5 +1,11 @@
+
+register_keys:
  - Demographics_Name
  - Demographics_Age
  - Demographics_Hospital Number
  - Demographics_Date of Procedure
  - Demographics_ICD Number
+
+pdffilename:
+ - Demographics_Name
+ - Demographics_Date of Procedure
