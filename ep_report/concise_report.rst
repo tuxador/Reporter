@@ -155,7 +155,8 @@ Puducherry - 605006
       'Progr RV pace', noblanks([('VA conduction ', get('Prog V Pace_VA conduction'), ''),
                               ('VAERP ', get('Prog V Pace_VAERP'), ' ms'),
 			      ('atrial activation ',get('Prog V Pace_Atrial Activation'), ''),
-			      ('VERP ', get('Prog V Pace_VERP'), ' ms') ]) ])}
+			      ('VERP ', get('Prog V Pace_VERP'), ' ms')]), 
+      'Comment', get_quoted('Baseline_Comments')])}
 
 
 
