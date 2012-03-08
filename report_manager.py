@@ -178,7 +178,7 @@ class ReportManager():
         if len(self.tpl_files) > 0:
             template_chooser = TemplateChooser(None, self.project_dir, self.tpl_files)
 
-            if templatechooser.ShowModal() == wx.ID_CANCEL:
+            if template_chooser.ShowModal() == wx.ID_CANCEL:
                 return
 
             elif template_chooser.ShowModal() == wx.ID_OK:
@@ -576,11 +576,11 @@ class TemplateChooser(wx.Dialog):
 
         self.choices = wx.RadioBox(panel, -1, "Choose template",
                                    choices=self.templates, style=wx.RA_VERTICAL)
-        self.cancel_button = wx.Button(panel, -1, 'Cancel')
+        #self.cancel_button = wx.Button(panel, -1, 'Cancel')
         self.no_template_button = wx.Button(panel, -1, 'No template')
         self.use_template_button = wx.Button(panel, -1, 'Use template')
 
-        self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+        #self.cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
         self.no_template_button.Bind(wx.EVT_BUTTON, self.no_template)
         self.use_template_button.Bind(wx.EVT_BUTTON, self.use_template)
 
