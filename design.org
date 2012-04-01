@@ -3,8 +3,15 @@
 ** DONE Total number of records to be displayed in status, update when filtered
 ** DONE Change key for record when key fields change
 ** TODO Need clear filter button
-
 ** DONE Images will be in a separate folder and reference only by image name
+** TODO Access control
+   - admin - all access
+   - user - write new records, read locked records
+   - viewer - only read records
+   - ability to view modifications made by user
+** TODO Attach images to each record
+** TODO QR code in report
+   - Use pyqrnative - http://code.google.com/p/pyqrnative/source/checkout
 * Program files
 ** DONE report.py -- Report class 
 *** Input - path to a template file (.rst), variable values as a dictionary
