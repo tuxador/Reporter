@@ -397,9 +397,7 @@ class ReportManager():
 
         # retrieve stored raw report
         try:
-            print "using raw report"
             raw_report = record_vals['raw_report']
-            print 'current qr img path', record_vals['qrimg']
         except KeyError:
             raw_report = ''
 
