@@ -402,7 +402,7 @@ class ReportManager():
             raw_report = ''
 
             # create qr code image, pass filename to record_vals
-            qrimg_data = dict((k, record_vals[k]) for k in self.records.qrcode_fields)
+            qrimg_data = [(k, record_vals[k]) for k in self.records.qrcode_fields]
             _, qrimg_filename = tempfile.mkstemp(suffix='.jpg')
             qr = QRImg(qrimg_data, qrimg_filename)
             qr.make_image()
