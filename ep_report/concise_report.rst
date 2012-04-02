@@ -74,8 +74,8 @@
 %>	
 
 
-|jipmer|  Electrophysiology study and RF ablation
-=================================================
+|jipmer|  Electrophysiology study and RF ablation |qrcode|
+=========================================================
 
 Department of Cardiology
 ------------------------
@@ -221,9 +221,6 @@ Puducherry - 605006
 .. csv-table:: Recommendations
    :widths: 1, 50
 
-
-
-
       ${list2onecolcsv([get('Recommendations_Recommendation 1'),
                     get('Recommendations_Recommendation 2'),
 		    get('Recommendations_Recommendation 3'),
@@ -247,6 +244,12 @@ Puducherry - 605006
     	      :width: 1in
 	      :align: middle
 
+.. |qrcode| image:: ${get('qrimg')}
+             :height: 1in
+	     :width: 1in
+	     :align: middle
+
+	      
 .. footer::
 
    EP report  Pg.###Page###

@@ -13,6 +13,7 @@ import time
 import yaml
 import hashlib
 import csv
+import tempfile
 #import numpy
 
 from records import Records
@@ -21,6 +22,8 @@ from read_only_form import ReadOnlyForm
 from report import Report
 from config_manager import Config
 from summary import NumSummary, CatSummary
+
+from qrcode import QRImg
 
 ID_NEW = wx.NewId()
 ID_EDIT = wx.NewId()
@@ -394,10 +397,20 @@ class ReportManager():
 
         # retrieve stored raw report
         try:
+            print "using raw report"
             raw_report = record_vals['raw_report']
+            print 'current qr img path', record_vals['qrimg']
         except KeyError:
             raw_report = ''
-        
+
+            # create qr code image, pass filename to record_vals
+            qrimg_data = dict((k, record_vals[k]) for k in self.records.qrcode_fields)
+            _, qrimg_filename = tempfile.mkstemp(suffix='.jpg')
+            qr = QRImg(qrimg_data, qrimg_filename)
+            qr.make_image()
+            record_vals['qrimg'] = qrimg_filename
+            print record_vals['qrimg']
+            
         # style file in the project directory
         # same name as report or all.sty
         local_stylefile = os.path.splitext(template_file)[0] + '.sty'
@@ -417,7 +430,6 @@ class ReportManager():
         
         record_vals['raw_report'] = raw_report
         self.records.insert_record(record_vals, id)
-
         
         
     def display_pdf(self, pdf_file):
