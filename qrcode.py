@@ -32,8 +32,6 @@ class QRImg():
         qr.make() # todo: handle typeerror when data is too large
 
         im = qr.makeImage()
-
-        im.show()
         
         im.save(self.img_path, "JPEG")
         
@@ -46,7 +44,6 @@ class QRImg():
         >>> lst2str([('a', 1), ('b', 2), ('c', 3)])
         'a: 1\nb: 2\nc: 3'
         """
-        print lst
         return '\n'.join([field + ': ' + str(value) for (field, value) in lst])
         
 
