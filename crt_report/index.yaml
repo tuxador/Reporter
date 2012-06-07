@@ -1,0 +1,15 @@
+
+register_keys:
+  - Demographics_Name
+  - Demographics_Age
+  - Demographics_IP Number
+  - Demographics_Date of Procedure
+
+qrcode:
+  - Demographics_Name
+  - Demographics_IP Number
+  - Demographics_Date of Procedure
+
+pdffilename:
+  - Demographics_Name
+  - Demographics_Date of Procedure

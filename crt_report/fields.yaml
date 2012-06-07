@@ -1,0 +1,147 @@
+# Input fields to be displayed in the form
+# Examples
+
+# text input [label, text]
+# spin control [label, spin, min, max, initial]
+# combo box [label, combo, [list of choices], default]		
+
+Demographics:
+  0: [Name, text]
+  1: [Age (yrs), text]
+  2: [Sex, combo, [Male,Female], Male]
+  3: [Contact number, text]
+  4: [Date of Admission (yyyy-mm-dd), date]
+  5: [Date of Procedure (yyyy-mm-dd), date]
+  6: [Date of Discharge (yyyy-mm-dd), date]
+  7: [IP Number, text]
+  8: [MRD Number, text]
+  9: [Procedure No, text]
+  10: [Procedure Start(hh.mm am), text]
+  11: [Procedure End(hh.mm am), text]
+  12: [Fluoro time(seconds), text]
+  13: [Referring Physician, combo, ['Dr. Amirtha Ganesh', ''], '']
+---
+
+Clinical:
+  0: [Heart failure etiology, combo, [Nonischemic cardiomyopathy, Ischemic cardiomyopathy], Nonischemic cardiomyopathy]
+  1: [NYHA Class, combo, [I, II, III, IV], III]
+  2: [QRS morphology, combo, [Narrow, LBBB, RBBB, IVCD], LBBB]
+  3: [QRS width, spin, 60, 400, 150]
+  4: [Comments, text]
+---
+
+Investigations:
+  0: [Hb (g/dl), text]
+  1: [TC (cells/cu.mm), text]
+  2: [DC, text]
+  3: [Bld Sugar (mg/dl),text]
+  4: [Bld Urea (mg/dl), text]
+  5: [Se Creat (mg/dl), text]
+  6: [HIV, text, Negative]
+  7: [HBsAg, text, Negative]
+  8: [HCV, text, Negative]
+  
+---
+
+Procedure:
+
+  0: [Procedure 1, combo, [New CRT implant, CRT upgrade, CRT Pulse generator change], New CRT implant]
+  1: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
+  2: [Operator 2, combo, [Ravishankar, Rahul, Pradeep, Vidhyakar, Srikanth, Chandramohan], ]
+  3: [Technician, combo, [Janardhanan, Narasimhan, Devi], Janardhanan]
+  4: [Anaesthesia, combo, [LA, GA], LA]
+  5: [Side, combo, [left, right], left]
+  6: [Incision, combo, [infraclavicular, deltopectoral], infraclavicular]
+  7: [Access for RA lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], axillary vein puncture]
+  8: [Access for RV lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], cephalic vein cutdown]
+  9: [Access for LV lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], axillary vein puncture]
+  10: [Long sheath, combo, [Medtronic MB2, Medtronic MP, Medtronic AM, Guidant Rapido EH, Guidant MPH], Medtronic MB2]
+  11: [CS cannulation, combo, [contrast, inner catheter and contrast, inner catheter and wire, deflectable EP catheter], deflectable EP catheter]
+  12: [Venogram findings, text, 'Balloon occlusion coronary venography showed']
+  13: [Subselective sheath used, combo, [yes, no]]
+  14: [Lead positioning technique, combo, [with stylet, 'over wire', through subselective catheter]]
+  15: [Long sheath removal, combo, [slit, peeled], slit]
+  16: [Pocket, combo, [subcutaneous, subpectoral], subcutaneous]
+  17: [Subcutaneous closure, combo, [vicryl 2-0 in 2 layers continuous, vicryl 2-0 in 1 layer continuous, vicryl 2-0 in 1 layer interrupted], vicryl 2-0 in 2 layers continuous]
+  18: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
+
+---
+
+Pulse Generator:
+  0: [Model, combo, [Medtronic, St Jude ], Medtronic]
+  1: [Source, combo, [new own, new hosp, Stimubanque, refurb hosp], new hosp]
+  2: [Serial no., text]
+
+---
+
+Atrial lead:
+  0: [Position, combo, [atrial appendage, lateral atrial wall, atrial septum], atrial appendage]
+  1: [Polarity, combo, [bipolar, unipolar], bipolar]
+  2: [Fixation, combo, [active, passive], passive]
+  3: [Model, combo, [Medtronic, St Jude], Medtronic]
+  4: [Serial no., text]
+  5: [Impedance (ohms), text]
+  6: [Sensing amplitude (mV), text]
+  7: [Pacing Threshold (V), text]
+
+---
+
+Ventricular lead:
+  0: [Position, combo, [RV apex, RV outflow tract], RVA]
+  1: [Polarity, combo, [bipolar, unipolar], bipolar]
+  2: [Fixation, combo, [active, passive], passive]
+  3: [Model, combo, [Medtronic, St Jude], Medtronic]
+  4: [Serial no., text]
+  5: [Impedance (ohms), text]
+  6: [Sensing amplitude (mV), text]
+  7: [Pacing Threshold (V), text]
+
+---
+
+CS lead:
+  0: [Position, combo, [middle cardiac vein, posterolateral vein, lateral vein, anterolateral vein, great cardiac vein], posterolateral vein]
+  1: [Polarity, combo, [bipolar, unipolar], bipolar]
+  2: [Fixation, combo, [active, passive], passive]
+  3: [Model, [Medtronic, St Jude], Medtronic]
+  4: [Serial no., text]
+  5: [Impedance (ohms), text]
+  6: [Sensing amplitude (mV), text]
+  7: [Pacing Threshold (V), text]
+
+---
+
+Settings:
+  0: [Mode, combo, [VVI, DDD, VVIR, DDDR], DDD]
+  1: [Lower Rate (bpm), spin, 30, 100, 60]
+  2: [SAV delay (ms), spin, 40, 300, 90]
+  3: [PAV delay (ms), spin, 40, 300, 90]
+  4: [LV to RV offset (ms), spin, -100, 100, 0]
+  3: [RA output (V, ms), text]
+  4: [RV output (V, ms), text]
+  5: [LV output (V, ms), text]
+
+---
+
+Recommendations:
+  0: [Recommendation 1, text, Keep wound dry for 5 days]
+  1: [Recommendation 2, text, Restricted arm movements for 6 weeks on side of procedure]
+  2: [Recommendation 3, text, "Review in pacemaker clinic on wednesdays at 2:30 pm in room 184"]
+  3: [Recommendation 4, text, Medications as advised]
+
+---
+
+Medications:
+
+  0: [Drug 1, combo, [Carvedilol 3.125 mg BID, Carvedilol 6.25 mg BID, Carvedilol 12.5 mg BID, Metoprolol 12.5 mg BID], Carvedilol 3.125 mg BID]
+  1: [Drug 2, combo, [Envas 2.5 mg BID, Envas 5 mg BID], Envas 2.5 mg BID] 
+  2: [Drug 3, combo, [Lasix 20 mg OD, Lasix 40 mg - 20 mg - 0 mg, Lasix 40 mg BID], Lasix 20 mg OD]
+  3: [Drug 4, combo, [Aldactone 25 mg OD], Aldactone 25 mg OD]
+  4: [Drug 5, text]
+  5: [Drug 6, text]
+  6: [Drug 7, text]
+  7: [Drug 8, text]
+  8: [Drug 9, text]
+
+
+
+  
