@@ -3,6 +3,13 @@
 """Use supplied dictionary of values and a template to fill in the template
 with mako and render the report to a pdf with rst2pdf"""
 
+
+# TODO:
+#     Store a copy of the report in the public folder of dropbox.
+#     The qr code will link to the url to this file. This is simply
+#     "http://dl.dropbox.com/u/" + user_id + file_path
+
+
 import wx
 import os
 #import subprocess

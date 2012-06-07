@@ -24,10 +24,11 @@ class QRImg():
         self.img_path = img_path
         #self.data = self.dict2data(data_dict)
         self.data = self.lst2str(data_list)
-
+        print 'qr data', self.data
+        
         
     def make_image(self):
-        qr = QRCode(8, QRErrorCorrectLevel.L) # 8 handles long data also
+        qr = QRCode(9, QRErrorCorrectLevel.L) # 8 handles long data also
         qr.addData(self.data)
         qr.make() # todo: handle typeerror when data is too large
 
