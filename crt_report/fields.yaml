@@ -25,9 +25,10 @@ Demographics:
 Clinical:
   0: [Heart failure etiology, combo, [Nonischemic cardiomyopathy, Ischemic cardiomyopathy], Nonischemic cardiomyopathy]
   1: [NYHA Class, combo, [I, II, III, IV], III]
-  2: [QRS morphology, combo, [Narrow, LBBB, RBBB, IVCD], LBBB]
+  2: [QRS morphology, combo, [narrow QRS, LBBB, RBBB, IVCD], LBBB]
   3: [QRS width, spin, 60, 400, 150]
-  4: [Comments, text]
+  4: [LVEF, spin, 10, 70, 35]
+  5: [Comments, text]
 ---
 
 Investigations:
@@ -47,38 +48,37 @@ Procedure:
 
   0: [Procedure 1, combo, [New CRT implant, CRT upgrade, CRT Pulse generator change], New CRT implant]
   1: [Operator 1, combo, [Raja Selvaraj, Balachander J], Raja Selvaraj]
-  2: [Operator 2, combo, [Ravishankar, Rahul, Pradeep, Vidhyakar, Srikanth, Chandramohan], ]
+  2: [Operator 2, combo, [Ravishankar, Rahul, Pradeep, Vidhyakar, Srikanth, Chandramohan], Rahul]
   3: [Technician, combo, [Janardhanan, Narasimhan, Devi], Janardhanan]
   4: [Anaesthesia, combo, [LA, GA], LA]
   5: [Side, combo, [left, right], left]
   6: [Incision, combo, [infraclavicular, deltopectoral], infraclavicular]
   7: [Access for RA lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], axillary vein puncture]
   8: [Access for RV lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], cephalic vein cutdown]
-  9: [Access for LV lead, combo, [cephalic vein cutdown, cephalic vein cutdown with peelaway sheath, subclavian puncture, axillary vein puncture], axillary vein puncture]
+  9: [Access for LV lead, combo, [subclavian puncture, axillary vein puncture], axillary vein puncture]
   10: [Long sheath, combo, [Medtronic MB2, Medtronic MP, Medtronic AM, Guidant Rapido EH, Guidant MPH], Medtronic MB2]
   11: [CS cannulation, combo, [contrast, inner catheter and contrast, inner catheter and wire, deflectable EP catheter], deflectable EP catheter]
   12: [Venogram findings, text, 'Balloon occlusion coronary venography showed']
-  13: [Subselective sheath used, combo, [yes, no]]
-  14: [Lead positioning technique, combo, [with stylet, 'over wire', through subselective catheter]]
-  15: [Long sheath removal, combo, [slit, peeled], slit]
-  16: [Pocket, combo, [subcutaneous, subpectoral], subcutaneous]
-  17: [Subcutaneous closure, combo, [vicryl 2-0 in 2 layers continuous, vicryl 2-0 in 1 layer continuous, vicryl 2-0 in 1 layer interrupted], vicryl 2-0 in 2 layers continuous]
-  18: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
+  13: [Lead positioning technique, combo, [with stylet, over wire, over wire through subselective catheter, wire placed through subselective catheter], over wire]
+  14: [Long sheath removal, combo, [slit, peeled], slit]
+  15: [Pocket, combo, [subcutaneous, subpectoral], subcutaneous]
+  16: [Subcutaneous closure, combo, [vicryl 2-0 in 2 layers continuous, vicryl 2-0 in 1 layer continuous, vicryl 2-0 in 1 layer interrupted], vicryl 2-0 in 2 layers continuous]
+  17: [Skin closure, combo, [vicryl 3-0 subcuticular, prolene 3-0 interrupted], vicryl 3-0 subcuticular]
 
 ---
 
 Pulse Generator:
-  0: [Model, combo, [Medtronic, St Jude ], Medtronic]
+  0: [Model, combo, [Medtronic, St Jude Frontier II], Medtronic]
   1: [Source, combo, [new own, new hosp, Stimubanque, refurb hosp], new hosp]
   2: [Serial no., text]
 
 ---
 
 Atrial lead:
-  0: [Position, combo, [atrial appendage, lateral atrial wall, atrial septum], atrial appendage]
+  0: [Position, combo, [Atrial appendage, Lateral atrial wall, Atrial septum], Atrial appendage]
   1: [Polarity, combo, [bipolar, unipolar], bipolar]
   2: [Fixation, combo, [active, passive], passive]
-  3: [Model, combo, [Medtronic, St Jude], Medtronic]
+  3: [Model, combo, [Medtronic, St Jude Tendril SDX], Medtronic]
   4: [Serial no., text]
   5: [Impedance (ohms), text]
   6: [Sensing amplitude (mV), text]
@@ -90,7 +90,7 @@ Ventricular lead:
   0: [Position, combo, [RV apex, RV outflow tract], RVA]
   1: [Polarity, combo, [bipolar, unipolar], bipolar]
   2: [Fixation, combo, [active, passive], passive]
-  3: [Model, combo, [Medtronic, St Jude], Medtronic]
+  3: [Model, combo, [Medtronic 4092, St Jude], Medtronic]
   4: [Serial no., text]
   5: [Impedance (ohms), text]
   6: [Sensing amplitude (mV), text]
@@ -99,10 +99,10 @@ Ventricular lead:
 ---
 
 CS lead:
-  0: [Position, combo, [middle cardiac vein, posterolateral vein, lateral vein, anterolateral vein, great cardiac vein], posterolateral vein]
+  0: [Position, combo, [Middle cardiac vein, Posterolateral vein, Lateral vein, Anterolateral vein, Great cardiac vein], Posterolateral vein]
   1: [Polarity, combo, [bipolar, unipolar], bipolar]
   2: [Fixation, combo, [active, passive], passive]
-  3: [Model, [Medtronic, St Jude], Medtronic]
+  3: [Model, combo, [Medtronic bipolar OTW 4194, St Jude], Medtronic]
   4: [Serial no., text]
   5: [Impedance (ohms), text]
   6: [Sensing amplitude (mV), text]
@@ -116,9 +116,9 @@ Settings:
   2: [SAV delay (ms), spin, 40, 300, 90]
   3: [PAV delay (ms), spin, 40, 300, 90]
   4: [LV to RV offset (ms), spin, -100, 100, 0]
-  3: [RA output (V, ms), text]
-  4: [RV output (V, ms), text]
-  5: [LV output (V, ms), text]
+  3: [RA output (V ms), text]
+  4: [RV output (V ms), text]
+  5: [LV output (V ms), text]
 
 ---
 
@@ -132,10 +132,10 @@ Recommendations:
 
 Medications:
 
-  0: [Drug 1, combo, [Carvedilol 3.125 mg BID, Carvedilol 6.25 mg BID, Carvedilol 12.5 mg BID, Metoprolol 12.5 mg BID], Carvedilol 3.125 mg BID]
-  1: [Drug 2, combo, [Envas 2.5 mg BID, Envas 5 mg BID], Envas 2.5 mg BID] 
-  2: [Drug 3, combo, [Lasix 20 mg OD, Lasix 40 mg - 20 mg - 0 mg, Lasix 40 mg BID], Lasix 20 mg OD]
-  3: [Drug 4, combo, [Aldactone 25 mg OD], Aldactone 25 mg OD]
+  0: [Drug 1, combo, [Tab. Carvedilol 3.125 mg BID, Tab. Carvedilol 6.25 mg BID, Tab. Carvedilol 12.5 mg BID, Tab. Metoprolol 12.5 mg BID], Tab. Carvedilol 3.125 mg BID]
+  1: [Drug 2, combo, [Tab. Envas 2.5 mg BID, Tab. Envas 5 mg BID], Tab. Envas 2.5 mg BID] 
+  2: [Drug 3, combo, [Tab. Lasix 20 mg OD, Tab. Lasix 40 mg - 20 mg - 0 mg, Tab. Lasix 40 mg BID], Tab. Lasix 20 mg OD]
+  3: [Drug 4, combo, [Tab. Aldactone 25 mg OD], Tab. Aldactone 25 mg OD]
   4: [Drug 5, text]
   5: [Drug 6, text]
   6: [Drug 7, text]
